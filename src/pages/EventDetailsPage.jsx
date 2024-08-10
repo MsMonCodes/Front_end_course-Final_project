@@ -78,44 +78,58 @@ export const EventDetailsPage = () => {
               mb={{ base: 10, md: 'none' }}
             >
               <Stack
-                mt={{ base: 0, md: 10 }}
+                mt={{ base: -6, md: 9 }}
+                mb={{ base: -5, md: 'inherit' }}
+                gap={{ base: 2, md: 'inherit' }}
               >
                 {/* <Box pt={{ base: 0, md: 8 }} pb={4}>
                 <Text fontSize={'xl'} fontWeight={'bold'} letterSpacing={1}>Event details:</Text>
               </Box> */}
 
                 <Box>
-                  <Box gap={2} display={'inline-flex'}>
+                  <Box gap={2}
+                    // display={'inline-flex'}
+                    display={{ base: 'block', md: 'inline-flex' }} >
                     <Text verticalAlign={'center'}>Date:</Text>
                     <Text fontSize={'lg'} fontWeight={'semibold'}>{new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text></Box>
                 </Box>
 
                 <Box>
-                  <Box gap={2} display={'inline-flex'}>
+                  <Box gap={2}
+                    // display={'inline-flex'}
+                    display={{ base: 'block', md: 'inline-flex' }} >
                     <Text verticalAlign={'center'}>Start time:</Text>
                     <Text fontSize={'lg'} fontWeight={'semibold'}>{event.startTime.slice(11, 16)}</Text></Box>
                 </Box>
 
                 <Box>
-                  <Box gap={2} display={'inline-flex'}>
+                  <Box gap={2}
+                    // display={'inline-flex'}
+                    display={{ base: 'block', md: 'inline-flex' }} >
                     <Text verticalAlign={'center'}>End time:</Text>
                     <Text fontSize={'lg'} fontWeight={'semibold'}>{event.endTime.slice(11, 16)}</Text></Box>
                 </Box>
 
                 <Box>
-                  <Box gap={2} display={'inline-flex'}>
+                  <Box gap={2}
+                    // display={'inline-flex'}
+                    display={{ base: 'block', md: 'inline-flex' }} >
                     <Text verticalAlign={'center'}>Location:</Text>
                     <Text fontSize={'lg'} fontWeight={'semibold'}>{event.location}</Text></Box>
                 </Box>
 
                 <Box>
-                  <Box gap={2} display={'inline-flex'}>
+                  <Box gap={2}
+                    // display={'inline-flex'}
+                    display={{ base: 'block', md: 'inline-flex' }} >
                     {
                       event.categoryIds.length > 1
                         ? <Text verticalAlign={'center'}>Categories:</Text>
                         : <Text verticalAlign={'center'}>Category:</Text>
                     }
-                    <Text fontSize={'lg'} fontWeight={'semibold'}>
+                    <Text
+                      fontSize={'lg'}
+                      fontWeight={'semibold'} >
                       {
                         event.categoryIds.map((categoryId) => {
                           return (categories.find((category) => categoryId == category.id)).name

@@ -15,7 +15,7 @@ export const Root = () => {
   // }
 
   return (
-    <Box bgColor={'blackAlpha.900'} color={'yellow.500'} align={'center'} scrollBehavior={'smooth'} >
+    <Box bgColor={'blackAlpha.900'} color={'yellow.500'} justifyContent={'center'} align={'center'} scrollBehavior={'smooth'} >
       <Navigation />
       <Outlet />
     </Box>
