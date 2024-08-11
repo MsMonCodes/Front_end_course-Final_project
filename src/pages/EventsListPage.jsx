@@ -1,6 +1,7 @@
 import { React, useState, useRef } from 'react';
-import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel } from '@chakra-ui/react';
-import { useLoaderData, Link, Form } from "react-router-dom";
+import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select } from '@chakra-ui/react';
+import { useLoaderData, Link, Form, redirect } from "react-router-dom";
+// import { AddEventForm } from './AddEvent';
 // import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
 
 export const loader = async () => {
@@ -15,7 +16,97 @@ export const loader = async () => {
   }
 }
 
+
+
+// export const actionExample = async ({ request }) => {
+
+//   const data = await request.formData()
+//   console.log(request);
+
+//   const submission = {
+//     // events.push({
+//     image: data.get('eventImage'),
+//     title: data.get('eventName'),
+//     description: data.get('eventDescription'),
+//     startTime: data.get('eventStart'),
+//     eventEnd: data.get('eventEnd'),
+//     location: data.get('eventLocation'),
+//     // })
+
+//     // categories.
+//     Cname: data.get('eventCategory'),
+
+//     // users.
+//     Uimage: data.get('hostImage'),
+//     Uname: data.get('hostName')
+//   }
+//   console.log(submission)
+
+//   //send post request
+
+//   //redirect the user
+//   return redirect('/')
+// }
+
+export const actionsfd = async (event) => {
+  const response = await fetch(
+    `http://localhost:3000/events/`, {
+    method: `POST`,
+    body: JSON.stringify({ event }),
+    headers: { "Content-Type": "application/json;charset=utf-8" },
+  }
+  );
+}
+
+export const action = async ({ request }) => {
+  const data = await request.formData()
+  console.log(request);
+
+  const submission = {
+    image: data.get('eventImage'),
+    title: data.get('eventName'),
+    description: data.get('eventDescription'),
+    startTime: data.get('eventStart'),
+    eventEnd: data.get('eventEnd'),
+    location: data.get('eventLocation'),
+
+    // categories.
+    Cname: data.get('eventCategory'),
+
+    // users.
+    Uname: data.get('hostName')
+  }
+  console.log(submission)
+
+  //send post request
+  // const response = await fetch(
+  //   `http://localhost:3000/events`, {
+  //   method: `PUT`,
+  //   body: JSON.stringify({ submission }),
+  //   headers: { "Content-Type": "application/json;charset=utf-8" },
+  // }
+  // );
+
+  //redirect the user
+  return redirect('/')
+}
+
+
+
 export const EventsListPage = () => {
+
+
+  const [inputs, setInputs] = useState({});
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInputs(values => ({ ...values, [name]: value }))
+  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(inputs);
+  }
+
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
@@ -36,11 +127,12 @@ export const EventsListPage = () => {
     );
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    createEvent({ content });
-    setContent('');
-  }
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   createEvent({ content });
+  //   setContent('');
+  // }
+
 
   // function InitialFocus() {
   //   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -120,171 +212,57 @@ export const EventsListPage = () => {
               <ModalCloseButton />
 
               <ModalBody pb={6}>
-                <Form
-                  onSubmit={handleSubmit}
-                >
-                  <FormControl>
-                    <FormLabel>Upload your event image</FormLabel>
-                    <Input required={false}
-                      ref={initialRef}
-                      // onChange={(e) => setEventImage(e.target.value)} value={eventImage}
-                      type={'image'}
-                      // placeholder='Upload your event image'
-                      placeholder='...' />
-                  </FormControl>
+                <Form onSubmit={handleSubmit}>
+                  <FormLabel>Who is the host of this event?</FormLabel>
+                  <Select required={true} name='categoryIds'>
+                    {users.map((user) => (
+                      <option value={user.id} key={user.id}>{user.name}</option>
+                    ))} </Select>
 
-                  <FormControl mt={4}>
-                    <FormLabel>Enter the name of your event</FormLabel>
-                    <Input required={true}
-                      // ref={initialRef}
-                      // onChange={(e) => setEventTitle(e.target.value)} value={eventTitle}
-                      type='text'
-                      // placeholder='What is the name of your event?'
-                      placeholder='...' />
-                  </FormControl>
+                  <FormLabel>Enter the name of your event</FormLabel>
+                  <Input required={true} name='title' value={inputs.title || ""} onChange={handleChange} type='text' placeholder='...' />
 
-                  <FormControl mt={4}>
-                    <FormLabel>Type your event description here</FormLabel>
-                    <Input required={true}
-                      // ref={initialRef} 
-                      // onChange={(e) => setEventDescription(e.target.value)} value={eventDescription}
-                      type='text'
-                      // placeholder='Type your event description here' 
-                      placeholder='...' />
-                  </FormControl>
+                  <FormLabel>Type your event description here</FormLabel>
+                  <Input required={true} name='description' value={inputs.description || ""} onChange={handleChange} type='text' placeholder='...' />
 
-                  {/* <FormControl mt={4}>
-                    <FormLabel>.........</FormLabel>
-                    <Input required='true'
-                      // ref={initialRef} 
-                      // value={{ eventDate, eventStartTime }}
-                      // onChange={(e) => { setEventDate(e.target.value), setEventStartTime(e.target.value) }}
-                      type={'datetime-local'}
-                      placeholder='Select the date of your event' />
-                  </FormControl> */}
+                  {/* <FormLabel>Upload your event image</FormLabel>
+          <Input required={false} ref={initialRef} type={'image'} name='image'  value={inputs.image || ""} onChange={handleChange}/> */}
 
-                  <FormControl mt={4}>
-                    <FormLabel>Select the date of your event</FormLabel>
-                    <Input required={true}
-                      // ref={initialRef}
-                      // onChange={(e) => setEventDate(e.target.value)} value={eventDate}
-                      type={'datetime-local'}
-                      // placeholder='Select the date of your event' 
-                      placeholder='...' />
-                  </FormControl>
+                  <FormLabel>What category does your event fall under?</FormLabel>
+                  <Select required={true} name='categoryIds' value={inputs.categoryIds || ""} onChange={handleChange}>
+                    {categories.map((category) => (
+                      <option value={category.id} key={category.id}>{category.name}</option>
+                    ))} </Select>
 
-                  <FormControl mt={4}>
-                    <FormLabel>Select the start time of your event</FormLabel>
-                    <Input required={true}
-                      // ref={initialRef} 
-                      type={'datetime-local'}
-                      // onChange={(e) => setEventStartTime(e.target.value)}
-                      // value={eventStartTime}
-                      // placeholder='Select the start time of your event'
-                      placeholder='...' />
-                  </FormControl>
+                  <FormLabel>Enter the location of your event</FormLabel>
+                  <Input required={true} name='location' value={inputs.location || ""} onChange={handleChange} type={'text'} />
 
-                  <FormControl mt={4}>
-                    <FormLabel>Select the end time of your event</FormLabel>
-                    <Input required={true}
-                      // ref={initialRef} 
-                      // onChange={(e) => setEventEndTime(e.target.value)} value={eventEndTime}
-                      type={'datetime-local'}
-                      // placeholder='Select the end time of your event'
-                      placeholder='...' />
-                  </FormControl>
+                  <FormLabel>Select the start date and time of your event</FormLabel>
+                  <Input required={true} name='startTime' value={inputs.startTime || ""} onChange={handleChange} type={'datetime-local'} />
 
-                  <FormControl mt={4}>
-                    <FormLabel>Enter the location of your event</FormLabel>
-                    <Input required={true}
-                      // ref={initialRef} 
-                      // onChange={(e) => setEventLocation(e.target.value)} value={eventLocation}
-                      type={'text'}
-                      // placeholder='What is the location of your event?' 
-                      placeholder='...' />
-                  </FormControl>
+                  <FormLabel>Select the end date and time of your event</FormLabel>
+                  <Input required={true} name='endTime' value={inputs.endTime || ""} onChange={handleChange} type={'datetime-local'} />
 
-                  <FormControl mt={4}>
-                    <FormLabel>What category does your event fall under?</FormLabel>
-                    <Input required={true}
-                      // ref={initialRef} 
-                      // onChange={(e) => setCategoryName(e.target.value)} value={eventCategoryName}
-                      type={'text'}
-                      // placeholder='What category does your event fall under?'
-                      placeholder='...' />
-                  </FormControl>
+                  <Box>
+                    <Button colorScheme='pink' mr={3} type={'submit'}
+                    // onSubmit={handleSubmit}
+                    >Save</Button>
+                    <Button onClick={onClose}>Cancel</Button>
+                  </Box>
 
-                  <FormControl mt={4}>
-                    <FormLabel>Upload an image of the host of this event</FormLabel>
-                    <Input required={false}
-                      // ref={initialRef} 
-                      // onChange={(e) => setEventHostImage(e.target.value)} value={eventHostImage}
-                      type={'image'}
-                      // placeholder='Upload an image of the host of this event' 
-                      placeholder='...' />
-                  </FormControl>
-
-                  <FormControl mt={4}>
-                    <FormLabel>What is the name of the host of this event?</FormLabel>
-                    <Input required={true}
-                      // ref={initialRef} 
-                      // onChange={(e) => setEventHostName(e.target.value)} value={eventHostName}
-                      type='text'
-                      // placeholder='What is the name of the host of this event?' 
-                      placeholder='...' />
-                  </FormControl>
                 </Form>
-
 
               </ModalBody>
 
               <ModalFooter>
-                <Button colorScheme='pink' mr={3} type={'submit'} onSubmit={handleSubmit}>Save</Button>
-                <Button onClick={onClose}>Cancel</Button>
+                {/* <Button colorScheme='pink' mr={3} type={'submit'}
+                // onSubmit={handleSubmit}
+                >Save</Button>
+                <Button onClick={onClose}>Cancel</Button> */}
               </ModalFooter>
 
             </ModalContent>
           </Modal>
-
-          {/* <>
-            <Button onClick={onOpen}>Open Modal</Button>
-            <Button ml={4} ref={finalRef}>
-              I'll receive focus on close
-            </Button>
-
-            <Modal
-              initialFocusRef={initialRef}
-              finalFocusRef={finalRef}
-              isOpen={isOpen}
-              onClose={onClose}
-            >
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Create your account</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody pb={6}>
-                  <FormControl>
-                    <FormLabel>First name</FormLabel>
-                    <Input ref={initialRef} placeholder='First name' />
-                  </FormControl>
-
-                  <FormControl mt={4}>
-                    <FormLabel>Last name</FormLabel>
-                    <Input placeholder='Last name' />
-                  </FormControl>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button colorScheme='blue' mr={3}>
-                    Save
-                  </Button>
-                  <Button onClick={onClose}>Cancel</Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </> */}
-
-
         </HStack>
 
         <Box
@@ -317,9 +295,7 @@ export const EventsListPage = () => {
                     w={{ base: '50vw', md: 'inherit' }}>
                     <Stack pb={8}>
                       {/* <Link to={`event/${event.id}`}> */}
-                      <Heading pb={4} size={'lg'}
-                      // _hover={{ color: "yellow.300" }}
-                      >{event.title}</Heading>
+                      <Heading pb={4} size={'lg'} >{event.title}</Heading>
                       {/* </Link> */}
                       <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>{event.description}</Text></Stack>
 

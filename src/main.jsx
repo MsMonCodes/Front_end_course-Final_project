@@ -2,7 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { EventDetailsPage, loader as eventDetailsLoader } from './pages/EventDetailsPage';
-import { EventsListPage, loader as eventsListLoader } from './pages/EventsListPage';
+import { EventsListPage, action as addEventAction, loader as eventsListLoader } from './pages/EventsListPage';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Root } from './components/Root';
 // import { AddEvent } from './AddEvent';
@@ -16,6 +16,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <EventsListPage />,
         loader: eventsListLoader,
+        action: addEventAction,
       },
       {
         path: '/event/:eventId',
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
       },
       // {
       //   path: '/event/new',
-      //   element: <AddEvent createEvent={CreateEventFn} />,
+      //   element: <AddEventForm />,
       // },
     ],
   },
