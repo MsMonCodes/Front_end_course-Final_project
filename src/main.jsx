@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Root } from './components/Root';
 // import { AddEvent } from './AddEvent';
 
+
 const router = createBrowserRouter([
   {
     path: '/',

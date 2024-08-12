@@ -1,8 +1,9 @@
 import { React, useState, useRef } from 'react';
-import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select } from '@chakra-ui/react';
+import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect } from "react-router-dom";
 // import { AddEventForm } from './AddEvent';
 // import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
+// import { FileUpload, FileUploadTrigger, FileUploadDropzone, FileUploadPreview, } from '@saas-ui/file-upload'
 
 export const loader = async () => {
   const events = await fetch(`http://localhost:3000/events`);
@@ -63,18 +64,14 @@ export const action = async ({ request }) => {
   console.log(request);
 
   const submission = {
-    image: data.get('eventImage'),
+    createdBy: data.get('hostName'),
     title: data.get('eventName'),
     description: data.get('eventDescription'),
-    startTime: data.get('eventStart'),
-    eventEnd: data.get('eventEnd'),
+    image: data.get('eventImage'),
+    categoryIds: data.get(['eventCategory']),
     location: data.get('eventLocation'),
-
-    // categories.
-    Cname: data.get('eventCategory'),
-
-    // users.
-    Uname: data.get('hostName')
+    startTime: data.get('eventStart'),
+    endTime: data.get('eventEnd'),
   }
   console.log(submission)
 
@@ -195,76 +192,126 @@ export const EventsListPage = () => {
       <Stack className='event-list'
         w={'100%'}
         h={'100%'}>
-        <HStack>
-          <Heading py={4}>Upcoming events</Heading>
-          <Button type={'button'} onClick={onOpen}>+</Button>
+        <HStack justifyContent={'center'}>
+
+          <HStack justifyContent={'space-between'}
+            w={{ base: '100%', md: 'container.sm', lg: 'container.md' }}>
+            <Heading py={4}>Upcoming events</Heading>
+            <Button type={'button'} marginBlockStart={'50%'} onClick={onOpen} fontSize={'2xl'} >+</Button>
+          </HStack>
+
           <Modal
             initialFocusRef={initialRef}
             finalFocusRef={finalRef}
             isOpen={isOpen}
-            onClose={onClose}
           >
-            <ModalOverlay />
-            <ModalContent>
-
+            <ModalOverlay
+              bg={'whiteAlpha.200'}
+              backdropFilter={'auto'}
+              // backdropInvert='80%'
+              backdropBlur='8px' />
+            <ModalContent
+              onClose={onClose}
+              bgColor={'whiteAlpha.800'}
+              color={'blackAlpha.900'}
+            // bgColor={'blackAlpha.900'} color={'whiteAlpha.900'}
+            >
               <ModalHeader>Add your event details</ModalHeader>
+              <ModalCloseButton onClick={onClose} />
 
-              <ModalCloseButton />
+              <ModalBody>
+                <Form onSubmit={handleSubmit} >
+                  <FormControl>
+                    <Box>
+                      <FormLabel>Who is the host of this event?</FormLabel>
+                      <Select required={true} name='CreatedBy'>
+                        {users.map((user) => (
+                          <option value={user.id} key={user.id}>{user.name}</option>
+                        ))} </Select>
+                    </Box>
 
-              <ModalBody pb={6}>
-                <Form onSubmit={handleSubmit}>
-                  <FormLabel>Who is the host of this event?</FormLabel>
-                  <Select required={true} name='categoryIds'>
-                    {users.map((user) => (
-                      <option value={user.id} key={user.id}>{user.name}</option>
-                    ))} </Select>
+                    <Box>
+                      <FormLabel>Enter the name of your event</FormLabel>
+                      <Input required={true} name='title' value={inputs.title || ""} onChange={handleChange} type='text' placeholder='...' />
+                    </Box>
 
-                  <FormLabel>Enter the name of your event</FormLabel>
-                  <Input required={true} name='title' value={inputs.title || ""} onChange={handleChange} type='text' placeholder='...' />
+                    <Box>
+                      <FormLabel>Type your event description here</FormLabel>
+                      <Input required={true} name='description' value={inputs.description || ""} onChange={handleChange} type='text' placeholder='...' />
+                    </Box>
 
-                  <FormLabel>Type your event description here</FormLabel>
-                  <Input required={true} name='description' value={inputs.description || ""} onChange={handleChange} type='text' placeholder='...' />
+                    <Box>
+                      <FormLabel>Upload your event image</FormLabel>
+                      {/* <FileUpload maxFileSize={1024 * 1024} maxFiles={1} accept="image/">
+                          {({ acceptedFiles, deleteFile }) => (
+                            <FileUploadDropzone>
+                              {!acceptedFiles?.length ? (
+                                <>
+                                  <Text fontSize={'sm'}>Drag your image here</Text>
+                                  <FileUploadTrigger as={Button}>Select files</FileUploadTrigger>
+                                </>
+                              ) : (
+                                <HStack>
+                                  <FileUploadPreview file={acceptedFiles[0]} w={'200px'} />
+                                  <Button onClick={(e) => {
+                                    e.stopPropagation()
+                                    deleteFile(acceptedFiles[0])
+                                  }}
+                                  >Remove</Button>
+                                </HStack>
+                              )}
+                            </FileUploadDropzone>
+                          )}
+                        </FileUpload> */}
+                      {/* <Input required={false} ref={initialRef} type={'image'} name='image'
+                          value={inputs.image || ""} onChange={handleChange} /> */}
 
-                  {/* <FormLabel>Upload your event image</FormLabel>
-          <Input required={false} ref={initialRef} type={'image'} name='image'  value={inputs.image || ""} onChange={handleChange}/> */}
+                    </Box>
 
-                  <FormLabel>What category does your event fall under?</FormLabel>
-                  <Select required={true} name='categoryIds' value={inputs.categoryIds || ""} onChange={handleChange}>
-                    {categories.map((category) => (
-                      <option value={category.id} key={category.id}>{category.name}</option>
-                    ))} </Select>
+                    <Box>
+                      <FormLabel>What category does your event fall under?</FormLabel>
+                      <InputGroup display={'flex'} flexDir={'column'} required={true} name='categoryIds' value={inputs.categoryIds || ""} onChange={handleChange}>
+                        {categories.map((category) => (
+                          <Switch colorScheme={'yellow'} pb={2} size={'sm'} value={category.id} key={category.id} > {category.name}</Switch>
+                        ))} </InputGroup>
+                    </Box>
 
-                  <FormLabel>Enter the location of your event</FormLabel>
-                  <Input required={true} name='location' value={inputs.location || ""} onChange={handleChange} type={'text'} />
+                    <Box>
+                      <FormLabel>Enter the location of your event</FormLabel>
+                      <Input required={true} name='location' value={inputs.location || ""} onChange={handleChange} type={'text'} />
+                    </Box>
 
-                  <FormLabel>Select the start date and time of your event</FormLabel>
-                  <Input required={true} name='startTime' value={inputs.startTime || ""} onChange={handleChange} type={'datetime-local'} />
+                    <Box>
+                      <FormLabel>Select the start date and time of your event</FormLabel>
+                      <Input required={true} name='startTime' value={inputs.startTime || ""} onChange={handleChange} type={'datetime-local'} />
+                    </Box>
 
-                  <FormLabel>Select the end date and time of your event</FormLabel>
-                  <Input required={true} name='endTime' value={inputs.endTime || ""} onChange={handleChange} type={'datetime-local'} />
+                    <Box>
+                      <FormLabel>Select the end date and time of your event</FormLabel>
+                      <Input required={true} name='endTime' value={inputs.endTime || ""} onChange={handleChange} type={'datetime-local'} />
+                    </Box>
 
-                  <Box>
-                    <Button colorScheme='pink' mr={3} type={'submit'}
-                    // onSubmit={handleSubmit}
-                    >Save</Button>
-                    <Button onClick={onClose}>Cancel</Button>
-                  </Box>
+                    <Flex pt={4} my={4} justify={'flex-end'}>
+                      <Button colorScheme='yellow' mr={3} type={'submit'}
+                      // onSubmit={handleSubmit}
+                      >Save</Button>
+                      <Button onClick={onClose} colorScheme={'whiteAlpha'}>Cancel</Button>
+                    </Flex>
+                  </FormControl>
 
                 </Form>
-
               </ModalBody>
 
-              <ModalFooter>
-                {/* <Button colorScheme='pink' mr={3} type={'submit'}
+              {/* <ModalFooter>
+                <Button colorScheme='pink' mr={3} type={'submit'}
                 // onSubmit={handleSubmit}
                 >Save</Button>
-                <Button onClick={onClose}>Cancel</Button> */}
-              </ModalFooter>
+                <Button onClick={onClose}>Cancel</Button>
+              </ModalFooter> */}
 
             </ModalContent>
           </Modal>
-        </HStack>
-
+        </HStack >
         <Box
           pb={10}>
           {events.map((event) => (
@@ -279,9 +326,10 @@ export const EventsListPage = () => {
               bgColor={'blackAlpha.900'}
               color={'purple.400'}
               _hover={{
+                marginLeft: -2,
                 color: "pink.500",
                 borderColor: "yellow.500",
-                borderInlineStartWidth: 6,
+                borderInlineStartWidth: 8,
 
                 // paddingInlineStart: -16,
               }}>
