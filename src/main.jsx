@@ -5,6 +5,7 @@ import { EventDetailsPage, loader as eventDetailsLoader } from './pages/EventDet
 import { EventsListPage, action as addEventAction, loader as eventsListLoader } from './pages/EventsListPage';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Root } from './components/Root';
+import { ErrorPage } from './pages/ErrorPage';
 // import { AddEvent } from './AddEvent';
 
 
@@ -12,12 +13,14 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: '/',
         element: <EventsListPage />,
         loader: eventsListLoader,
         action: addEventAction,
+        errorElement: <ErrorPage />,
       },
       {
         path: '/event/:eventId',
