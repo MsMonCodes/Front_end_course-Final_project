@@ -3,10 +3,16 @@ import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar';
 import { render } from 'react-dom';
-// import { SearchFn } from '../components/SearchFn';
-// import { AddEventForm } from './AddEvent';
-// import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
-// import { FileUpload, FileUploadTrigger, FileUploadDropzone, FileUploadPreview, } from '@saas-ui/file-upload'
+import DefaultImage from "../assets/DefaultImage.jpg";
+import LoadingSpinner from "../assets/LoadingSpinner.gif";
+{// import { SearchFn } from '../components/SearchFn';
+  // import { AddEventForm } from './AddEvent';
+  // import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
+  // import { FileUpload, FileUploadTrigger, FileUploadDropzone, FileUploadPreview, } from '@saas-ui/file-upload'
+
+  // link to default image: <Link to="https://www.freepik.com/free-photo/retro-black-camera-arrangement_13360548.htm#from_view=detail_alsolike">Image by freepik</Link>
+  // default image: Photo by Tirachard Kumtanom: https://www.pexels.com/photo/black-and-silver-film-camera-on-brown-wooden-surface-733853/
+}
 
 export const loader = async () => {
   const events = await fetch(`http://localhost:3000/events`);
@@ -19,18 +25,6 @@ export const loader = async () => {
     categories: await categories.json(),
   }
 }
-
-
-// export const actionsfd = async (event) => {
-//   const response = await fetch(
-//     `http://localhost:3000/events/`, {
-//     method: `POST`,
-//     body: JSON.stringify({ event }),
-//     headers: { "Content-Type": "application/json;charset=utf-8" },
-//   }
-//   );
-// }
-
 
 // export const action = async ({ request }) => {
 //   const data = await request.formData()
@@ -113,8 +107,6 @@ export const loader = async () => {
 //   }
 // }
 
-
-
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
   const [inputs, setInputs] = useState({});
@@ -187,14 +179,12 @@ export const EventsListPage = () => {
     }
   }
 
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
 
   const { events, users, categories } = useLoaderData();
   // console.log({ events, users, categories });
-
 
   const breakpoints = {
     base: '0em',
@@ -205,14 +195,43 @@ export const EventsListPage = () => {
     '2xl': '96em', // ~1536px
   }
 
+  const [defaultEventImage, setDefaultEventImage] = useState(DefaultImage);
+  const fileUploadRef = useRef(null);
+  const handleUploadImage = (event) => {
+    event.preventDefault();
+    fileUploadRef.current.click();
+  }
+  const imagePreview = async () => {
+    try {
+      setDefaultEventImage(LoadingSpinner);
+      // <LoadingSpinner size={'xs'} bgColor={'none'} bgSize={'full'} />
+      const uploadedFile = fileUploadRef.current.files[0];
+      // const cachedURL = URL.createObjectURL(uploadedFile);
+      // setDefaultEventImage(cachedURL);      
+      setDefaultEventImage(URL.createObjectURL(uploadedFile));
+
+      // const formData = new FormData();
+      // formData.append("file", uploadedFile);
+
+      // const response = await fetch(`http://localhost:3000/events/`, {
+      //   method: `POST`,
+      //   body: formData
+      // });
+
+      // if (response.status === 201) {
+      //   const data = await response.json();
+      //   setDefaultEventImage("");
+      // }
+
+    } catch (error) {
+      console.error(error);
+      setDefaultEventImage(DefaultImage);
+    }
+  }
 
   return (
     <>
-      <Stack className='event-list'
-        w={'100%'}
-        h={'100%'}
-        align={'center'}
-      >
+      <Stack className='event-list' w={'100%'} h={'100%'} align={'center'}>
         <Stack pb={{ base: 6, md: 10 }} gap={4} w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} align={'center'}>
           <Heading py={4} pb={{ base: 4, md: 8 }}>Upcoming events</Heading>
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'}
@@ -327,20 +346,15 @@ export const EventsListPage = () => {
 
             ))}</Stack>
         </Stack >
-        <Modal
-          initialFocusRef={initialRef}
-          finalFocusRef={finalRef}
-          isOpen={isOpen}
-        >
+        <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen}>
           <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
           <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'} >
             <ModalHeader>Add your event details</ModalHeader>
             <ModalCloseButton onClick={onClose} />
-
             <ModalBody>
               <Form onSubmit={handleSubmit} method={"post"}>
                 <FormControl>
-                  <Box>
+                  <Box pb={3}>
                     <FormLabel>Who is the host of this event?</FormLabel>
                     <Select
                       value={inputs.createdBy} onChange={handleChange} name='CreatedBy'
@@ -350,20 +364,29 @@ export const EventsListPage = () => {
                         <option value={user.id} key={user.id}>{user.name}</option>
                       ))} </Select></Box>
 
-                  <Box>
+                  <Box pb={3}>
                     <FormLabel>Enter the name of your event</FormLabel>
                     <Input
                       required={true}
                       name='title' value={inputs.title || ""} onChange={handleChange} type='text' placeholder='...' /></Box>
 
-                  <Box>
+                  <Box pb={3}>
                     <FormLabel>Type your event description here</FormLabel>
                     <Input
                       required={true}
                       name='description' value={inputs.description || ""} onChange={handleChange} type='text' placeholder='...' /></Box>
 
-                  <Box>
-                    <FormLabel>Upload your event image</FormLabel>
+                  <Box pb={3}>
+                    <FormLabel>Upload your event image:
+                      <Text display={'inline'} verticalAlign={'center'} fontSize={'sm'} fontStyle={'italic'}
+                        color={'blackAlpha.700'} pl={2}>Click to upload an image</Text></FormLabel>
+                    {/* <Form id={'form'} encType='multipart/form-data' > */}
+                    <Button _hover={'none'} bgImage={defaultEventImage} bgSize={'cover'} bgPos={'center'} h={'xs'}
+                      w={'xs'} type={'submit'} onClick={handleUploadImage} />
+                    <Input type={'file'} id={'file'} ref={fileUploadRef}
+                      // value={inputs.image} 
+                      onChange={imagePreview} hidden />
+
                     {/* <FileUpload maxFileSize={1024 * 1024} maxFiles={1} accept="image/">
                           {({ acceptedFiles, deleteFile }) => (
                             <FileUploadDropzone>
@@ -389,7 +412,7 @@ export const EventsListPage = () => {
                           value={inputs.image || ""} onChange={handleChange} /> */}
                   </Box>
 
-                  <Box>
+                  <Box pb={3}>
                     <FormLabel>What category does your event fall under?</FormLabel>
                     <InputGroup display={'flex'} flexDir={'column'} required={true} name='categoryIds'
                       value={inputs.categoryIds || ""}
@@ -402,25 +425,25 @@ export const EventsListPage = () => {
                         > {category.name}</Switch>
                       ))} </InputGroup></Box>
 
-                  <Box>
+                  <Box pb={3}>
                     <FormLabel>Enter the location of your event</FormLabel>
                     <Input
                       //  required={true} 
                       name='location' value={inputs.location || ""} onChange={handleChange} type={'text'} /></Box>
 
-                  <Box>
+                  <Box pb={3}>
                     <FormLabel>Select the start date and time of your event</FormLabel>
                     <Input
                       // required={true}
                       name='startTime' value={inputs.startTime || ""} onChange={handleChange} type={'datetime-local'} /></Box>
 
-                  <Box>
+                  <Box pb={3}>
                     <FormLabel>Select the end date and time of your event</FormLabel>
                     <Input
                       // required={true} 
                       name='endTime' value={inputs.endTime || ""} onChange={handleChange} type={'datetime-local'} /></Box>
 
-                  <Flex pt={4} my={4} justify={'flex-end'}>
+                  <Flex pt={4} my={4} justify={'flex-end'} >
                     <Button colorScheme='yellow' mr={3} type={'submit'}
                       method={'post'}
                       onSubmit={handleSubmit}
@@ -433,7 +456,7 @@ export const EventsListPage = () => {
                 >Save</Button>
                 <Button onClick={onClose}>Cancel</Button>
               </ModalFooter> */}
-          </ModalContent></Modal>
+          </ModalContent></Modal >
       </Stack >
     </>
   );

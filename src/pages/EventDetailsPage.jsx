@@ -7,6 +7,18 @@ export const loader = async ({ params }) => {
   const users = await fetch(`http://localhost:3000/users`);
   const categories = await fetch(`http://localhost:3000/categories`);
 
+  return {
+    event: await event.json(),
+    users: await users.json(),
+    categories: await categories.json(),
+  }
+}
+
+
+export const EventDetailsPage = () => {
+  window.scrollTo(0, 0);
+  const { event, users, categories } = useLoaderData();
+
   const breakpoints = {
     base: '0em',
     sm: '30em', // ~480px. em is a relative unit and is dependant on the font-size.
@@ -15,18 +27,6 @@ export const loader = async ({ params }) => {
     xl: '80em', // ~1280px
     '2xl': '96em', // ~1536px
   }
-
-  return {
-    event: await event.json(),
-    users: await users.json(),
-    categories: await categories.json(),
-  }
-}
-
-export const EventDetailsPage = () => {
-  window.scrollTo(0, 0);
-  const { event, users, categories } = useLoaderData();
-
   return (
     <div className='event-details-page' w={'100%'} h={'100%'} align={'center'}>
 
