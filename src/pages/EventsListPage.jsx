@@ -1,7 +1,8 @@
 import { React, useState, useRef } from 'react';
 import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue } from '@chakra-ui/react';
-import { useLoaderData, Link, Form, redirect } from "react-router-dom";
+import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar';
+import { render } from 'react-dom';
 // import { SearchFn } from '../components/SearchFn';
 // import { AddEventForm } from './AddEvent';
 // import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
@@ -115,9 +116,9 @@ export const loader = async () => {
 
 
 export const EventsListPage = () => {
-
-
+  window.scrollTo(0, 0);
   const [inputs, setInputs] = useState({});
+
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -125,56 +126,66 @@ export const EventsListPage = () => {
       if (!inputs.categoryIds) {
         inputs.categoryIds = []
       }
-      inputs.categoryIds.push(Number(value));
+      if (event.target.checked) {
+        inputs.categoryIds.push(Number(value));
+      } else {
+        inputs.categoryIds.splice(Number(value));
+      }
     }
     else {
       setInputs(values => ({ ...values, [name]: value }))
     }
+
   }
+
   const handleSubmit = async (event) => {
+    // try {
     event.preventDefault();
-    // console.log(event.target);
-    // console.log(inputs);
-    // alert(inputs);
-    let response = await fetch(
+    // setUiState('saving');;
+    const response = await fetch(
       `http://localhost:3000/events/`, {
       method: `POST`,
       body: JSON.stringify(inputs),
       headers: { "Content-Type": "application/json;charset=utf-8" },
     });
-    // let response = await fetch(
-    //   `http://localhost:3000/events/`, {
-    //   method: `DELETE`,
-    //   body: JSON.stringify(event.target),
-    //   headers: { "Content-Type": "application/json;charset=utf-8" },
-    // });
 
 
-    if (response.result) {
-      alert('Error. Please try again!');
+    if (!response.ok) {
+      alert(`An error occurred: ${error.message}. Please try again.`);
+      throw new Error(`Failed to create new event. Status: ${response.status}`);
     } else {
-      alert('The event has been created!');
+      alert('Success! This event has been createed!');
+      // throw new Error(`Failed to create new event. Status: ${response.status}`);
+    }
+
+    // useNavigate(`http://localhost:3000/events/${event.value}`);
+    // } catch (error) {
+    // console.error("An error occurred while creating a new event: ", error);
+    // }
+
+    return redirect(`/event/:eventId`)
+    // return redirect(`http://localhost:3000/events/${event.target.value}`);
+  }
+
+  const handleDelete = async (event) => {
+    event.preventDefault();
+    // let copy = [this.state.events];
+    // copy.splice(event, 1);
+    // this.setState({ events: copy });
+    console.log(event)
+    const response = await fetch(
+      `http://localhost:3000/events/${event.target.value}`, {
+      method: `DELETE`,
+      // body: JSON.stringify(this.event),
+      // headers: { "Content-Type": "application/json;charset=utf-8" },
+    });
+
+    if (!response.ok) {
+      alert(`An error occurred: ${error.message}. Please try again.`);
+    } else {
+      alert('Success! The event has been deleted!');
     }
   }
-  // const handleDelete = async (event) => {
-  //   let copy = [this.state.events];
-  //   copy.splice(event, 1);
-  //   this.setState({ events: copy });
-  // }
-  // response = await fetch(
-  //   `http://localhost:3000/events/`, {
-  //   method: `DELETE`,
-  //   body: JSON.stringify(this.event),
-  //   headers: { "Content-Type": "application/json;charset=utf-8" },
-  // });
-
-  // let response = await request.json();
-  // if (response.result === 'Sucess!') {
-  //   alert('The event has been deleted!');
-  // } else {
-  //   alert('Error. Try again!');
-  // }
-
 
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -184,15 +195,6 @@ export const EventsListPage = () => {
   const { events, users, categories } = useLoaderData();
   // console.log({ events, users, categories });
 
-  const CreateEventFn = async (event) => {
-    const response = await fetch(
-      `http://localhost:3000/events/`, {
-      method: `POST`,
-      body: JSON.stringify({ event }),
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    }
-    );
-  }
 
   const breakpoints = {
     base: '0em',
@@ -301,7 +303,7 @@ export const EventsListPage = () => {
                               }).join(", ")}</Box></Flex></Box></Stack>
                     </Container>
 
-                    <Box
+                    {/* <Box
                       // w={'50hw'}
                       w={{ base: '50vw', md: 'inherit' }}>
                       <Image
@@ -312,13 +314,13 @@ export const EventsListPage = () => {
                         objectFit={'cover'}
                         src={event.image}
                         alt={`image of ${event.description}`} />
-                    </Box>
-                    {/* <Flex bgImg={event.image} bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
+                    </Box> */}
+                    <Flex bgImg={event.image} bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
                       h={'xs'} justifyContent={'right'} borderRightRadius={{ base: 0, md: 7.5 }}>
-                      <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'pink.500'} method={"delete"}
+                      <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'pink.500'} method={"delete"} onClick={handleDelete} value={event.id}
                       // onClick={() => this.props.handleDelete(this.props.id)}
                       >x</Button>
-                    </Flex> */}
+                    </Flex>
                   </HStack>
                 </Link>
               </Card >
@@ -331,7 +333,7 @@ export const EventsListPage = () => {
           isOpen={isOpen}
         >
           <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
-          <ModalContent onClose={onClose} bgColor={'whiteAlpha.700'} color={'blackAlpha.900'} >
+          <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'} >
             <ModalHeader>Add your event details</ModalHeader>
             <ModalCloseButton onClick={onClose} />
 
@@ -341,10 +343,11 @@ export const EventsListPage = () => {
                   <Box>
                     <FormLabel>Who is the host of this event?</FormLabel>
                     <Select
+                      value={inputs.createdBy} onChange={handleChange} name='CreatedBy'
                       required={true}
-                      name='CreatedBy' value={inputs.createdBy} placeholder='Select a registered host'>
+                      placeholder='Select a registered host'>
                       {users.map((user) => (
-                        <option value={user.id} key={user.id} onChange={handleChange}>{user.name}</option>
+                        <option value={user.id} key={user.id}>{user.name}</option>
                       ))} </Select></Box>
 
                   <Box>
@@ -389,10 +392,14 @@ export const EventsListPage = () => {
                   <Box>
                     <FormLabel>What category does your event fall under?</FormLabel>
                     <InputGroup display={'flex'} flexDir={'column'} required={true} name='categoryIds'
-                      value={inputs.categoryIds || ""} onChange={handleChange} >
+                      value={inputs.categoryIds || ""}
+                    >
                       {categories.map((category) => (
                         <Switch colorScheme={'yellow'} pb={2} size={'sm'} name='categoryIds'
-                          value={category.id} key={category.id} > {category.name}</Switch>
+                          value={category.id}
+                          key={category.id}
+                          onChange={handleChange}
+                        > {category.name}</Switch>
                       ))} </InputGroup></Box>
 
                   <Box>
@@ -415,9 +422,9 @@ export const EventsListPage = () => {
 
                   <Flex pt={4} my={4} justify={'flex-end'}>
                     <Button colorScheme='yellow' mr={3} type={'submit'}
-                    // method={'post'}
-                    // onSubmit={handleSubmit}
-                    >Save</Button>
+                      method={'post'}
+                      onSubmit={handleSubmit}
+                    >Save & View</Button>
                     <Button onClick={onClose} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></Flex>
                 </FormControl></Form></ModalBody>
             {/* <ModalFooter>

@@ -24,6 +24,7 @@ export const loader = async ({ params }) => {
 }
 
 export const EventDetailsPage = () => {
+  window.scrollTo(0, 0);
   const { event, users, categories } = useLoaderData();
 
   return (
