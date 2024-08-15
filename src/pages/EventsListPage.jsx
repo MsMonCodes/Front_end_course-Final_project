@@ -139,8 +139,9 @@ export const EventsListPage = () => {
       method: `POST`,
       body: JSON.stringify(inputs),
       headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
-
+    })
+      .then(response => response.json())
+      .then(addEvent => (addEvent))
 
     if (!response.ok) {
       alert(`An error occurred: ${error.message}. Please try again.`);
@@ -168,8 +169,6 @@ export const EventsListPage = () => {
     const response = await fetch(
       `http://localhost:3000/events/${event.target.value}`, {
       method: `DELETE`,
-      // body: JSON.stringify(this.event),
-      // headers: { "Content-Type": "application/json;charset=utf-8" },
     });
 
     if (!response.ok) {
@@ -235,10 +234,8 @@ export const EventsListPage = () => {
         <Stack pb={{ base: 6, md: 10 }} gap={4} w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} align={'center'}>
           <Heading py={4} pb={{ base: 4, md: 8 }}>Upcoming events</Heading>
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'}
-          // justifyContent={{ base: 'flex-end', md: 'space-between' }} 
           >
             <SearchBar barWidth={'fit-content'}
-            // barWidth={{ base: 'fit-content', md: 'sm' }} 
             />
             <Button type={'button'} bgColor={'whiteAlpha.400'} minW={{ base: 'fit-content', md: '0px' }} justifyContent={'right'} onClick={onOpen}>+</Button>
 
@@ -253,12 +250,9 @@ export const EventsListPage = () => {
           <Stack gap={4} w={'inherit'}>
             {events.map((event) => (
               <Card key={event.id} className='event'
-                // w={{ base: '100%', md: 'container.sm', lg: 'container.md' }}
                 h={'xs'}
                 align={{ md: 'center' }}
-                // justify={'center'}
                 justifyContent={'space-between'}
-                // my={{ base: 1, md: 4, lg: 8 }}
                 borderRadius={{ base: 0, md: 7.5 }}
                 bgColor={'blackAlpha.900'}
                 color={'purple.400'}
@@ -267,7 +261,6 @@ export const EventsListPage = () => {
                   color: "pink.500",
                   borderColor: "yellow.500",
                   borderInlineStartWidth: 8,
-                  // paddingInlineStart: -16,
                 }}>
                 <Link to={`event/${event.id}`}>
                   <HStack
@@ -381,7 +374,9 @@ export const EventsListPage = () => {
                       <Text display={'inline'} verticalAlign={'center'} fontSize={'sm'} fontStyle={'italic'}
                         color={'blackAlpha.700'} pl={2}>Click to upload an image</Text></FormLabel>
                     {/* <Form id={'form'} encType='multipart/form-data' > */}
-                    <Button _hover={'none'} bgImage={defaultEventImage} bgSize={'cover'} bgPos={'center'} h={'xs'}
+                    <Button
+                      // _hover={'none'} 
+                      bgImage={defaultEventImage} bgSize={'cover'} bgPos={'center'} h={'xs'}
                       w={'xs'} type={'submit'} onClick={handleUploadImage} />
                     <Input type={'file'} id={'file'} ref={fileUploadRef}
                       // value={inputs.image} 
