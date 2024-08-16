@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Image, Heading, Text, Box, Flex, Container, Stack, StackItem, SimpleGrid, ControlBox, Grid, GridItem, HStack, Button } from '@chakra-ui/react';
 import { useLoaderData, Link } from "react-router-dom";
+import DefaultImage from "../assets/DefaultImage.jpg";
 
 export const loader = async ({ params }) => {
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
@@ -41,7 +42,7 @@ export const EventDetailsPage = () => {
             justify={'center'} bgColor={'blackAlpha.900'} color={'pink.500'} mb={10} >
 
             <Image borderTopRadius={'inherit'} boxSize={'full'} w={{ base: '100%', md: 'container.md' }} height={'full'}
-              objectFit={'cover'} src={event.image} alt={`image of ${event.description}`} alignItems={'right'} />
+              objectFit={'cover'} src={event.image ? event.image : DefaultImage} alt={`image of ${event.description}`} alignItems={'right'} />
 
             <Stack paddingBlock={8} w={{ base: '100%', md: 'container.md' }} >
               <Heading color={'yellow.500'} pb={2} size={'2xl'}>{event.title}</Heading>

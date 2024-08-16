@@ -1,10 +1,11 @@
 import { React, useState, useRef } from 'react';
-import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar';
 import { render } from 'react-dom';
 import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 {// import { SearchFn } from '../components/SearchFn';
   // import { AddEventForm } from './AddEvent';
   // import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
@@ -109,11 +110,37 @@ export const loader = async () => {
 
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
-  const [inputs, setInputs] = useState({});
+  // const eventlist = useLoaderData();
+  const [eventList, setEventList] = useState(null);
+  const [inputs, setInputs] = useState({
+    // createdBy: "",
+    // title: "",
+    // description: "",
+    // image: "../assets/DefaultImage.jpg",
+    // categoryIds: [],
+    // location: "",
+    // startTime: "",
+    // endTime: ""
+  });
 
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
+    // if (name === "createdBy") {
+    //   value.createdBy = Number(value)
+    // }
+    // if (name === 'categoryIds') {
+    //   if ('enabled') {
+    //     inputs.categoryIds.push(Number(value))
+    //   } else {
+    //     inputs.categoryIds.splice(Number(value))
+    //   }
+    //   // setInputs({ [name]: [value.categoryIds.sort()] });
+    //   inputs.categoryIds = [value.categoryIds]
+    // } else {
+    //   setInputs(values => ({ ...values, [name]: value }))
+    // }
+
     if (name === 'categoryIds') {
       if (!inputs.categoryIds) {
         inputs.categoryIds = []
@@ -123,11 +150,11 @@ export const EventsListPage = () => {
       } else {
         inputs.categoryIds.splice(Number(value));
       }
+      // inputs.categoryIds.sort([value])
     }
     else {
       setInputs(values => ({ ...values, [name]: value }))
     }
-
   }
 
   const handleSubmit = async (event) => {
@@ -141,15 +168,16 @@ export const EventsListPage = () => {
       headers: { "Content-Type": "application/json;charset=utf-8" },
     })
       .then(response => response.json())
-      .then(addEvent => (addEvent))
+      // .then(addEvent => render(addEvent))
+      .then(redirect(`./.`));
 
-    if (!response.ok) {
-      alert(`An error occurred: ${error.message}. Please try again.`);
-      throw new Error(`Failed to create new event. Status: ${response.status}`);
-    } else {
-      alert('Success! This event has been createed!');
-      // throw new Error(`Failed to create new event. Status: ${response.status}`);
-    }
+    // if (!response.ok) {
+    //   alert(`An error occurred: ${error.message}. Please try again.`);
+    //   throw new Error(`Failed to create new event. Status: ${response.status}`);
+    // } else {
+    //   alert('Success! This event has been createed!');
+    //   // throw new Error(`Failed to create new event. Status: ${response.status}`);
+    // }
 
     // useNavigate(`http://localhost:3000/events/${event.value}`);
     // } catch (error) {
@@ -200,32 +228,29 @@ export const EventsListPage = () => {
     event.preventDefault();
     fileUploadRef.current.click();
   }
-  const imagePreview = async () => {
-    try {
-      setDefaultEventImage(LoadingSpinner);
-      // <LoadingSpinner size={'xs'} bgColor={'none'} bgSize={'full'} />
-      const uploadedFile = fileUploadRef.current.files[0];
-      // const cachedURL = URL.createObjectURL(uploadedFile);
-      // setDefaultEventImage(cachedURL);      
-      setDefaultEventImage(URL.createObjectURL(uploadedFile));
+  const imagePreview = () => {
+    setDefaultEventImage(LoadingSpinner);
+    // <LoadingSpinner size={'xs'} bgColor={'none'} bgSize={'full'} />
+    const uploadedFile = fileUploadRef.current.files[0];
+    // const cachedURL = URL.createObjectURL(uploadedFile);
+    // setDefaultEventImage(cachedURL);      
+    setDefaultEventImage(URL.createObjectURL(uploadedFile));
 
-      // const formData = new FormData();
-      // formData.append("file", uploadedFile);
+    // const formData = new FormData();
+    // formData.append("file", uploadedFile);
 
-      // const response = await fetch(`http://localhost:3000/events/`, {
-      //   method: `POST`,
-      //   body: formData
-      // });
+    // const response = await fetch(`http://localhost:3000/events/`, {
+    //   method: `POST`,
+    //   body: formData
+    // });
 
-      // if (response.status === 201) {
-      //   const data = await response.json();
-      //   setDefaultEventImage("");
-      // }
+    // if (response.status === 201) {
+    //   const data = await response.json();
+    //   setDefaultEventImage("");
+    // }
 
-    } catch (error) {
-      console.error(error);
-      setDefaultEventImage(DefaultImage);
-    }
+    // setDefaultEventImage(DefaultImage);
+
   }
 
   return (
@@ -271,9 +296,7 @@ export const EventsListPage = () => {
                     <Container
                       w={{ base: '50vw', md: 'inherit' }}>
                       <Stack pb={{ base: 1, md: 8 }}>
-                        {/* <Link to={`event/${event.id}`}> */}
                         <Heading pb={4} size={'lg'} >{event.title}</Heading>
-                        {/* </Link> */}
                         <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>{event.description}</Text></Stack>
 
                       <Stack justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
@@ -311,7 +334,7 @@ export const EventsListPage = () => {
                             }
                             <Box>{
                               event.categoryIds.map((categoryId) => {
-                                return (categories.find((category) => categoryId == category.id)).name
+                                return (categories.find((category) => categoryId == category.id))?.name
                               }).join(", ")}</Box></Flex></Box></Stack>
                     </Container>
 
@@ -327,7 +350,7 @@ export const EventsListPage = () => {
                         src={event.image}
                         alt={`image of ${event.description}`} />
                     </Box> */}
-                    <Flex bgImg={event.image} bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
+                    <Flex bgImg={event.image ? event.image : DefaultImage} bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
                       h={'xs'} justifyContent={'right'} borderRightRadius={{ base: 0, md: 7.5 }}>
                       <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'pink.500'} method={"delete"} onClick={handleDelete} value={event.id}
                       // onClick={() => this.props.handleDelete(this.props.id)}
@@ -350,7 +373,7 @@ export const EventsListPage = () => {
                   <Box pb={3}>
                     <FormLabel>Who is the host of this event?</FormLabel>
                     <Select
-                      value={inputs.createdBy} onChange={handleChange} name='CreatedBy'
+                      value={inputs.createdBy} onChange={handleChange} name='createdBy'
                       required={true}
                       placeholder='Select a registered host'>
                       {users.map((user) => (
@@ -374,12 +397,12 @@ export const EventsListPage = () => {
                       <Text display={'inline'} verticalAlign={'center'} fontSize={'sm'} fontStyle={'italic'}
                         color={'blackAlpha.700'} pl={2}>Click to upload an image</Text></FormLabel>
                     {/* <Form id={'form'} encType='multipart/form-data' > */}
-                    <Button
-                      // _hover={'none'} 
-                      bgImage={defaultEventImage} bgSize={'cover'} bgPos={'center'} h={'xs'}
-                      w={'xs'} type={'submit'} onClick={handleUploadImage} />
+                    {/* <Icon><FontAwesomeIcon icon="fa-solid fa-image" />
+                    </Icon> */}
+                    <Box bgImage={defaultEventImage} bgSize={'cover'} bgPos={'center'} h={'xs'}
+                      w={'xs'} type={'submit'} onClick={handleUploadImage} rounded={'lg'} />
                     <Input type={'file'} id={'file'} ref={fileUploadRef}
-                      // value={inputs.image} 
+                      // value={inputs.image}
                       onChange={imagePreview} hidden />
 
                     {/* <FileUpload maxFileSize={1024 * 1024} maxFiles={1} accept="image/">
@@ -404,13 +427,14 @@ export const EventsListPage = () => {
                           )}
                         </FileUpload> */}
                     {/* <Input required={false} ref={initialRef} type={'image'} name='image'
-                          value={inputs.image || ""} onChange={handleChange} /> */}
+                      value={inputs.image || ""} onChange={handleChange} /> */}
                   </Box>
 
                   <Box pb={3}>
                     <FormLabel>What category does your event fall under?</FormLabel>
                     <InputGroup display={'flex'} flexDir={'column'} required={true} name='categoryIds'
                       value={inputs.categoryIds || ""}
+                      onChange={handleChange}
                     >
                       {categories.map((category) => (
                         <Switch colorScheme={'yellow'} pb={2} size={'sm'} name='categoryIds'
