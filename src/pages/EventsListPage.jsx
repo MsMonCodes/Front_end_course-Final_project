@@ -28,86 +28,28 @@ export const loader = async () => {
   }
 }
 
-// export const action = async ({ request }) => {
-//   const data = await request.formData()
-//   console.log(`ACTION LOGGED:  ${request}`);
+// export const loader = async ({ params }) => {
+//   const events = await fetch(`http://localhost:3000/events/${params.eventId}`);
+//   const users = await fetch(`http://localhost:3000/users`);
+//   const categories = await fetch(`http://localhost:3000/categories`);
 
-//   const submission = {
-//     createdBy: data.get('hostName'),
-//     title: data.get('eventName'),
-//     description: data.get('eventDescription'),
-//     image: data.get('eventImage'),
-//     categoryIds: data.get(['eventCategory']),
-//     location: data.get('eventLocation'),
-//     startTime: data.get('eventStart'),
-//     endTime: data.get('eventEnd'),
-//   }
-//   console.log(`SUBMISSION LOGGED:  ${submission}`)
-
-//   //send post request
-//   const response = await fetch(
-//     `http://localhost:3000/events`, {
-//     method: `PUT`,
-//     body: JSON.stringify({ submission }),
-//     headers: { "Content-Type": "application/json;charset=utf-8" },
-//   }
-//   );
-//   console.log(`SUBMISSION LOGGED:  ${response}`)
-
-//   //redirect the user
-//   return redirect('/')
-// }
-
-// export const action = async ({ request, params }) => {
-//   switch (request.method) {
-//     case "POST": {
-//       let formData = await request.formData.json();
-//       let createdBy = formData.get('hostName');
-//       let title = formData.get('eventName');
-//       let description = formData.get('eventDescription');
-//       let image = formData.get('eventImage');
-//       let categoryIds = formData.get(['eventCategory']);
-//       let location = formData.get('eventLocation');
-//       let startTime = formData.get("eventStart");
-//       let endTime = formData.get("eventEnd");
-
-//       return await fetch(
-//         console.log(request)
-//           `http://localhost:3000/events/`, {
-//         method: `POST`,
-//         body: JSON.stringify({ formData }),
-//         headers: { "Content-Type": "application/json;charset=utf-8" },
-//       }
-//       );
-
-//     }
-//     case "PUT": {
-//       let formData = await request;
-//       // let createdBy = formData.get('hostName');
-//       // let title = formData.get('eventName');
-//       // let description = formData.get('eventDescription');
-//       // let image = formData.get('eventImage');
-//       // let categoryIds = formData.get(['eventCategory']);
-//       // let location = formData.get('eventLocation');
-//       // let startTime = formData.get("eventStart");
-//       // let endTime = formData.get("eventEnd");
-
-//       return await fetch(
-//         `http://localhost:3000/events/`, {
-//         method: `PUT`,
-//         body: JSON.stringify({ formData }),
-//         headers: { "Content-Type": "application/json;charset=utf-8" },
-//       }
-//       );
-//     }
-//     case "DELETE": {
-//       return events(params.id);
-//     }
-//     default: {
-//       throw new Response("", { status: 405 });
-//     }
+//   return {
+//     events: await events.json(),
+//     users: await users.json(),
+//     categories: await categories.json(),
 //   }
 // }
+
+export const action = async ({ request, params }) => {
+  const formData = Object.fromEntries(await request.formData());
+  const body = JSON.stringify({ ...formData, eventId: params.eventId });
+  await fetch("http://localhost:3000/events", {
+    method: "POST",
+    body,
+    headers: { "Content-Type": "application/json" },
+  });
+  return redirect(`/event/${params.eventId}`);
+};
 
 export const EventsListPage = () => {
   window.scrollTo(0, 0);

@@ -1,4 +1,4 @@
-import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Switch, InputGroup } from "@chakra-ui/react";
+import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Switch, InputGroup, Textarea, Checkbox, SelectField, CheckboxGroup } from "@chakra-ui/react";
 import { React, useState, useRef } from 'react';
 import { Form, redirect, useLoaderData } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
@@ -14,8 +14,8 @@ export const EventForm = () => {
         // createdBy: "",
         // title: "",
         // description: "",
-        // image: "../assets/DefaultImage.jpg",
-        // categoryIds: [],
+        // image: "",
+        categoryIds: [],
         // location: "",
         // startTime: "",
         // endTime: ""
@@ -34,22 +34,21 @@ export const EventForm = () => {
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
+        // console.log(event.target);
 
         if (name === 'categoryIds') {
-            if (!inputs.categoryIds) {
-                inputs.categoryIds = []
-            }
+            let catIds = inputs.categoryIds;
             if (event.target.checked) {
-                inputs.categoryIds.push(Number(value));
-            } else {
-                inputs.categoryIds.splice(Number(value));
+                catIds.push(Number(value));
             }
-            // inputs.categoryIds.sort([value])
+            else {
+                catIds = catIds.filter((id) => id !== Number(value));
+            }
+            setInputs(values => ({ ...values, [name]: catIds }))
         }
         else {
             setInputs(values => ({ ...values, [name]: value }))
         }
-        // event = inputs;
     }
 
 
@@ -83,9 +82,6 @@ export const EventForm = () => {
         // return redirect(`/event/:eventId`)
         // return redirect(`http://localhost:3000/events/${event.target.value}`);
     }
-
-
-
 
     const [defaultEventImage, setDefaultEventImage] = useState(DefaultImage);
     const fileUploadRef = useRef(null);
@@ -127,42 +123,42 @@ export const EventForm = () => {
                     <ModalHeader>Add your event details</ModalHeader>
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
-                        <Form onSubmit={handleSubmit} method={"post"}>
+                        <Form onSubmit={handleSubmit} id={"add-new-event"} method={"post"}>
                             <FormControl>
-                                <Box pb={3}>
-                                    <FormLabel>Who is the host of this event?</FormLabel>
-                                    <Select
-                                        value={inputs.createdBy} onChange={handleChange} name='createdBy'
-                                        required={true}
-                                        placeholder='Select a registered host'>
+                                <Box pb={3}><FormLabel>Who is the host of this event?</FormLabel>
+                                    <Select required={true} placeholder='Select a registered host'
+                                        onChange={handleChange} value={inputs.createdBy} name='createdBy'>
                                         {users.map((user) => (
                                             <option value={user.id} key={user.id}>{user.name}</option>
-                                        ))} </Select></Box>
+                                        ))}</Select></Box>
 
-                                <Box pb={3}>
-                                    <FormLabel>Enter the name of your event</FormLabel>
-                                    <Input
-                                        required={true}
-                                        name='title' value={inputs.title || ""} onChange={handleChange} type='text' placeholder='...' /></Box>
+                                <Box pb={3}><FormLabel>Enter the name of your event</FormLabel>
+                                    <Input required={true} name='title'
+                                        onChange={handleChange}
+                                        value={inputs.title || ""}
+                                        type='text' placeholder='...' /></Box>
 
-                                <Box pb={3}>
-                                    <FormLabel>Type your event description here</FormLabel>
-                                    <Input
-                                        required={true}
-                                        name='description' value={inputs.description || ""} onChange={handleChange} type='text' placeholder='...' /></Box>
+                                <Box pb={3}><FormLabel>Type your event description here</FormLabel>
+                                    <Input required={true} name={'description'}
+                                        onChange={handleChange}
+                                        value={inputs.description || ""}
+                                        type='text' placeholder='...' /></Box>
 
-                                <Box pb={3}>
-                                    <FormLabel>Upload your event image:
-                                        <Text display={'inline'} verticalAlign={'center'} fontSize={'sm'} fontStyle={'italic'}
-                                            color={'blackAlpha.700'} pl={2}>Click to upload an image</Text></FormLabel>
+                                <Box pb={3}><FormLabel>Upload your event image:
+                                    <Text display={'inline'} verticalAlign={'center'} fontSize={'sm'} fontStyle={'italic'}
+                                        color={'blackAlpha.700'} pl={2}>Click to upload an image</Text></FormLabel>
                                     {/* <Form id={'form'} encType='multipart/form-data' > */}
-                                    {/* <Icon><FontAwesomeIcon icon="fa-solid fa-image" />
-          </Icon> */}
-                                    <Box bgImage={defaultEventImage} bgSize={'cover'} bgPos={'center'} h={'xs'}
-                                        w={'xs'} type={'submit'} onClick={handleUploadImage} rounded={'lg'} />
+                                    {/* <Icon><FontAwesomeIcon icon="fa-solid fa-image" />*/}
+                                    <Textarea aria-label="image" rows="1" name="image" required={true}
+                                        onChange={handleChange} value={inputs.image || ""}
+                                        placeholder={'Paste the image URL here.'}></Textarea>
+                                    {/* <Box bgImage={defaultEventImage} bgSize={'cover'} bgPos={'center'} h={'xs'}
+                                        w={'xs'} type={'submit'}
+                                        onClick={handleUploadImage}
+                                        rounded={'lg'} />
                                     <Input type={'file'} id={'file'} ref={fileUploadRef}
                                         // value={inputs.image}
-                                        onChange={imagePreview} hidden />
+                                        onChange={imagePreview} hidden /> */}
 
                                     {/* <FileUpload maxFileSize={1024 * 1024} maxFiles={1} accept="image/">
                 {({ acceptedFiles, deleteFile }) => (
@@ -191,40 +187,36 @@ export const EventForm = () => {
 
                                 <Box pb={3}>
                                     <FormLabel>What category does your event fall under?</FormLabel>
-                                    <InputGroup display={'flex'} flexDir={'column'} required={true} name='categoryIds'
+                                    <InputGroup display={'flex'} flexDir={'column'} required={true}
+                                        name='categoryIds'
+                                        // onChange={handleChange}
+                                        // onChange={e => this.handleChange(e)}
                                         value={inputs.categoryIds || ""}
-                                        onChange={handleChange}
-                                    >
-                                        {categories.map((category) => (
-                                            <Switch colorScheme={'yellow'} pb={2} size={'sm'} name='categoryIds'
-                                                value={category.id}
-                                                key={category.id}
-                                                onChange={handleChange}
-                                            > {category.name}</Switch>
-                                        ))} </InputGroup></Box>
+                                    // key={category.id}
+                                    >{categories.map((category) => (
+                                        <Switch colorScheme={'yellow'} pb={2} size={'sm'} name='categoryIds' key={category.id}
+                                            // type="checkbox"
+                                            // defaultChecked={false}
+                                            onChange={handleChange}
+                                            value={category.id}
+                                        >{category.name}</Switch>
+                                    ))} </InputGroup></Box>
 
-                                <Box pb={3}>
-                                    <FormLabel>Enter the location of your event</FormLabel>
-                                    <Input
-                                        //  required={true} 
-                                        name='location' value={inputs.location || ""} onChange={handleChange} type={'text'} /></Box>
+                                <Box pb={3}><FormLabel>Enter the location of your event</FormLabel>
+                                    <Input required={true} type={'text'}
+                                        name='location' onChange={handleChange} value={inputs.location || ""} /></Box>
 
-                                <Box pb={3}>
-                                    <FormLabel>Select the start date and time of your event</FormLabel>
-                                    <Input
-                                        // required={true}
-                                        name='startTime' value={inputs.startTime || ""} onChange={handleChange} type={'datetime-local'} /></Box>
+                                <Box pb={3}><FormLabel>Select the start date and time of your event</FormLabel>
+                                    <Input required={true} type={'datetime-local'}
+                                        name='startTime' onChange={handleChange} value={inputs.startTime || ""} /></Box>
 
-                                <Box pb={3}>
-                                    <FormLabel>Select the end date and time of your event</FormLabel>
-                                    <Input
-                                        // required={true} 
-                                        name='endTime' value={inputs.endTime || ""} onChange={handleChange} type={'datetime-local'} /></Box>
+                                <Box pb={3}><FormLabel>Select the end date and time of your event</FormLabel>
+                                    <Input required={true} type={'datetime-local'}
+                                        name='endTime' onChange={handleChange} value={inputs.endTime || ""} /></Box>
 
                                 <Flex pt={4} my={4} justify={'flex-end'} >
-                                    <Button colorScheme='yellow' mr={3} type={'submit'}
-                                        method={'post'}
-                                        onSubmit={handleSubmit}
+                                    <Button colorScheme='yellow' mr={3} type={'submit'} method={'post'}
+                                        onSubmit={handleSubmit} onClick={onClose}
                                     >Save & View</Button>
                                     <Button onClick={onClose} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></Flex>
                             </FormControl></Form></ModalBody>
