@@ -11,14 +11,14 @@ export const EventForm = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { users, categories } = useLoaderData(loader);
     const [inputs, setInputs] = useState({
-        // createdBy: "",
-        // title: "",
-        // description: "",
-        // image: "",
+        createdBy: "",
+        title: "",
+        description: "",
+        image: "",
         categoryIds: [],
-        // location: "",
-        // startTime: "",
-        // endTime: ""
+        location: "",
+        startTime: "",
+        endTime: ""
     });
     const initialRef = useRef(null);
     const finalRef = useRef(null);
@@ -34,8 +34,6 @@ export const EventForm = () => {
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-        // console.log(event.target);
-
         if (name === 'categoryIds') {
             let catIds = inputs.categoryIds;
             if (event.target.checked) {
@@ -51,11 +49,8 @@ export const EventForm = () => {
         }
     }
 
-
     const handleSubmit = async (event) => {
-        // try {
         event.preventDefault();
-        // setUiState('saving');;
         const response = await fetch(
             `http://localhost:3000/events/`, {
             method: `POST`,
@@ -63,25 +58,37 @@ export const EventForm = () => {
             headers: { "Content-Type": "application/json;charset=utf-8" },
         })
             .then(response => response.json())
-            // .then(addEvent => render(addEvent))
             .then(redirect(`/`));
-
-        // if (!response.ok) {
-        //   alert(`An error occurred: ${error.message}. Please try again.`);
-        //   throw new Error(`Failed to create new event. Status: ${response.status}`);
-        // } else {
-        //   alert('Success! This event has been createed!');
-        //   // throw new Error(`Failed to create new event. Status: ${response.status}`);
-        // }
-
-        // useNavigate(`http://localhost:3000/events/${event.value}`);
-        // } catch (error) {
-        // console.error("An error occurred while creating a new event: ", error);
-        // }
-
-        // return redirect(`/event/:eventId`)
-        // return redirect(`http://localhost:3000/events/${event.target.value}`);
     }
+
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+    //     const response = await fetch(
+    //         `http://localhost:3000/events/`, {
+    //         method: `POST`,
+    //         body: JSON.stringify(inputs),
+    //         headers: { "Content-Type": "application/json;charset=utf-8" },
+    //     })
+    //         .then(response => response.json())
+    //         // .then(({ CurrentPage }) => render(CurrentPage))
+    //         .then(redirect(`/`));
+
+    //     // if (!response.ok) {
+    //     //   alert(`An error occurred: ${error.message}. Please try again.`);
+    //     //   throw new Error(`Failed to create new event. Status: ${response.status}`);
+    //     // } else {
+    //     //   alert('Success! This event has been createed!');
+    //     //   // throw new Error(`Failed to create new event. Status: ${response.status}`);
+    //     // }
+
+    //     // useNavigate(`http://localhost:3000/events/${event.value}`);
+    //     // } catch (error) {
+    //     // console.error("An error occurred while creating a new event: ", error);
+    //     // }
+
+    //     // return redirect(`/event/:eventId`)
+    //     // return redirect(`http://localhost:3000/events/${event.target.value}`);
+    // }
 
     const [defaultEventImage, setDefaultEventImage] = useState(DefaultImage);
     const fileUploadRef = useRef(null);

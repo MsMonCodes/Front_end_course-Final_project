@@ -15,6 +15,17 @@ export const loader = async ({ params }) => {
   }
 }
 
+export const action = async ({ request, params }) => {
+  const formData = Object.fromEntries(await request.formData());
+  const body = JSON.stringify({ ...formData, eventId: params.eventId });
+  await fetch("http://localhost:3000/events", {
+    method: "PUT",
+    body,
+    headers: { "Content-Type": "application/json" },
+  });
+  return redirect(`/event/${params.eventId}`);
+};
+
 
 export const EventDetailsPage = () => {
   window.scrollTo(0, 0);

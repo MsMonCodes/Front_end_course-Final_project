@@ -28,18 +28,6 @@ export const loader = async () => {
   }
 }
 
-// export const loader = async ({ params }) => {
-//   const events = await fetch(`http://localhost:3000/events/${params.eventId}`);
-//   const users = await fetch(`http://localhost:3000/users`);
-//   const categories = await fetch(`http://localhost:3000/categories`);
-
-//   return {
-//     events: await events.json(),
-//     users: await users.json(),
-//     categories: await categories.json(),
-//   }
-// }
-
 export const action = async ({ request, params }) => {
   const formData = Object.fromEntries(await request.formData());
   const body = JSON.stringify({ ...formData, eventId: params.eventId });
@@ -118,6 +106,36 @@ export const EventsListPage = () => {
     }
   }
 
+  // const handleSubmit = async (event) => {
+  //   // try {
+  //   event.preventDefault();
+  //   // setUiState('saving');;
+  //   const response = await fetch(
+  //     `http://localhost:3000/events/`, {
+  //     method: `POST`,
+  //     body: JSON.stringify(inputs),
+  //     headers: { "Content-Type": "application/json;charset=utf-8" },
+  //   })
+  //     .then(response => response.json())
+  //     // .then(addEvent => render(addEvent))
+  //     .then(redirect(`/`));
+
+  //   // if (!response.ok) {
+  //   //   alert(`An error occurred: ${error.message}. Please try again.`);
+  //   //   throw new Error(`Failed to create new event. Status: ${response.status}`);
+  //   // } else {
+  //   //   alert('Success! This event has been createed!');
+  //   //   // throw new Error(`Failed to create new event. Status: ${response.status}`);
+  //   // }
+
+  //   // useNavigate(`http://localhost:3000/events/${event.value}`);
+  //   // } catch (error) {
+  //   // console.error("An error occurred while creating a new event: ", error);
+  //   // }
+
+  //   // return redirect(`/event/:eventId`)
+  //   // return redirect(`http://localhost:3000/events/${event.target.value}`);
+  // }
 
   const breakpoints = {
     base: '0em',
