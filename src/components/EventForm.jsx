@@ -2,10 +2,11 @@ import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalO
 import { React, useState, useRef } from 'react';
 import { Form, redirect, useLoaderData } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
+// import { loader } from "../pages/EventDetailsPage";
 
 import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const EventForm = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
