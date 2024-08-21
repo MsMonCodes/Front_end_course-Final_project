@@ -210,6 +210,7 @@ export const EventsListPage = () => {
                   color: "pink.500",
                   borderColor: "yellow.500",
                   borderInlineStartWidth: 8,
+                  button: { color: 'pink.500' }
                 }}>
                 <Link to={`event/${event.id}`}>
                   <HStack
@@ -225,7 +226,6 @@ export const EventsListPage = () => {
 
                       <Stack justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
                         <Box >
-
                           {event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
                             ? (<Box><Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
                               {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
@@ -238,15 +238,6 @@ export const EventsListPage = () => {
                                   {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>
                             )
                           }
-
-                          {/* <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
-                            {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}
-                          </Text>
-
-                          <Box gap={1} display={'inline-flex'}>
-                            <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>{event.startTime.slice(11, 16)}</Text>
-                            - <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>{event.endTime.slice(11, 16)}</Text></Box> */}
-
                         </Box>
 
                         <Box justifyContent={'space-between'}>
@@ -261,23 +252,9 @@ export const EventsListPage = () => {
                                 return (categories.find((category) => categoryId == category.id))?.name
                               }).join(", ")}</Box></Flex></Box></Stack>
                     </Container>
-
-                    {/* <Box
-                      // w={'50hw'}
-                      w={{ base: '50vw', md: 'inherit' }}>
-                      <Image
-                        // w={{ base: 'xs', md: 'lg' }}
-                        h={'xs'}
-                        justifyContent={'right'}
-                        borderRightRadius={{ base: 0, md: 7.5 }}
-                        objectFit={'cover'}
-                        src={event.image}
-                        alt={`image of ${event.description}`} />
-                    </Box> */}
                     <Flex bgImg={event.image ? event.image : DefaultImage} bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
                       h={'xs'} justifyContent={'right'} borderRightRadius={{ base: 0, md: 7.5 }}>
-                      <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'pink.500'} method={"delete"} onClick={handleDelete} value={event.id}
-                      // onClick={() => this.props.handleDelete(this.props.id)}
+                      <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'purple.300'} method={"delete"} onClick={handleDelete} value={event.id}
                       >x</Button>
                     </Flex>
                   </HStack>
