@@ -1,7 +1,7 @@
 import { React, useState, useRef, useEffect } from 'react';
 import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
-import { SearchBar } from '../components/SearchBar-deleteMaybe';
+import { SearchBar } from '../components/SearchBar';
 import { render } from 'react-dom';
 import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
@@ -40,6 +40,14 @@ export const action = async ({ request, params }) => {
   return redirect(`/event/${params.eventId}`);
 };
 
+export const deleteEventAction = async ({ params }) => {
+  const { eventId } = params;
+  if (window.confirm(`Are you sure you want to delete this event?`)) {
+    await axios.delete(`https://localhost:3000/events/${eventId}`);
+  }
+  return null;
+}
+
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
   const { isOpen, onOpen, onClose, } = useDisclosure();
@@ -61,8 +69,8 @@ export const EventsListPage = () => {
   }, []);
 
   const fetchEvents = async () => {
-    const response = await axios.get(`http://localhost:3000/events/`);
-    fetchEvents();
+    const response = await axios.get(`http://localhost:3000/events/`)
+      .then(fetchEvents());
   }
 
   const { events, users, categories } = useLoaderData();
@@ -102,11 +110,15 @@ export const EventsListPage = () => {
   const handleDelete = async (event) => {
     try {
       event.preventDefault();
-      const response = await fetch(
-        `http://localhost:3000/events/${event.target.value}`, {
-        method: `DELETE`,
-      })
-        .then(alert('Success! The event has been deleted!'));
+      if (window.confirm(`Are you sure you want to delete this event?`)) {
+        const response = await fetch(
+          `http://localhost:3000/events/${event.target.value}`, {
+          method: `DELETE`,
+        })
+        // await axios.delete(`https://localhost:3000/events/${eventId}`);
+      }
+      // return null;
+      alert('Success! The event has been deleted!');
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
     } finally {
@@ -120,6 +132,7 @@ export const EventsListPage = () => {
     //     }
 
   }
+
 
   // const handleSubmit = async (event) => {
   //   // try {
@@ -194,6 +207,22 @@ export const EventsListPage = () => {
 
   // const [searchField, setSearchField] = useState('');
   // const filteredEvents = events.filter((event) => event.title.toLowerCase().includes(searchField.toLowerCase()));
+
+
+
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   const exactMatch = events.find(
+  //     (event) => event.name.toLowerCase() === searchTerm.toLowerCase()
+  //   );
+
+  //   if (exactMatch) {
+  //     navigate(`/event/${exactMatch.id}`);
+  //   }
+  // }, [searchTerm, events, navigate]);
+
+
+
 
   return (
     <>
@@ -274,7 +303,9 @@ export const EventsListPage = () => {
                       bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
                       h={'xs'} justifyContent={'right'} borderRightRadius={{ base: 0, md: 7.5 }}>
                       <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'purple.300'}
-                        method={"delete"} onClick={handleDelete} value={event.id} aria-label='Delete event'
+                        method={"delete"}
+                        onClick={handleDelete}
+                        value={event.id} aria-label='Delete event'
                       >x</Button>
                     </Flex>
                   </HStack>
