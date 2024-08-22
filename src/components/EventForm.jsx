@@ -8,7 +8,7 @@ import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export const EventForm = () => {
+export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { users, categories } = useLoaderData(loader);
     const [inputs, setInputs] = useState({
@@ -43,23 +43,25 @@ export const EventForm = () => {
             else {
                 catIds = catIds.filter((id) => id !== Number(value));
             }
-            setInputs(values => ({ ...values, [name]: catIds }))
+            setInputs(values => ({ ...values, [name]: catIds.sort() }))
         }
         else {
             setInputs(values => ({ ...values, [name]: value }))
         }
+        fetchEvents();
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const response = await fetch(
             `http://localhost:3000/events/`, {
-            method: `POST`,
+            method: submitMethod,
             body: JSON.stringify(inputs),
             headers: { "Content-Type": "application/json;charset=utf-8" },
         })
             .then(response => response.json())
-            .then(redirect(`/`));
+            // .then(redirect(`/`));
+            .fetchEvents();
     }
 
     // const handleSubmit = async (event) => {
@@ -91,36 +93,36 @@ export const EventForm = () => {
     //     // return redirect(`http://localhost:3000/events/${event.target.value}`);
     // }
 
-    const [defaultEventImage, setDefaultEventImage] = useState(DefaultImage);
-    const fileUploadRef = useRef(null);
-    const handleUploadImage = (event) => {
-        event.preventDefault();
-        fileUploadRef.current.click();
-    }
-    const imagePreview = () => {
-        setDefaultEventImage(LoadingSpinner);
-        // <LoadingSpinner size={'xs'} bgColor={'none'} bgSize={'full'} />
-        const uploadedFile = fileUploadRef.current.files[0];
-        // const cachedURL = URL.createObjectURL(uploadedFile);
-        // setDefaultEventImage(cachedURL);      
-        setDefaultEventImage(URL.createObjectURL(uploadedFile));
+    // const [defaultEventImage, setDefaultEventImage] = useState(DefaultImage);
+    // const fileUploadRef = useRef(null);
+    // const handleUploadImage = (event) => {
+    //     event.preventDefault();
+    //     fileUploadRef.current.click();
+    // }
+    // const imagePreview = () => {
+    //     setDefaultEventImage(LoadingSpinner);
+    //     // <LoadingSpinner size={'xs'} bgColor={'none'} bgSize={'full'} />
+    //     const uploadedFile = fileUploadRef.current.files[0];
+    //     // const cachedURL = URL.createObjectURL(uploadedFile);
+    //     // setDefaultEventImage(cachedURL);      
+    //     setDefaultEventImage(URL.createObjectURL(uploadedFile));
 
-        // const formData = new FormData();
-        // formData.append("file", uploadedFile);
+    //     // const formData = new FormData();
+    //     // formData.append("file", uploadedFile);
 
-        // const response = await fetch(`http://localhost:3000/events/`, {
-        //   method: `POST`,
-        //   body: formData
-        // });
+    //     // const response = await fetch(`http://localhost:3000/events/`, {
+    //     //   method: `POST`,
+    //     //   body: formData
+    //     // });
 
-        // if (response.status === 201) {
-        //   const data = await response.json();
-        //   setDefaultEventImage("");
-        // }
+    //     // if (response.status === 201) {
+    //     //   const data = await response.json();
+    //     //   setDefaultEventImage("");
+    //     // }
 
-        // setDefaultEventImage(DefaultImage);
+    //     // setDefaultEventImage(DefaultImage);
 
-    }
+    // }
 
     return (
         <>
@@ -131,7 +133,10 @@ export const EventForm = () => {
                     <ModalHeader>Add your event details</ModalHeader>
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
-                        <Form onSubmit={handleSubmit} id={"add-new-event"} method={"post"}>
+                        <Form onSubmit={handleSubmit} id={"add-new-event"}
+                            method={formMethod}
+                        // method={"post"}
+                        >
                             <FormControl>
                                 <Box pb={3}><FormLabel>Who is the host of this event?</FormLabel>
                                     <Select required={true} placeholder='Select a registered host'
@@ -167,28 +172,27 @@ export const EventForm = () => {
                                     <Input type={'file'} id={'file'} ref={fileUploadRef}
                                         // value={inputs.image}
                                         onChange={imagePreview} hidden /> */}
-
                                     {/* <FileUpload maxFileSize={1024 * 1024} maxFiles={1} accept="image/">
-                {({ acceptedFiles, deleteFile }) => (
-                  <FileUploadDropzone>
-                    {!acceptedFiles?.length ? (
-                      <>
-                        <Text fontSize={'sm'}>Drag your image here</Text>
-                        <FileUploadTrigger as={Button}>Select files</FileUploadTrigger>
-                      </>
-                    ) : (
-                      <HStack>
-                        <FileUploadPreview file={acceptedFiles[0]} w={'200px'} />
-                        <Button onClick={(e) => {
-                          e.stopPropagation()
-                          deleteFile(acceptedFiles[0])
-                        }}
-                        >Remove</Button>
-                      </HStack>
-                    )}
-                  </FileUploadDropzone>
-                )}
-              </FileUpload> */}
+                                        {({ acceptedFiles, deleteFile }) => (
+                                            <FileUploadDropzone>
+                                                {!acceptedFiles?.length ? (
+                                                    <>
+                                                        <Text fontSize={'sm'}>Drag your image here</Text>
+                                                        <FileUploadTrigger as={Button}>Select files</FileUploadTrigger>
+                                                    </>
+                                                ) : (
+                                                    <HStack>
+                                                        <FileUploadPreview file={acceptedFiles[0]} w={'200px'} />
+                                                        <Button onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            deleteFile(acceptedFiles[0])
+                                                        }}
+                                                        >Remove</Button>
+                                                    </HStack>
+                                                )}
+                                            </FileUploadDropzone>
+                                        )}
+                                    </FileUpload> */}
                                     {/* <Input required={false} ref={initialRef} type={'image'} name='image'
             value={inputs.image || ""} onChange={handleChange} /> */}
                                 </Box>
@@ -223,7 +227,7 @@ export const EventForm = () => {
                                         name='endTime' onChange={handleChange} value={inputs.endTime || ""} /></Box>
 
                                 <Flex pt={4} my={4} justify={'flex-end'} >
-                                    <Button colorScheme='yellow' mr={3} type={'submit'} method={'post'}
+                                    <Button colorScheme='yellow' mr={3} type={'submit'} method={formMethod}
                                         onSubmit={handleSubmit} onClick={onClose}
                                     >Save & View</Button>
                                     <Button onClick={onClose} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></Flex>

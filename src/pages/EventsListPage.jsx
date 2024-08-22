@@ -1,12 +1,13 @@
-import { React, useState, useRef } from 'react';
-import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField } from '@chakra-ui/react';
+import { React, useState, useRef, useEffect } from 'react';
+import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
-import { SearchBar } from '../components/SearchBar';
+import { SearchBar } from '../components/SearchBar-deleteMaybe';
 import { render } from 'react-dom';
 import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { EventForm } from '../components/EventForm';
+import { axios } from 'axios';
 {// import { SearchFn } from '../components/SearchFn';
   // import { AddEventForm } from './AddEvent';
   // import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
@@ -41,7 +42,8 @@ export const action = async ({ request, params }) => {
 
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
-  const { onOpen } = useDisclosure();
+  const { isOpen, onOpen, onClose, } = useDisclosure();
+
   // const [eventList, setEventList] = useState({});
   // const [inputs, setInputs] = useState({
   //   // createdBy: "",
@@ -53,6 +55,15 @@ export const EventsListPage = () => {
   //   // startTime: "",
   //   // endTime: ""
   // });
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    const response = await axios.get(`http://localhost:3000/events/`);
+    fetchEvents();
+  }
 
   const { events, users, categories } = useLoaderData();
   // console.log({ events, users, categories });
@@ -89,21 +100,25 @@ export const EventsListPage = () => {
   // }
 
   const handleDelete = async (event) => {
-    event.preventDefault();
-    // let copy = [this.state.events];
-    // copy.splice(event, 1);
-    // this.setState({ events: copy });
-    console.log(event)
-    const response = await fetch(
-      `http://localhost:3000/events/${event.target.value}`, {
-      method: `DELETE`,
-    });
-
-    if (!response.ok) {
+    try {
+      event.preventDefault();
+      const response = await fetch(
+        `http://localhost:3000/events/${event.target.value}`, {
+        method: `DELETE`,
+      })
+        .then(alert('Success! The event has been deleted!'));
+    } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
-    } else {
-      alert('Success! The event has been deleted!');
+    } finally {
+      fetchEvents();
     }
+
+    //  if (!response.ok) {
+    //       alert(`An error occurred: ${error.message}. Please try again.`);
+    //     } else {
+    //       alert('Success! The event has been deleted!');
+    //     }
+
   }
 
   // const handleSubmit = async (event) => {
@@ -177,16 +192,26 @@ export const EventsListPage = () => {
 
   // }
 
+  // const [searchField, setSearchField] = useState('');
+  // const filteredEvents = events.filter((event) => event.title.toLowerCase().includes(searchField.toLowerCase()));
+
   return (
     <>
       <Stack className='event-list' w={'100%'} h={'100%'} align={'center'}>
         <Stack pb={{ base: 6, md: 10 }} gap={4} w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} align={'center'}>
           <Heading py={4} pb={{ base: 4, md: 8 }}>Upcoming events</Heading>
-          <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'}
-          >
-            <SearchBar barWidth={'fit-content'}
+          <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'}>
+            <SearchBar barWidth={'fit-content'} events={events}
+            //  searchField={searchField} setSearchField={setSearchField} 
             />
-            <EventForm onClick={onOpen} />
+
+
+
+            <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
+              submitMethod={`POST`} formMethod={"post"}
+            />
+
+
 
             {/* <Button type={'button'} bgColor={'whiteAlpha.400'} minW={{ base: 'fit-content', md: '0px' }}
               // minW={{ base: 'fit-content', md: '0px' }} 
@@ -213,13 +238,8 @@ export const EventsListPage = () => {
                   button: { color: 'pink.500' }
                 }}>
                 <Link to={`event/${event.id}`}>
-                  <HStack
-                    w={{ base: '100%', md: 'container.sm', lg: 'container.md' }}
-                    h={'xs'}
-                    justify={{ base: 'flex-start', md: 'space-between' }}
-                  >
-                    <Container
-                      w={{ base: '50vw', md: 'inherit' }}>
+                  <HStack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} h={'xs'} justify={{ base: 'flex-start', md: 'space-between' }}>
+                    <Container w={{ base: '50vw', md: 'inherit' }}>
                       <Stack pb={{ base: 1, md: 8 }}>
                         <Heading pb={4} size={'lg'} >{event.title}</Heading>
                         <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>{event.description}</Text></Stack>
@@ -232,13 +252,10 @@ export const EventsListPage = () => {
                               <Box gap={1} display={'inline-flex'}>
                                 <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>{event.startTime.slice(11, 16)}</Text>
                                 - <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>{event.endTime.slice(11, 16)}</Text></Box></Box>
-                            ) : (
-                              <Box gap={1} display={'flex'} flexDir={'column'}>
-                                <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
-                                  {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>
-                            )
-                          }
-                        </Box>
+                            ) : (<Box gap={1} display={'flex'} flexDir={'column'}>
+                              <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
+                                {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
+                          } </Box>
 
                         <Box justifyContent={'space-between'}>
                           <Flex gap={{ sm: 0, md: 2 }} display={'flow'}>
@@ -252,9 +269,12 @@ export const EventsListPage = () => {
                                 return (categories.find((category) => categoryId == category.id))?.name
                               }).join(", ")}</Box></Flex></Box></Stack>
                     </Container>
-                    <Flex bgImg={event.image ? event.image : DefaultImage} bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
+                    <Flex bgImg={event.image}
+                      // bgImg={event.image ? event.image : DefaultImage} 
+                      bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
                       h={'xs'} justifyContent={'right'} borderRightRadius={{ base: 0, md: 7.5 }}>
-                      <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'purple.300'} method={"delete"} onClick={handleDelete} value={event.id}
+                      <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'purple.300'}
+                        method={"delete"} onClick={handleDelete} value={event.id} aria-label='Delete event'
                       >x</Button>
                     </Flex>
                   </HStack>

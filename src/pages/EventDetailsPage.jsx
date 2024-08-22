@@ -44,7 +44,7 @@ export const EventDetailsPage = () => {
 
       <Stack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} pb={10} gap={4} >
         <Heading py={4} pb={8}>Event details</Heading>
-        <HStack gap={4} justifyContent={'flex-end'} w={'100%'} >
+        <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
           <Button bgColor={'whiteAlpha.400'} ><Link to="/">Edit - in progress</Link></Button>
           <Button bgColor={'whiteAlpha.400'} ><Link to="/">Back</Link></Button></HStack>
 
@@ -62,9 +62,7 @@ export const EventDetailsPage = () => {
             <HStack bgColor={'whiteAlpha.50'} justifyContent={'space-between'} w={{ base: '100%', md: 'container.md' }}
               display={{ base: 'block', md: 'flex' }} pb={{ base: 16, md: 0 }} borderRadius={'inherit'} >
 
-              <Container justifyContent={'center'} alignContent={'center'} py={0}
-              // borderBottom={{ base: '1px', md: 'none' }}
-              >
+              <Container justifyContent={'center'} alignContent={'center'} py={0}>
                 <Stack align={'center'} justify={'center'} py={10} gap={{ base: 2, md: 'inherit' }} >
 
                   <Heading fontWeight={'thin'} size={'lg'} pb={{ base: 2, md: 6 }}>Event details</Heading>
@@ -74,10 +72,11 @@ export const EventDetailsPage = () => {
                       ? (<HStack><Text fontSize={'lg'} fontWeight={'semibold'}>
                         {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
                         <HStack gap={1} display={'inline-flex'}>
+
                           <Text fontSize={'lg'} fontWeight={'semibold'}>
-                            {event.startTime.slice(11, 16)}</Text>
-                          - <Text fontSize={'lg'} fontWeight={'semibold'}>
-                            {event.endTime.slice(11, 16)}</Text></HStack></HStack>)
+                            ({event.startTime.slice(11, 16)} - {event.endTime.slice(11, 16)})</Text>
+
+                        </HStack></HStack>)
                       : (<Box gap={1} display={'flex'} flexDir={'column'}>
                         <Text fontSize={'lg'} fontWeight={'semibold'}>
                           {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
