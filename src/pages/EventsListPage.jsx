@@ -7,7 +7,7 @@ import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { EventForm } from '../components/EventForm';
-import { axios } from 'axios';
+// import { axios } from 'axios';
 {// import { SearchFn } from '../components/SearchFn';
   // import { AddEventForm } from './AddEvent';
   // import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
@@ -37,19 +37,14 @@ export const action = async ({ request, params }) => {
     body,
     headers: { "Content-Type": "application/json" },
   });
-  return redirect(`/event/${params.eventId}`);
+  // return redirect(`/event/${params.eventId}`);
+  return null;
 };
 
-export const deleteEventAction = async ({ params }) => {
-  const { eventId } = params;
-  if (window.confirm(`Are you sure you want to delete this event?`)) {
-    await axios.delete(`https://localhost:3000/events/${eventId}`);
-  }
-  return null;
-}
 
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose, } = useDisclosure();
 
   // const [eventList, setEventList] = useState({});
@@ -69,8 +64,11 @@ export const EventsListPage = () => {
   }, []);
 
   const fetchEvents = async () => {
-    const response = await axios.get(`http://localhost:3000/events/`)
-      .then(fetchEvents());
+    try {
+      const response = await fetch(`http://localhost:3000/events/`)
+    } finally {
+      fetchEvents()
+    }
   }
 
   const { events, users, categories } = useLoaderData();
@@ -107,23 +105,53 @@ export const EventsListPage = () => {
   //   // return redirect(`http://localhost:3000/events/${event.target.value}`);
   // }
 
-  const handleDelete = async (event) => {
+  // const handleDelete = async (event) => {
+  //   try {
+  //     event.preventDefault();
+  //     if (window.confirm(`Are you sure you want to delete this event?`)) {
+  //       const response = await fetch(
+  //         `http://localhost:3000/events/${event.target.value}`, {
+  //         method: `DELETE`,
+  //       })
+  //       // await axios.delete(`https://localhost:3000/events/${eventId}`);
+  //     }
+  //     // return null;
+  //     alert('Success! The event has been deleted!');
+  //   } catch (error) {
+  //     alert(`An error occurred: ${error.message}. Please try again.`);
+  //   } finally {
+  //     fetchEvents();
+  //   }
+
+  //   //  if (!response.ok) {
+  //   //       alert(`An error occurred: ${error.message}. Please try again.`);
+  //   //     } else {
+  //   //       alert('Success! The event has been deleted!');
+  //   //     }
+
+  // }
+
+
+
+  const handleDelete = (event) => {
     try {
       event.preventDefault();
       if (window.confirm(`Are you sure you want to delete this event?`)) {
-        const response = await fetch(
-          `http://localhost:3000/events/${event.target.value}`, {
+        fetch(`http://localhost:3000/events/${event.target.value}`, {
           method: `DELETE`,
-        })
+        });
+        console.log("handleDELETE success");
+        alert('Success! The event has been deleted!');
         // await axios.delete(`https://localhost:3000/events/${eventId}`);
       }
       // return null;
-      alert('Success! The event has been deleted!');
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
-    } finally {
-      fetchEvents();
+      console.log("handleDELETE error");
     }
+    fetchEvents();
+    navigate(`/`);
+
 
     //  if (!response.ok) {
     //       alert(`An error occurred: ${error.message}. Please try again.`);

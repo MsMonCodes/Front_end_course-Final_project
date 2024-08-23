@@ -1,6 +1,6 @@
-import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Switch, InputGroup, Textarea, Checkbox, SelectField, CheckboxGroup } from "@chakra-ui/react";
+import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Switch, InputGroup, Textarea, Checkbox, SelectField, CheckboxGroup, Toast, useToast } from "@chakra-ui/react";
 import { React, useState, useRef } from 'react';
-import { Form, redirect, useLoaderData } from "react-router-dom";
+import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
 // import { loader } from "../pages/EventDetailsPage";
 
@@ -31,6 +31,8 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
         xl: '80em', // ~1280px
         '2xl': '96em', // ~1536px
     }
+    const toast = useToast();
+    const navigate = useNavigate();
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -49,19 +51,46 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
             setInputs(values => ({ ...values, [name]: value }))
         }
         fetchEvents();
+        navigate(`/`);
     }
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event, params) => {
         event.preventDefault();
-        const response = await fetch(
-            `http://localhost:3000/events/`, {
-            method: submitMethod,
-            body: JSON.stringify(inputs),
-            headers: { "Content-Type": "application/json;charset=utf-8" },
-        })
-            .then(response => response.json())
+        try {
+            const response = await fetch(
+                `http://localhost:3000/events/`, {
+                method: submitMethod,
+                body: JSON.stringify(inputs),
+                headers: { "Content-Type": "application/json;charset=utf-8" },
+            })
+                .then(response => response.json())
             // .then(redirect(`/`));
-            .fetchEvents();
+            // .then(response => {
+            if (response.ok) {
+                toast({
+                    title: 'Success!',
+                    description: 'Your new event has been created.',
+                    ststus: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                });
+                console.log("RESPONSE OKAY");
+                // fetchEvents();
+                // navigate(`/`);
+            }
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: 'There was an error while creating the event.',
+                ststus: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            console.log("RESPONSE BAD")
+        }
+        fetchEvents();
+        navigate(`/`);
+        // handleSubmit();
     }
 
     // const handleSubmit = async (event) => {
@@ -228,9 +257,10 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
 
                                 <Flex pt={4} my={4} justify={'flex-end'} >
                                     <Button colorScheme='yellow' mr={3} type={'submit'} method={formMethod}
-                                        onSubmit={handleSubmit} onClick={onClose}
+                                        // onSubmit={handleSubmit} 
+                                        onClick={onClose}
                                     >Save & View</Button>
-                                    <Button onClick={onClose} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></Flex>
+                                    <Button onClick={() => onClose} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></Flex>
                             </FormControl></Form></ModalBody>
                     {/* <ModalFooter>
       <Button colorScheme='pink' mr={3} type={'submit'}
