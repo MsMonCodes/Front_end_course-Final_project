@@ -39,6 +39,9 @@ export const EventDetailsPage = () => {
     xl: '80em', // ~1280px
     '2xl': '96em', // ~1536px
   }
+
+  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
+
   return (
     <div className='event-details-page' w={'80%'} h={'100%'} align={'center'}>
 
@@ -87,15 +90,32 @@ export const EventDetailsPage = () => {
                       <Text verticalAlign={'center'}>Location:</Text>
                       <Text fontSize={'lg'} fontWeight={'semibold'}>{event.location}</Text></HStack></Center>
 
-                  <Center><HStack gap={2} display={{ base: 'block', md: 'inline-flex' }}>
-                    {event.categoryIds.length > 1
-                      ? <Text>Categories:</Text>
-                      : <Text>Category:</Text>}
-                    <Text fontSize={'lg'} fontWeight={'semibold'}>
-                      {event.categoryIds.map((categoryId) => {
-                        return (categories.find((category) => categoryId == category.id)).name
-                      }).join(", ")
-                      }</Text></HStack></Center></Stack></Container>
+
+
+
+                  <Box justifyContent={'space-between'}>
+                    {event.categoryIds.length > 0
+                      ? <Flex gap={{ sm: 0, md: 2 }} display={'flow'}>
+                        <Text fontSize={{ base: 'sm', md: 'inherit' }}>{categoryHeader(event)}</Text>
+                        {event.categoryIds.map((categoryId) => {
+                          return (categories.find((category) => categoryId == category.id))?.name
+                        }).join(", ")}</Flex>
+                      : null
+                    }</Box>
+
+
+
+                  <Center>
+                    {event.categoryIds.length > 0
+                      ? <HStack gap={2} display={{ base: 'block', md: 'inline-flex' }}>
+                        <Text>{categoryHeader(event)}</Text>
+                        <Text fontSize={'lg'} fontWeight={'semibold'}>
+                          {event.categoryIds.map((categoryId) => {
+                            return (categories.find((category) => categoryId == category.id)).name
+                          }).join(", ")
+                          }</Text></HStack>
+                      : ''}
+                  </Center></Stack></Container>
 
               <Box mt={{ base: 10, md: 0 }} backgroundImage={users.find((user) => event.createdBy == user.id).image} backgroundSize={'cover'}
                 borderBottomRightRadius={{ base: 0, md: 5 }} boxSize={'2xs'}

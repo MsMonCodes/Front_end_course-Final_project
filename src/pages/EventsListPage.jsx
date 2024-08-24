@@ -2,20 +2,7 @@ import { React, useState, useRef, useEffect } from 'react';
 import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar';
-import { render } from 'react-dom';
-import DefaultImage from "../assets/DefaultImage.jpg";
-import LoadingSpinner from "../assets/LoadingSpinner.gif";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { EventForm } from '../components/EventForm';
-// import { axios } from 'axios';
-{// import { SearchFn } from '../components/SearchFn';
-  // import { AddEventForm } from './AddEvent';
-  // import { BreakpointsObject, BreakpointsArray } from '../components/Breakpoints';
-  // import { FileUpload, FileUploadTrigger, FileUploadDropzone, FileUploadPreview, } from '@saas-ui/file-upload'
-
-  // link to default image: <Link to="https://www.freepik.com/free-photo/retro-black-camera-arrangement_13360548.htm#from_view=detail_alsolike">Image by freepik</Link>
-  // default image: Photo by Tirachard Kumtanom: https://www.pexels.com/photo/black-and-silver-film-camera-on-brown-wooden-surface-733853/
-}
 
 export const loader = async () => {
   const events = await fetch(`http://localhost:3000/events`);
@@ -63,13 +50,8 @@ export const EventsListPage = () => {
     fetchEvents();
   }, []);
 
-  const fetchEvents = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/events/`)
-    } finally {
-      fetchEvents()
-    }
-  }
+  const fetchEvents = async () => await fetch(`http://localhost:3000/events/`);
+
 
   const { events, users, categories } = useLoaderData();
   // console.log({ events, users, categories });
@@ -249,8 +231,7 @@ export const EventsListPage = () => {
   //   }
   // }, [searchTerm, events, navigate]);
 
-
-
+  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
 
   return (
     <>
@@ -298,10 +279,10 @@ export const EventsListPage = () => {
                   <HStack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} h={'xs'} justify={{ base: 'flex-start', md: 'space-between' }}>
                     <Container w={{ base: '50vw', md: 'inherit' }}>
                       <Stack pb={{ base: 1, md: 8 }}>
-                        <Heading pb={4} size={'lg'} >{event.title}</Heading>
+                        <Heading pb={2} size={'lg'} >{event.title}</Heading>
                         <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>{event.description}</Text></Stack>
 
-                      <Stack justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
+                      <Stack pt={6} justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
                         <Box >
                           {event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
                             ? (<Box><Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
@@ -315,16 +296,14 @@ export const EventsListPage = () => {
                           } </Box>
 
                         <Box justifyContent={'space-between'}>
-                          <Flex gap={{ sm: 0, md: 2 }} display={'flow'}>
-                            {
-                              event.categoryIds.length > 1
-                                ? <Text fontSize={{ base: 'sm', md: 'inherit' }}>Event categories:</Text>
-                                : <Text fontSize={{ base: 'sm', md: 'inherit' }}>Event category:</Text>
-                            }
-                            <Box>{
-                              event.categoryIds.map((categoryId) => {
+                          {event.categoryIds.length > 0
+                            ? <Flex gap={{ sm: 0, md: 2 }} display={'flow'}>
+                              <Text fontSize={{ base: 'sm', md: 'inherit' }}>{categoryHeader(event)}</Text>
+                              {event.categoryIds.map((categoryId) => {
                                 return (categories.find((category) => categoryId == category.id))?.name
-                              }).join(", ")}</Box></Flex></Box></Stack>
+                              }).join(", ")}</Flex>
+                            : null
+                          }</Box></Stack>
                     </Container>
                     <Flex bgImg={event.image}
                       // bgImg={event.image ? event.image : DefaultImage} 
