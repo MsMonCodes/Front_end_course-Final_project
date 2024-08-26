@@ -45,7 +45,7 @@ export const EventDetailsPage = () => {
   return (
     <div className='event-details-page' w={'80%'} h={'100%'} align={'center'}>
 
-      <Stack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} pb={10} gap={4} >
+      <Stack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} pb={0} gap={4} >
         <Heading py={4} pb={8}>Event details</Heading>
         <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
           <Button bgColor={'whiteAlpha.400'} ><Link to="/">Edit - in progress</Link></Button>
@@ -63,10 +63,12 @@ export const EventDetailsPage = () => {
               <Text color={'purple.500'} letterSpacing={3} fontWeight={'semibold'} fontSize={'xl'}>{event.description}</Text></Stack>
 
             <HStack bgColor={'whiteAlpha.50'} justifyContent={'space-between'} w={{ base: '100%', md: 'container.md' }}
-              display={{ base: 'block', md: 'flex' }} pb={{ base: 16, md: 0 }} borderRadius={'inherit'} >
+              display={{ base: 'block', md: 'flex' }} pb={{ base: 16, md: 0 }} borderRadius={'inherit'} h={'fit-content'}>
 
               <Container justifyContent={'center'} alignContent={'center'} py={0}>
-                <Stack align={'center'} justify={'center'} py={10} gap={{ base: 2, md: 'inherit' }} >
+                <Stack align={'center'} justify={'center'}
+                  py={{ base: 10, md: 0 }}
+                  gap={{ base: 2, md: 'inherit' }} >
 
                   <Heading fontWeight={'thin'} size={'lg'} pb={{ base: 2, md: 6 }}>Event details</Heading>
 

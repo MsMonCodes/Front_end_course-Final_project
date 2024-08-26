@@ -268,7 +268,7 @@ export const EventsListPage = () => {
               justifyContent={'right'} onClick={onOpen} >Create new</Button> */}
 
           </HStack>
-          <Stack gap={4} w={'inherit'}>
+          <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
             {events.map((event) => (
               <Card key={event.id} className='event'
                 h={'xs'}
@@ -291,7 +291,7 @@ export const EventsListPage = () => {
                         <Heading pb={2} size={'lg'} >{event.title}</Heading>
                         <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>{event.description}</Text></Stack>
 
-                      <Stack pt={6} justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
+                      <Stack pt={{ base: 4, md: 2 }} justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
                         <Box >
                           {event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
                             ? (<Box><Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
@@ -315,8 +315,8 @@ export const EventsListPage = () => {
                           }</Box></Stack>
                     </Container>
                     <Flex bgImg={event.image}
-                      // bgImg={event.image ? event.image : DefaultImage} 
-                      bgSize={'cover'} w={{ base: 'xs', md: 'lg' }}
+                      // bgImg={event.image ? event.image : DefaultImage}  pos={{ base: 'absolute', md: 'inherit' }}
+                      bgSize={'cover'} w={{ base: '50vw', md: 'lg' }}
                       h={'xs'} justifyContent={'right'} borderRightRadius={{ base: 0, md: 7.5 }}>
                       <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'purple.300'}
                         method={"delete"}
