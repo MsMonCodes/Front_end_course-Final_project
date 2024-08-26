@@ -65,33 +65,27 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
                 headers: { "Content-Type": "application/json;charset=utf-8" },
             })
                 .then(response => response.json())
-            if (response.ok) {
-                toast({
+                .then(toast({
                     title: 'Success!',
                     description: 'Your new event has been created.',
-                    ststus: 'success',
+                    status: 'success',
                     duration: 5000,
                     isClosable: true,
-                });
-                console.log("RESPONSE OKAY");
-                // if (!value)
-                fetchEvents();
-                console.log(event);
-                // if (FormControl) {
-                onClose();
-
-                navigate(`/`);
-            }
+                }))
         } catch (error) {
             toast({
                 title: 'Error',
                 description: 'There was an error while creating the event.',
-                ststus: 'error',
+                status: 'error',
                 duration: 5000,
                 isClosable: true,
             });
-            console.log("RESPONSE BAD")
         }
+        fetchEvents();
+        console.log(event);
+        // if (FormControl) {
+        onClose();
+        navigate(`/`);
     }
 
 

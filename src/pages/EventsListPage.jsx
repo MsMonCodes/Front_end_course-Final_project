@@ -1,5 +1,5 @@
 import { React, useState, useRef, useEffect } from 'react';
-import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton } from '@chakra-ui/react';
+import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton, useToast } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
 import { EventForm } from '../components/EventForm';
@@ -33,6 +33,7 @@ export const EventsListPage = () => {
   window.scrollTo(0, 0);
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose, } = useDisclosure();
+  const toast = useToast();
 
   // const [eventList, setEventList] = useState({});
   // const [inputs, setInputs] = useState({
@@ -121,9 +122,15 @@ export const EventsListPage = () => {
       if (window.confirm(`Are you sure you want to delete this event?`)) {
         fetch(`http://localhost:3000/events/${event.target.value}`, {
           method: `DELETE`,
-        });
+        })
+          .then(toast({
+            title: 'Success!',
+            description: 'The event has been deleted.',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          }));
         console.log("handleDELETE success");
-        alert('Success! The event has been deleted!');
         // await axios.delete(`https://localhost:3000/events/${eventId}`);
       }
       // return null;
