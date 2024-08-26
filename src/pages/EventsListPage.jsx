@@ -35,86 +35,13 @@ export const EventsListPage = () => {
   const { isOpen, onOpen, onClose, } = useDisclosure();
   const toast = useToast();
 
-  // const [eventList, setEventList] = useState({});
-  // const [inputs, setInputs] = useState({
-  //   // createdBy: "",
-  //   // title: "",
-  //   // description: "",
-  //   // image: "../assets/DefaultImage.jpg",
-  //   // categoryIds: [],
-  //   // location: "",
-  //   // startTime: "",
-  //   // endTime: ""
-  // });
-
   useEffect(() => {
     fetchEvents();
   }, []);
 
   const fetchEvents = async () => await fetch(`http://localhost:3000/events/`);
 
-
   const { events, users, categories } = useLoaderData();
-  // console.log({ events, users, categories });
-
-  // const handleSubmit = async (event) => {
-  //   // try {
-  //   event.preventDefault();
-  //   // setUiState('saving');;
-  //   const response = await fetch(
-  //     `http://localhost:3000/events/`, {
-  //     method: `POST`,
-  //     body: JSON.stringify(eventList),
-  //     headers: { "Content-Type": "application/json;charset=utf-8" },
-  //   })
-  //     .then(response => response.json())
-  //     // .then(addEvent => render(addEvent))
-  //     .then(redirect(`/`));
-
-  //   // if (!response.ok) {
-  //   //   alert(`An error occurred: ${error.message}. Please try again.`);
-  //   //   throw new Error(`Failed to create new event. Status: ${response.status}`);
-  //   // } else {
-  //   //   alert('Success! This event has been createed!');
-  //   //   // throw new Error(`Failed to create new event. Status: ${response.status}`);
-  //   // }
-
-  //   // useNavigate(`http://localhost:3000/events/${event.value}`);
-  //   // } catch (error) {
-  //   // console.error("An error occurred while creating a new event: ", error);
-  //   // }
-
-  //   // return redirect(`/event/:eventId`)
-  //   // return redirect(`http://localhost:3000/events/${event.target.value}`);
-  // }
-
-  // const handleDelete = async (event) => {
-  //   try {
-  //     event.preventDefault();
-  //     if (window.confirm(`Are you sure you want to delete this event?`)) {
-  //       const response = await fetch(
-  //         `http://localhost:3000/events/${event.target.value}`, {
-  //         method: `DELETE`,
-  //       })
-  //       // await axios.delete(`https://localhost:3000/events/${eventId}`);
-  //     }
-  //     // return null;
-  //     alert('Success! The event has been deleted!');
-  //   } catch (error) {
-  //     alert(`An error occurred: ${error.message}. Please try again.`);
-  //   } finally {
-  //     fetchEvents();
-  //   }
-
-  //   //  if (!response.ok) {
-  //   //       alert(`An error occurred: ${error.message}. Please try again.`);
-  //   //     } else {
-  //   //       alert('Success! The event has been deleted!');
-  //   //     }
-
-  // }
-
-
 
   const handleDelete = (event) => {
     try {
@@ -123,64 +50,23 @@ export const EventsListPage = () => {
         fetch(`http://localhost:3000/events/${event.target.value}`, {
           method: `DELETE`,
         })
-          .then(toast({
+          .then(fetchEvents())
+          .then(response => response.json())
+          .then(navigate(0))
+          .finally(toast({
             title: 'Success!',
             description: 'The event has been deleted.',
             status: 'success',
             duration: 5000,
             isClosable: true,
-          }));
+          }))
         console.log("handleDELETE success");
-        // await axios.delete(`https://localhost:3000/events/${eventId}`);
       }
-      // return null;
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
       console.log("handleDELETE error");
     }
-    fetchEvents();
-    navigate(`/`);
-
-
-    //  if (!response.ok) {
-    //       alert(`An error occurred: ${error.message}. Please try again.`);
-    //     } else {
-    //       alert('Success! The event has been deleted!');
-    //     }
-
   }
-
-
-  // const handleSubmit = async (event) => {
-  //   // try {
-  //   event.preventDefault();
-  //   // setUiState('saving');;
-  //   const response = await fetch(
-  //     `http://localhost:3000/events/`, {
-  //     method: `POST`,
-  //     body: JSON.stringify(inputs),
-  //     headers: { "Content-Type": "application/json;charset=utf-8" },
-  //   })
-  //     .then(response => response.json())
-  //     // .then(addEvent => render(addEvent))
-  //     .then(redirect(`/`));
-
-  //   // if (!response.ok) {
-  //   //   alert(`An error occurred: ${error.message}. Please try again.`);
-  //   //   throw new Error(`Failed to create new event. Status: ${response.status}`);
-  //   // } else {
-  //   //   alert('Success! This event has been createed!');
-  //   //   // throw new Error(`Failed to create new event. Status: ${response.status}`);
-  //   // }
-
-  //   // useNavigate(`http://localhost:3000/events/${event.value}`);
-  //   // } catch (error) {
-  //   // console.error("An error occurred while creating a new event: ", error);
-  //   // }
-
-  //   // return redirect(`/event/:eventId`)
-  //   // return redirect(`http://localhost:3000/events/${event.target.value}`);
-  // }
 
   const breakpoints = {
     base: '0em',
@@ -191,93 +77,25 @@ export const EventsListPage = () => {
     '2xl': '96em', // ~1536px
   }
 
-  // const [defaultEventImage, setDefaultEventImage] = useState(DefaultImage);
-  // const fileUploadRef = useRef(null);
-  // const handleUploadImage = (event) => {
-  //   event.preventDefault();
-  //   fileUploadRef.current.click();
-  // }
-  // const imagePreview = () => {
-  //   setDefaultEventImage(LoadingSpinner);
-  //   // <LoadingSpinner size={'xs'} bgColor={'none'} bgSize={'full'} />
-  //   const uploadedFile = fileUploadRef.current.files[0];
-  //   // const cachedURL = URL.createObjectURL(uploadedFile);
-  //   // setDefaultEventImage(cachedURL);      
-  //   setDefaultEventImage(URL.createObjectURL(uploadedFile));
-
-  //   // const formData = new FormData();
-  //   // formData.append("file", uploadedFile);
-
-  //   // const response = await fetch(`http://localhost:3000/events/`, {
-  //   //   method: `POST`,
-  //   //   body: formData
-  //   // });
-
-  //   // if (response.status === 201) {
-  //   //   const data = await response.json();
-  //   //   setDefaultEventImage("");
-  //   // }
-
-  //   // setDefaultEventImage(DefaultImage);
-
-  // }
-
-  // const [searchField, setSearchField] = useState('');
-  // const filteredEvents = events.filter((event) => event.title.toLowerCase().includes(searchField.toLowerCase()));
-
-
-
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   const exactMatch = events.find(
-  //     (event) => event.name.toLowerCase() === searchTerm.toLowerCase()
-  //   );
-
-  //   if (exactMatch) {
-  //     navigate(`/event/${exactMatch.id}`);
-  //   }
-  // }, [searchTerm, events, navigate]);
-
   const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
 
   return (
     <>
       <Stack className='event-list' w={'100%'} h={'100%'} align={'center'}>
         <Stack pb={{ base: 6, md: 10 }} gap={4} w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} align={'center'}>
+
           <Heading py={4} pb={{ base: 4, md: 8 }}>Upcoming events</Heading>
+
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'}>
-            <SearchBar
-              // barWidth={'fit-content'} 
-              events={events} placeholder={'Search by title'}
-            //  searchField={searchField} setSearchField={setSearchField} 
-            />
-
-
-
+            <SearchBar events={events} placeholder={'Search by title'} />
             <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
-              submitMethod={`POST`} formMethod={"post"}
-            />
+              submitMethod={`POST`} formMethod={"post"} /></HStack>
 
-
-
-            {/* <Button type={'button'} bgColor={'whiteAlpha.400'} minW={{ base: 'fit-content', md: '0px' }}
-              // minW={{ base: 'fit-content', md: '0px' }} 
-              justifyContent={'right'} onClick={onOpen} visibility={{ base: 'visible', sm: 'visible', md: 'hidden' }} >+</Button>
-            <Button visibility={{ base: 'hidden', sm: 'hidden', md: 'visible' }} type={'button'} bgColor={'whiteAlpha.400'} minW={{ base: '0px', md: 'fit-content' }}
-              // minW={{ base: '0px', md: 'fit-content' }} 
-              justifyContent={'right'} onClick={onOpen} >Create new</Button> */}
-
-          </HStack>
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
             {events.map((event) => (
-              <Card key={event.id} className='event'
-                h={'xs'}
-                align={{ md: 'center' }}
-                justifyContent={'space-between'}
-                borderRadius={{ base: 0, md: 7.5 }}
-                bgColor={'blackAlpha.900'}
-                color={'purple.400'}
-                _hover={{
+              <Card key={event.id} className='event' h={'xs'} align={{ md: 'center' }}
+                justifyContent={'space-between'} borderRadius={{ base: 0, md: 7.5 }}
+                bgColor={'blackAlpha.900'} color={'purple.400'} _hover={{
                   marginLeft: -2,
                   color: "pink.500",
                   borderColor: "yellow.500",
@@ -286,7 +104,9 @@ export const EventsListPage = () => {
                 }}>
                 <Link to={`event/${event.id}`}>
                   <HStack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} h={'xs'} justify={{ base: 'flex-start', md: 'space-between' }}>
+
                     <Container w={{ base: '50vw', md: 'inherit' }}>
+
                       <Stack pb={{ base: 1, md: 8 }}>
                         <Heading pb={2} size={'lg'} >{event.title}</Heading>
                         <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>{event.description}</Text></Stack>
@@ -312,8 +132,8 @@ export const EventsListPage = () => {
                                 return (categories.find((category) => categoryId == category.id))?.name
                               }).join(", ")}</Flex>
                             : null
-                          }</Box></Stack>
-                    </Container>
+                          }</Box></Stack></Container>
+
                     <Flex bgImg={event.image}
                       // bgImg={event.image ? event.image : DefaultImage}  pos={{ base: 'absolute', md: 'inherit' }}
                       bgSize={'cover'} w={{ base: '50vw', md: 'lg' }}
@@ -322,15 +142,8 @@ export const EventsListPage = () => {
                         method={"delete"}
                         onClick={handleDelete}
                         value={event.id} aria-label='Delete event'
-                      >x</Button>
-                    </Flex>
-                  </HStack>
-                </Link>
-              </Card >
-
-            ))}</Stack>
-        </Stack >
-      </Stack >
+                      >x</Button></Flex></HStack></Link></Card >
+            ))}</Stack></Stack ></Stack >
     </>
   );
 };
