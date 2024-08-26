@@ -65,8 +65,6 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
                 headers: { "Content-Type": "application/json;charset=utf-8" },
             })
                 .then(response => response.json())
-            // .then(redirect(`/`));
-            // .then(response => {
             if (response.ok) {
                 toast({
                     title: 'Success!',
@@ -76,8 +74,13 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
                     isClosable: true,
                 });
                 console.log("RESPONSE OKAY");
-                // fetchEvents();
-                // navigate(`/`);
+                // if (!value)
+                fetchEvents();
+                console.log(event);
+                // if (FormControl) {
+                onClose();
+
+                navigate(`/`);
             }
         } catch (error) {
             toast({
@@ -89,14 +92,6 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
             });
             console.log("RESPONSE BAD")
         }
-        // if (!value)
-        fetchEvents();
-        console.log(event);
-        // if (FormControl) {
-        onClose();
-        // }
-
-        navigate(`/`);
     }
 
 

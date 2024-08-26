@@ -1,7 +1,7 @@
 import { React, useState, useRef, useEffect } from 'react';
 import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
-import { SearchBar } from '../components/SearchBar';
+import { SearchBar } from '../components/SearchBar.jsx';
 import { EventForm } from '../components/EventForm';
 
 export const loader = async () => {
@@ -239,7 +239,9 @@ export const EventsListPage = () => {
         <Stack pb={{ base: 6, md: 10 }} gap={4} w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} align={'center'}>
           <Heading py={4} pb={{ base: 4, md: 8 }}>Upcoming events</Heading>
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'}>
-            <SearchBar barWidth={'fit-content'} events={events}
+            <SearchBar
+              // barWidth={'fit-content'} 
+              events={events} placeholder={'Search by title'}
             //  searchField={searchField} setSearchField={setSearchField} 
             />
 

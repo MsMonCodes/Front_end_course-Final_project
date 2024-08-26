@@ -1,63 +1,66 @@
-import { Box, Button, Input, Spinner } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { Form, useNavigate } from "react-router-dom";
+import { Box, Container, DrawerOverlay, Flex, HStack, Input, InputGroup, InputLeftElement, InputRightElement, LinkOverlay, List, ListItem, Modal, ModalOverlay, Popover, Stack, TagRightIcon, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
+// import "./SearchBar.css";
+// import SearchIcon from "@material-ui/icons/Search";
+// import CloseIcon from "@material-ui/icons/Close";
+import { CiSearch } from "react-icons/ci";
+import { IoCloseOutline } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
 
-export const SearchBar = ({ barWidth, events }) => {
-    const [searchField, setSearchField] = useState('');
-    // const filteredEvents = events.filter((event) => event.title.toLowerCase().includes(searchField.toLowerCase()));
+export const SearchBar = ({ placeholder, events }) => {
+    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [searchInput, setSearchInput] = useState("");
 
+    const handleFilter = (event) => {
+        const searchWord = event.target.value;
+        setSearchInput(searchWord);
+        const newFilter = events.filter((value) => {
+            return value.title.toLowerCase().includes(searchWord.toLowerCase());
+        });
 
-    const navigate = useNavigate();
-    useEffect(() => {
-        const exactMatch = events.find(
-            (event) => event.title.toLowerCase() === searchField.toLowerCase()
-            // (event) => event.title.toLowerCase().includes(searchField.toLowerCase())
-        );
-
-        if (exactMatch) {
-            navigate(`/event/${exactMatch.id}`);
+        if (searchWord === "") {
+            setFilteredEvents([]);
+        } else {
+            setFilteredEvents(newFilter);
         }
-        // searchField('');
-    }, [searchField, events, navigate]);
+    };
+    const clearInput = () => {
+        setFilteredEvents([]);
+        setSearchInput("");
+    };
 
 
     return (
-        <>
-            <div id="sidebar">
-                {/* <Heading>Search Events</Heading> */}
-                <Box display={'inline-flex'}>
+        <div className="search">
+            <Container
+            // overflow={'hidden'}
+            // overflowY={'auto'}
+            >
+                <InputGroup className="searchInputs" borderEndRadius={0} borderColor={'whiteAlpha.400'}>
+                    <Input type="text" placeholder={placeholder} value={searchInput} onChange={handleFilter} />
+                    <InputRightElement className="searchIcon">
+                        {filteredEvents.length === 0 ? (<CiSearch />) : (<IoCloseOutline id="clearBtn" color={'yellow.200'} onClick={clearInput} />)}</InputRightElement></InputGroup>
+                {filteredEvents.length != 0 && (
+                    <List className="dataResult"
+                        textAlign={'left'} pl={2} pt={2} bgColor={'blackAlpha.900'}
+                        overflow={'hidden'} overflowY={'auto'} overscrollBehaviorY={'contain'}
+                        position={'absolute'} zIndex={2}
+                    // bgPos={'inherit'}
+                    >{filteredEvents.slice(0, 15).map((value, key) => {
+                        return (
+                            <ListItem key={value.id} _hover={{ bg: "whiteAlpha.100", cursor: "pointer" }}>
+                                <Link to={`/event/${value.id}`}
+                                    className="dataItem"
+                                // target="_blank"
+                                >
+                                    <Text>{value.title} </Text> </Link> </ListItem>
+                        );
+                    })} </List>)}
 
-                    <Box id="search-form" role="search" >
-                        <Input borderEndRadius={0} borderColor={'whiteAlpha.400'} w={barWidth}
-                            aria-label="Search contacts"
-                            placeholder="Search events..."
-                            type="search"
-                            value={searchField}
-                            onChange={(e) => setSearchField(e.target.value)}
-                        />
-                        {/* <Box
-                            id="search-spinner"
-                            aria-hidden
-                        // hidden={true}
-                        />
-                        <Box
-                            className="sr-only"
-                            aria-live="polite"
-                        >
-                        </Box> */}
-                    </Box>
-                    <Form
-                    // method="post" 
-                    >
-                        <Button bg={'whiteAlpha.400'} borderStartRadius={0}
-                        // method="post" 
-                        // type="submit"
-                        >Search</Button>
-                    </Form>
 
-                </Box>
-            </div >
-            <div id="detail"></div>
-        </>
+
+            </Container>
+        </div >
     );
 }
+
