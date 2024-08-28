@@ -3,6 +3,8 @@ import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
 import { EventForm } from '../components/EventForm';
+import { FilterElement } from '../components/FilterElement.jsx';
+import { CiSearch, CiCirclePlus, CiFilter, CiCircleMinus } from "react-icons/ci";
 
 export const loader = async () => {
   const events = await fetch(`http://localhost:3000/events`);
@@ -15,7 +17,6 @@ export const loader = async () => {
     categories: await categories.json(),
   }
 }
-
 export const action = async ({ request, params }) => {
   const formData = Object.fromEntries(await request.formData());
   const body = JSON.stringify({ ...formData, eventId: params.eventId });
@@ -27,7 +28,6 @@ export const action = async ({ request, params }) => {
   // return redirect(`/event/${params.eventId}`);
   return null;
 };
-
 
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
@@ -86,10 +86,11 @@ export const EventsListPage = () => {
 
           <Heading py={4} pb={{ base: 4, md: 8 }}>Upcoming events</Heading>
 
-          <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'}>
-            <SearchBar events={events} placeholder={'Search by title'} />
+          <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'} gap={2}>
+            <SearchBar events={events} placeholder={'Search by title...'} />
+            <FilterElement />
             <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
-              submitMethod={`POST`} formMethod={"post"} /></HStack>
+              submitMethod={`POST`} formMethod={"post"} ButtonIcon={<CiCirclePlus size={25} />} /></HStack>
 
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
             {events.map((event) => (

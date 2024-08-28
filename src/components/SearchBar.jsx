@@ -32,20 +32,16 @@ export const SearchBar = ({ placeholder, events }) => {
 
     return (
         <div className="search">
-            <Container
-            // overflow={'hidden'}
-            // overflowY={'auto'}
-            >
+            <Box>
                 <InputGroup className="searchInputs" borderEndRadius={0} borderColor={'whiteAlpha.400'}>
                     <Input type="text" placeholder={placeholder} value={searchInput} onChange={handleFilter} />
                     <InputRightElement className="searchIcon">
-                        {filteredEvents.length === 0 ? (<CiSearch />) : (<IoCloseOutline id="clearBtn" color={'yellow.200'} onClick={clearInput} />)}</InputRightElement></InputGroup>
+                        {filteredEvents.length === 0 ? (<CiSearch size={20} />) : (<IoCloseOutline id="clearBtn" color={'yellow.200'} onClick={clearInput} />)}</InputRightElement></InputGroup>
                 {filteredEvents.length != 0 && (
                     <List className="dataResult"
                         textAlign={'left'} pl={2} pt={2} bgColor={'blackAlpha.900'}
                         overflow={'hidden'} overflowY={'auto'} overscrollBehaviorY={'contain'}
                         position={'absolute'} zIndex={2}
-                    // bgPos={'inherit'}
                     >{filteredEvents.slice(0, 15).map((value, key) => {
                         return (
                             <ListItem key={value.id} _hover={{ bg: "whiteAlpha.100", cursor: "pointer" }}>
@@ -59,7 +55,7 @@ export const SearchBar = ({ placeholder, events }) => {
 
 
 
-            </Container>
+            </Box>
         </div >
     );
 }

@@ -1,4 +1,4 @@
-import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Switch, InputGroup, Textarea, Checkbox, SelectField, CheckboxGroup, Toast, useToast, FormHelperText } from "@chakra-ui/react";
+import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Switch, InputGroup, Textarea, Checkbox, SelectField, CheckboxGroup, Toast, useToast, FormHelperText, Icon } from "@chakra-ui/react";
 import { React, useState, useRef, isValidElement } from 'react';
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
@@ -8,7 +8,7 @@ import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
+export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { users, categories } = useLoaderData(loader);
     const [inputs, setInputs] = useState({
@@ -91,7 +91,11 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod }) => {
 
     return (
         <>
-            <Button type={'button'} bgColor={'whiteAlpha.400'} minW={{ base: 'fit-content', md: '0px' }} justifyContent={'right'} onClick={onOpen} >+</Button>
+            <Icon type={'button'} h={10} w={5}
+                // bgColor={'yellow.100'}  pl={2.5} pt={2.5}
+                _hover={{ color: 'white', cursor: 'pointer' }}
+                onClick={onOpen}>{ButtonIcon}</Icon>
+
             <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
                 <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'} >
