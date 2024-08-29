@@ -83,7 +83,6 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
         }
         fetchEvents();
         console.log(event);
-        // if (FormControl) {
         onClose();
         navigate(`/`);
     }
@@ -92,7 +91,6 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
     return (
         <>
             <Icon type={'button'} h={10} w={5}
-                // bgColor={'yellow.100'}  pl={2.5} pt={2.5}
                 _hover={{ color: 'white', cursor: 'pointer' }}
                 onClick={onOpen}>{ButtonIcon}</Icon>
 

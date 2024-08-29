@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card, Image, Heading, Text, Box, Flex, Container, Stack, StackItem, SimpleGrid, ControlBox, Grid, GridItem, HStack, Button, WrapItem, Center } from '@chakra-ui/react';
-import { useLoaderData, Link } from "react-router-dom";
+import { Card, Image, Heading, Text, Box, Flex, Container, Stack, StackItem, SimpleGrid, ControlBox, Grid, GridItem, HStack, Button, WrapItem, Center, useDisclosure, useToast } from '@chakra-ui/react';
+import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import DefaultImage from "../assets/DefaultImage.jpg";
+import { EventForm } from '../components/EventForm';
 
 export const loader = async ({ params }) => {
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
@@ -29,6 +30,9 @@ export const action = async ({ request, params }) => {
 
 export const EventDetailsPage = () => {
   window.scrollTo(0, 0);
+  const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const { event, users, categories } = useLoaderData();
 
   const breakpoints = {
@@ -48,6 +52,10 @@ export const EventDetailsPage = () => {
       <Stack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} pb={0} gap={4} >
         <Heading py={4} pb={8}>Event details</Heading>
         <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
+
+          <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
+            submitMethod={`POST`} formMethod={"post"} ButtonIcon={<CiCirclePlus size={25} />} />
+
           <Button bgColor={'whiteAlpha.400'} ><Link to="/">Edit - in progress</Link></Button>
           <Button bgColor={'whiteAlpha.400'} ><Link to="/">Back</Link></Button></HStack>
 

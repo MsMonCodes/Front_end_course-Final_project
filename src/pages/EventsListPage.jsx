@@ -104,12 +104,10 @@ export const EventsListPage = () => {
 
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'} gap={2}>
             <SearchBar events={events} placeholder={'Search by title...'} />
-            <Box >
-              <Select icon={<CiFilter size={25} />} placeholder={"None"} onChange={handleFilter}>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>{category.name}</option>
-                ))}</Select>
-            </Box>
+            <Box><Select icon={<CiFilter size={25} />} placeholder={"None"} onChange={handleFilter}>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>{category.name}</option>
+              ))}</Select></Box>
             <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
               submitMethod={`POST`} formMethod={"post"} ButtonIcon={<CiCirclePlus size={25} />} /></HStack>
 
