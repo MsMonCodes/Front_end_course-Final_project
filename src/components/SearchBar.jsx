@@ -1,4 +1,4 @@
-import { Box, Container, DrawerOverlay, Flex, HStack, Input, InputGroup, InputLeftElement, InputRightElement, LinkOverlay, List, ListItem, Modal, ModalOverlay, Popover, Stack, TagRightIcon, Text } from "@chakra-ui/react";
+import { Box, Container, DrawerOverlay, Flex, HStack, Input, InputGroup, InputLeftElement, InputRightElement, LinkOverlay, List, ListItem, MenuItem, Modal, ModalOverlay, Popover, Stack, TagRightIcon, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 // import "./SearchBar.css";
 // import SearchIcon from "@material-ui/icons/Search";
@@ -38,8 +38,7 @@ export const SearchBar = ({ placeholder, events }) => {
                     <InputRightElement className="searchIcon">
                         {filteredEvents.length === 0 ? (<CiSearch size={20} />) : (<IoCloseOutline id="clearBtn" color={'yellow.200'} onClick={clearInput} />)}</InputRightElement></InputGroup>
                 {filteredEvents.length != 0 && (
-                    <List className="dataResult"
-                        textAlign={'left'} pl={2} pt={2} bgColor={'blackAlpha.900'}
+                    <List className="dataResult" textAlign={'left'} pl={2} pt={2} bgColor={'blackAlpha.900'}
                         overflow={'hidden'} overflowY={'auto'} overscrollBehaviorY={'contain'}
                         position={'absolute'} zIndex={2}
                     >{filteredEvents.slice(0, 15).map((value, key) => {

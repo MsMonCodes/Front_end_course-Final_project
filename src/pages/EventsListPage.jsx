@@ -1,10 +1,11 @@
 import { React, useState, useRef, useEffect } from 'react';
-import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton, useToast } from '@chakra-ui/react';
+import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton, useToast, InputLeftElement } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
 import { EventForm } from '../components/EventForm';
-import { FilterElement } from '../components/FilterElement.jsx';
+// import { FilterElement } from '../components/FilterElement.jsx';
 import { CiSearch, CiCirclePlus, CiFilter, CiCircleMinus } from "react-icons/ci";
+// import { Filter } from '../components/test.jsx';
 
 export const loader = async () => {
   const events = await fetch(`http://localhost:3000/events`);
@@ -32,17 +33,16 @@ export const action = async ({ request, params }) => {
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose, } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => await fetch(`http://localhost:3000/events/`);
+  const fetchEvents = async () => {
+    await fetch(`http://localhost:3000/events/`);
+  }
 
   const { events, users, categories } = useLoaderData();
 
+  const [filteredEvents, setFilteredEvents] = useState(events);
   const handleDelete = (event) => {
     try {
       event.preventDefault();
@@ -79,6 +79,22 @@ export const EventsListPage = () => {
 
   const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
 
+  const handleFilter = (event) => {
+    const filterByCat = Number(event.target.value);
+    if (filterByCat === 0) {
+      setFilteredEvents(events);
+      return;
+    }
+    const filtered = events.filter((item) => {
+      return item.categoryIds.includes(filterByCat)
+    })
+    setFilteredEvents(filtered);
+  }
+
+  // useEffect(() => {
+  //   fetchEvents();
+  // }, []);
+
   return (
     <>
       <Stack className='event-list' w={'100%'} h={'100%'} align={'center'}>
@@ -88,12 +104,17 @@ export const EventsListPage = () => {
 
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'} gap={2}>
             <SearchBar events={events} placeholder={'Search by title...'} />
-            <FilterElement />
+            <Box >
+              <Select icon={<CiFilter size={25} />} placeholder={"None"} onChange={handleFilter}>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}</Select>
+            </Box>
             <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
               submitMethod={`POST`} formMethod={"post"} ButtonIcon={<CiCirclePlus size={25} />} /></HStack>
 
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
-            {events.map((event) => (
+            {filteredEvents.map((event) => (
               <Card key={event.id} className='event' h={'xs'} align={{ md: 'center' }}
                 justifyContent={'space-between'} borderRadius={{ base: 0, md: 7.5 }}
                 bgColor={'blackAlpha.900'} color={'purple.400'} _hover={{
