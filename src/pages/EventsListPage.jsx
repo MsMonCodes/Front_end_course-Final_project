@@ -2,9 +2,10 @@ import { React, useState, useRef, useEffect } from 'react';
 import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton, useToast, InputLeftElement } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
-import { EventForm } from '../components/EventForm';
+import { EventForm } from '../components/EventForm_Add&Edit.jsx';
 // import { FilterElement } from '../components/FilterElement.jsx';
 import { CiSearch, CiCirclePlus, CiFilter, CiCircleMinus } from "react-icons/ci";
+import { FormAddEvent } from '../components/FormAddEvent.jsx';
 // import { Filter } from '../components/test.jsx';
 
 export const loader = async () => {
@@ -43,6 +44,7 @@ export const EventsListPage = () => {
   const { events, users, categories } = useLoaderData();
 
   const [filteredEvents, setFilteredEvents] = useState(events);
+
   const handleDelete = (event) => {
     try {
       event.preventDefault();
@@ -77,6 +79,53 @@ export const EventsListPage = () => {
     '2xl': '96em', // ~1536px
   }
 
+  ////////////////////////////////////////ADDEDD
+  const formData = {};
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await fetch(
+        `http://localhost:3000/events/`, {
+        method: `POST`,
+        body: JSON.stringify(inputs),
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+      })
+        .then(response => response.json())
+        .then(toast({
+          title: 'Success!',
+          description: 'Your new event has been created.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        }))
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: 'Error',
+        description: 'There was an error while creating the event.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    fetchEvents();
+    onClose();
+    navigate(`/`);
+  }
+
+  const initialFormAddEvent = {
+    createdBy: "",
+    title: "",
+    description: "",
+    image: "",
+    categoryIds: [],
+    location: "",
+    startTime: "",
+    endTime: ""
+  }
+  ////////////////////////////////////////
+
   const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
 
   const handleFilter = (event) => {
@@ -108,8 +157,9 @@ export const EventsListPage = () => {
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>{category.name}</option>
               ))}</Select></Box>
-            <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
-              submitMethod={`POST`} formMethod={"post"} ButtonIcon={<CiCirclePlus size={25} />} /></HStack>
+            <FormAddEvent onClick={onOpen} onClose={onClose} submitEvent={handleSubmit}
+              initialFormState={initialFormAddEvent} submitMethod={`POST`} formMethod={"post"}
+              ButtonText="Add event" formData={formData} /></HStack>
 
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
             {filteredEvents.map((event) => (

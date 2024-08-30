@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, Image, Heading, Text, Box, Flex, Container, Stack, StackItem, SimpleGrid, ControlBox, Grid, GridItem, HStack, Button, WrapItem, Center, useDisclosure, useToast } from '@chakra-ui/react';
+import { Card, Image, Heading, Text, Box, Flex, Container, Stack, StackItem, SimpleGrid, ControlBox, Grid, GridItem, HStack, Button, WrapItem, Center, useDisclosure, useToast, Select } from '@chakra-ui/react';
 import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import DefaultImage from "../assets/DefaultImage.jpg";
-import { EventForm } from '../components/EventForm';
+import { FormEditEvent } from '../components/FormEditEvent';
 
 export const loader = async ({ params }) => {
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
@@ -15,7 +15,6 @@ export const loader = async ({ params }) => {
     categories: await categories.json(),
   }
 }
-
 export const action = async ({ request, params }) => {
   const formData = Object.fromEntries(await request.formData());
   const body = JSON.stringify({ ...formData, eventId: params.eventId });
@@ -26,7 +25,6 @@ export const action = async ({ request, params }) => {
   });
   return redirect(`/event/${params.eventId}`);
 };
-
 
 export const EventDetailsPage = () => {
   window.scrollTo(0, 0);
@@ -44,6 +42,67 @@ export const EventDetailsPage = () => {
     '2xl': '96em', // ~1536px
   }
 
+  const handleDelete = (event) => {
+    try {
+      event.preventDefault();
+      if (window.confirm(`Are you sure you want to delete this event?`)) {
+        fetch(`http://localhost:3000/events/${event.target.value}`, {
+          method: `DELETE`,
+        })
+          .then(fetchEvents())
+          .then(response => response.json())
+          .then(navigate(0))
+          .finally(toast({
+            title: 'Success!',
+            description: 'The event has been deleted.',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          }))
+        console.log("handleDELETE success");
+      }
+    } catch (error) {
+      alert(`An error occurred: ${error.message}. Please try again.`);
+      console.log("handleDELETE error");
+    }
+  }
+
+  ////////////////////////////////////////ADDEDD
+  const handleSubmit = async (event) => {
+    // event.preventDefault();
+    // console.log(e);
+    try {
+      await fetch(
+        `http://localhost:3000/events/${event.id}`, {
+        method: `PUT`,
+        body: JSON.stringify(event),
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+      })
+        .then(response => response.json())
+        .then(toast({
+          title: 'Success!',
+          description: 'This event has been updated.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        }))
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: 'Error',
+        description: 'There was an error while editing this event.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    // fetchEvents();
+    // console.log(event);
+    onClose();
+    navigate(`./`);
+  }
+  ////////////////////////////////////////
+
   const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
 
   return (
@@ -53,11 +112,32 @@ export const EventDetailsPage = () => {
         <Heading py={4} pb={8}>Event details</Heading>
         <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
 
-          <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
-            submitMethod={`POST`} formMethod={"post"} ButtonIcon={<CiCirclePlus size={25} />} />
+          {/* ////////////////////////////////////////REMOVED */}
+          {/* <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
+            submitMethod={`POST`} formMethod={"post"} ButtonIcon={<CiCirclePlus size={25} />} /> */}
 
-          <Button bgColor={'whiteAlpha.400'} ><Link to="/">Edit - in progress</Link></Button>
-          <Button bgColor={'whiteAlpha.400'} ><Link to="/">Back</Link></Button></HStack>
+          {/* ////////////////////////////////////////REPLACED_WITH */}
+          <FormEditEvent onClick={onOpen} onClose={onClose} submitEvent={handleSubmit}
+            initialFormState={event} formMethod={"put"} ButtonText={'Edit'} formData={event} />
+
+          {/* <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
+            _hover={{ bgColor: 'whiteAlpha.500', cursor: 'pointer' }} onClick={onOpen}>Delete</Button> */}
+
+          <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
+            // color={'purple.300'} 
+            _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
+            method={"delete"} onClick={handleDelete} value={event.id} aria-label={'Delete event'}>
+            Delete </Button>
+
+          {/* <Select icon={<CiFilter size={25} justify={'left'} />} placeholder={'Filter by category'}
+            type={'button'} h={10} w={'fit-content'} _hover={{ bg: "whiteAlpha.100", cursor: "pointer" }}
+            onClick={handleFilter()} border={'none'} /> */}
+
+          {/* <Button bgColor={'whiteAlpha.400'} ><Link to="/">Edit - in progress</Link></Button> */}
+
+          <Button bgColor={'whiteAlpha.300'} _hover={{
+            bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer'
+          }}><Link to="/">Back</Link></Button></HStack>
 
         <Stack borderRadius={{ base: 0, md: 7.5 }} h={'100%'} w={'100%'} align={'center'} justify={'center'}>
           <Card className='event-detail' w={{ sm: '100%', md: 'container.md' }} h={'fit-content'}
@@ -135,7 +215,7 @@ export const EventDetailsPage = () => {
                   <Text>Hosted by:</Text>
                   <Text fontWeight={'semibold'}>
                     {users.find((user) => event.createdBy == user.id).name}</Text></Box></Box>
-            </HStack></Card></Stack></Stack></div>
+            </HStack></Card></Stack></Stack></div >
   );
 };
 
