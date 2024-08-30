@@ -80,50 +80,50 @@ export const EventsListPage = () => {
   }
 
   ////////////////////////////////////////ADDEDD
-  const formData = {};
+  // const formData = {};
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await fetch(
-        `http://localhost:3000/events/`, {
-        method: `POST`,
-        body: JSON.stringify(inputs),
-        headers: { "Content-Type": "application/json;charset=utf-8" },
-      })
-        .then(response => response.json())
-        .then(toast({
-          title: 'Success!',
-          description: 'Your new event has been created.',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        }))
-    } catch (error) {
-      console.error(error)
-      toast({
-        title: 'Error',
-        description: 'There was an error while creating the event.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-    fetchEvents();
-    onClose();
-    navigate(`/`);
-  }
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3000/events/`, {
+  //       method: `POST`,
+  //       body: JSON.stringify(inputs),
+  //       headers: { "Content-Type": "application/json;charset=utf-8" },
+  //     })
+  //       .then(response => response.json())
+  //       .then(toast({
+  //         title: 'Success!',
+  //         description: 'Your new event has been created.',
+  //         status: 'success',
+  //         duration: 5000,
+  //         isClosable: true,
+  //       }))
+  //   } catch (error) {
+  //     console.error(error)
+  //     toast({
+  //       title: 'Error',
+  //       description: 'There was an error while creating the event.',
+  //       status: 'error',
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   }
+  //   fetchEvents()
+  //     .then(onClose())
+  //     .then(navigate(0));
+  // }
 
-  const initialFormAddEvent = {
-    createdBy: "",
-    title: "",
-    description: "",
-    image: "",
-    categoryIds: [],
-    location: "",
-    startTime: "",
-    endTime: ""
-  }
+  // const initialFormAddEvent = {
+  //   createdBy: "",
+  //   title: "",
+  //   description: "",
+  //   image: "",
+  //   categoryIds: [],
+  //   location: "",
+  //   startTime: "",
+  //   endTime: ""
+  // }
   ////////////////////////////////////////
 
   const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
@@ -157,9 +157,17 @@ export const EventsListPage = () => {
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>{category.name}</option>
               ))}</Select></Box>
-            <FormAddEvent onClick={onOpen} onClose={onClose} submitEvent={handleSubmit}
-              initialFormState={initialFormAddEvent} submitMethod={`POST`} formMethod={"post"}
-              ButtonText="Add event" formData={formData} /></HStack>
+
+
+            {/* <EventForm onClick={onOpen} onClose={onClose} submitEvent={handleSubmit}
+              initialFormState={initialFormAddEvent} submitMethod={`"POST"`} formMethod={`"post"`}
+              ButtonText="Add event (combined form)" formData={formData} /> */}
+            <FormAddEvent onClick={onOpen} onClose={onClose}
+            // fetchEvents={fetchEvents} submitEvent={handleSubmit} ButtonText="Add event" submitMethod={`POST`} formMethod={"post"} initialFormState={initialFormAddEvent}
+            />
+
+
+          </HStack>
 
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
             {filteredEvents.map((event) => (

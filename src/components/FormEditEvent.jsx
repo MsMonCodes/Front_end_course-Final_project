@@ -8,19 +8,23 @@ import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon }) => {
+export const FormEditEvent = (
+    // { fetchEvents, ButtonText, submitMethod, formMethod }
+) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { users, categories } = useLoaderData(loader);
+    const { event, users, categories } = useLoaderData(loader);
+    // const [inputs, setInputs] = useState(event);
     const [inputs, setInputs] = useState({
-        createdBy: "",
-        title: "",
-        description: "",
-        image: "",
-        categoryIds: [],
-        location: "",
-        startTime: "",
-        endTime: ""
+        createdBy: event.createdBy,
+        title: event.title,
+        description: event.description,
+        image: event.image,
+        categoryIds: [event.categoryIds],
+        location: event.location,
+        startTime: event.startTime.slice(0, 16),
+        endTime: event.endTime.slice(0, 16),
     });
+
     const initialRef = useRef(null);
     const finalRef = useRef(null);
     const breakpoints = {
@@ -50,8 +54,8 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
         else {
             setInputs(values => ({ ...values, [name]: value }))
         }
-        fetchEvents();
-        navigate(`/`);
+        // fetchEvents();
+        // navigate(`/`);
     }
 
 
@@ -59,8 +63,8 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
         event.preventDefault();
         try {
             const response = await fetch(
-                `http://localhost:3000/events/`, {
-                method: submitMethod,
+                `http://localhost:3000/events/${event.id}`, {
+                method: `PUT`,
                 body: JSON.stringify(inputs),
                 headers: { "Content-Type": "application/json;charset=utf-8" },
             })
@@ -81,18 +85,20 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
                 isClosable: true,
             });
         }
-        fetchEvents();
-        console.log(event);
-        onClose();
-        navigate(`/`);
+        await fetch(`http://localhost:3000/events/${event.id}`)
+            // console.log(event);
+            .then(onClose())
+            .then(navigate(`./`));
     }
 
 
     return (
         <>
-            <Icon type={'button'} h={10} w={5}
-                _hover={{ color: 'white', cursor: 'pointer' }}
-                onClick={onOpen}>{ButtonIcon}</Icon>
+            <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
+                _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
+                onClick={onOpen}>Edit</Button>
+            {/* <Icon type={'button'} h={10} w={5} _hover={{ color: 'white', cursor: 'pointer' }}
+                onClick={onOpen}>{ButtonText}</Icon> */}
 
             <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
@@ -101,7 +107,7 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
                         <Form onSubmit={handleSubmit} id={"add-new-event"}
-                            method={formMethod}
+                            method={"put"}
                         // method={"post"}
                         >
                             {/* <FormControl isInvalid={catValidation()}> */}
@@ -154,7 +160,7 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
                                     name='endTime' onChange={handleChange} value={inputs.endTime || ""} /></FormControl>
 
                             <Flex pt={4} my={4} justify={'flex-end'}>
-                                <Button colorScheme='yellow' mr={3} type={'submit'} method={formMethod}
+                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"}
                                 // onClick={() => onClose}
                                 >Save & View</Button>
                                 <Button onClick={() => onClose}

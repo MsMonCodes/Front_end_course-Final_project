@@ -8,7 +8,9 @@ import DefaultImage from "../assets/DefaultImage.jpg";
 import LoadingSpinner from "../assets/LoadingSpinner.gif";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon }) => {
+export const FormAddEvent = (
+    // { fetchEvents, ButtonText, submitMethod, formMethod}
+) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { users, categories } = useLoaderData(loader);
     const [inputs, setInputs] = useState({
@@ -50,8 +52,8 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
         else {
             setInputs(values => ({ ...values, [name]: value }))
         }
-        fetchEvents();
-        navigate(`/`);
+        // fetchEvents();
+        // navigate(`/`);
     }
 
 
@@ -60,7 +62,7 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
         try {
             const response = await fetch(
                 `http://localhost:3000/events/`, {
-                method: submitMethod,
+                method: `POST`,
                 body: JSON.stringify(inputs),
                 headers: { "Content-Type": "application/json;charset=utf-8" },
             })
@@ -81,18 +83,19 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
                 isClosable: true,
             });
         }
-        fetchEvents();
-        console.log(event);
-        onClose();
-        navigate(`/`);
+        await fetch(`http://localhost:3000/events/`)
+            .then(onClose())
+            .then(navigate(0));
     }
 
 
     return (
         <>
-            <Icon type={'button'} h={10} w={5}
-                _hover={{ color: 'white', cursor: 'pointer' }}
-                onClick={onOpen}>{ButtonIcon}</Icon>
+            <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
+                _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
+                onClick={onOpen}>Add event</Button>
+            {/* <Icon  type={'button'} h={10} w={5} _hover={{ color: 'white', cursor: 'pointer' }}
+                onClick={onOpen}>{ButtonText}</Icon> */}
 
             <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
@@ -100,10 +103,7 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
                     <ModalHeader>Add your event details</ModalHeader>
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
-                        <Form onSubmit={handleSubmit} id={"add-new-event"}
-                            method={formMethod}
-                        // method={"post"}
-                        >
+                        <Form onSubmit={handleSubmit} id={"add-new-event"} method={"post"}>
                             {/* <FormControl isInvalid={catValidation()}> */}
                             <FormControl pb={3}><FormLabel>Who is the host of this event?</FormLabel>
                                 <Select required={true} placeholder='Select a registered host'
@@ -154,7 +154,7 @@ export const EventForm = ({ fetchEvents, submitMethod, formMethod, ButtonIcon })
                                     name='endTime' onChange={handleChange} value={inputs.endTime || ""} /></FormControl>
 
                             <Flex pt={4} my={4} justify={'flex-end'}>
-                                <Button colorScheme='yellow' mr={3} type={'submit'} method={formMethod}
+                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"post"}
                                 // onClick={() => onClose}
                                 >Save & View</Button>
                                 <Button onClick={() => onClose}

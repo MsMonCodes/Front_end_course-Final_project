@@ -3,6 +3,7 @@ import { Card, Image, Heading, Text, Box, Flex, Container, Stack, StackItem, Sim
 import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import DefaultImage from "../assets/DefaultImage.jpg";
 import { FormEditEvent } from '../components/FormEditEvent';
+import { EventForm } from '../components/EventForm_Add&Edit';
 
 export const loader = async ({ params }) => {
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
@@ -72,7 +73,7 @@ export const EventDetailsPage = () => {
     // event.preventDefault();
     // console.log(e);
     try {
-      await fetch(
+      const response = await fetch(
         `http://localhost:3000/events/${event.id}`, {
         method: `PUT`,
         body: JSON.stringify(event),
@@ -112,13 +113,18 @@ export const EventDetailsPage = () => {
         <Heading py={4} pb={8}>Event details</Heading>
         <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
 
+
           {/* ////////////////////////////////////////REMOVED */}
           {/* <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
-            submitMethod={`POST`} formMethod={"post"} ButtonIcon={<CiCirclePlus size={25} />} /> */}
+            submitMethod={`PUT`} formMethod={"put"} ButtonIcon={<CiCirclePlus size={25} />} /> */}
 
           {/* ////////////////////////////////////////REPLACED_WITH */}
-          <FormEditEvent onClick={onOpen} onClose={onClose} submitEvent={handleSubmit}
-            initialFormState={event} formMethod={"put"} ButtonText={'Edit'} formData={event} />
+          {/* <EventForm onClick={onOpen} onClose={onClose} submitEvent={handleSubmit}
+            initialFormState={event} formMethod={"put"} ButtonText={'Edit (combined form)'} formData={event} /> */}
+          <FormEditEvent onClick={onOpen} onClose={onClose}
+          // fetchEvents={fetchEvents} submitEvent={handleSubmit} ButtonText={'Edit'}  formMethod={"put"} initialFormState={event}
+          />
+
 
           {/* <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
             _hover={{ bgColor: 'whiteAlpha.500', cursor: 'pointer' }} onClick={onOpen}>Delete</Button> */}
@@ -127,7 +133,7 @@ export const EventDetailsPage = () => {
             // color={'purple.300'} 
             _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
             method={"delete"} onClick={handleDelete} value={event.id} aria-label={'Delete event'}>
-            Delete </Button>
+            Delete</Button>
 
           {/* <Select icon={<CiFilter size={25} justify={'left'} />} placeholder={'Filter by category'}
             type={'button'} h={10} w={'fit-content'} _hover={{ bg: "whiteAlpha.100", cursor: "pointer" }}
