@@ -2,11 +2,9 @@ import { React, useState, useRef, useEffect } from 'react';
 import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton, useToast, InputLeftElement } from '@chakra-ui/react';
 import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
-import { EventForm } from '../components/EventForm_Add&Edit.jsx';
-// import { FilterElement } from '../components/FilterElement.jsx';
-import { CiSearch, CiCirclePlus, CiFilter, CiCircleMinus } from "react-icons/ci";
+// import { EventForm as FormAddEvent } from '../components/EventForm_Add&Edit.jsx';
+import { CiFilter } from "react-icons/ci";
 import { FormAddEvent } from '../components/FormAddEvent.jsx';
-// import { Filter } from '../components/test.jsx';
 
 export const loader = async () => {
   const events = await fetch(`http://localhost:3000/events`);
@@ -27,7 +25,6 @@ export const action = async ({ request, params }) => {
     body,
     headers: { "Content-Type": "application/json" },
   });
-  // return redirect(`/event/${params.eventId}`);
   return null;
 };
 
@@ -37,13 +34,17 @@ export const EventsListPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
-  const fetchEvents = async () => {
-    await fetch(`http://localhost:3000/events/`);
-  }
-
   const { events, users, categories } = useLoaderData();
-
   const [filteredEvents, setFilteredEvents] = useState(events);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const response = await fetch(`http://localhost:3000/events/`);
+      const json = await response.json();
+      console.log(json);
+    }
+    fetchEvents(events);
+  }, [filteredEvents]);
 
   const handleDelete = (event) => {
     try {
@@ -52,21 +53,18 @@ export const EventsListPage = () => {
         fetch(`http://localhost:3000/events/${event.target.value}`, {
           method: `DELETE`,
         })
-          .then(fetchEvents())
           .then(response => response.json())
-          .then(navigate(0))
-          .finally(toast({
+          .then(toast({
             title: 'Success!',
             description: 'The event has been deleted.',
             status: 'success',
             duration: 5000,
             isClosable: true,
           }))
-        console.log("handleDELETE success");
+          .finally(navigate(0))
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
-      console.log("handleDELETE error");
     }
   }
 
@@ -126,16 +124,16 @@ export const EventsListPage = () => {
   // }
   ////////////////////////////////////////
 
-  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
+  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Categories:" : "Category:";
 
   const handleFilter = (event) => {
-    const filterByCat = Number(event.target.value);
-    if (filterByCat === 0) {
+    const filterByCategory = Number(event.target.value);
+    if (filterByCategory === 0) {
       setFilteredEvents(events);
       return;
     }
     const filtered = events.filter((item) => {
-      return item.categoryIds.includes(filterByCat)
+      return item.categoryIds.includes(filterByCategory)
     })
     setFilteredEvents(filtered);
   }
@@ -153,18 +151,12 @@ export const EventsListPage = () => {
 
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'} gap={2}>
             <SearchBar events={events} placeholder={'Search by title...'} />
-            <Box><Select icon={<CiFilter size={25} />} placeholder={"None"} onChange={handleFilter}>
+            <Box><Select icon={<CiFilter size={25} />} placeholder={"none"} onChange={handleFilter}>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>{category.name}</option>
               ))}</Select></Box>
 
-
-            {/* <EventForm onClick={onOpen} onClose={onClose} submitEvent={handleSubmit}
-              initialFormState={initialFormAddEvent} submitMethod={`"POST"`} formMethod={`"post"`}
-              ButtonText="Add event (combined form)" formData={formData} /> */}
-            <FormAddEvent onClick={onOpen} onClose={onClose}
-            // fetchEvents={fetchEvents} submitEvent={handleSubmit} ButtonText="Add event" submitMethod={`POST`} formMethod={"post"} initialFormState={initialFormAddEvent}
-            />
+            <FormAddEvent onClick={onOpen} onClose={onClose} />
 
 
           </HStack>
@@ -190,38 +182,34 @@ export const EventsListPage = () => {
                         <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>{event.description}</Text></Stack>
 
                       <Stack pt={{ base: 4, md: 2 }} justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
-                        <Box >
-                          {event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
-                            ? (<Box><Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
-                              {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
-                              <Box gap={1} display={'inline-flex'}>
-                                <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>{event.startTime.slice(11, 16)}</Text>
-                                - <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>{event.endTime.slice(11, 16)}</Text></Box></Box>
-                            ) : (<Box gap={1} display={'flex'} flexDir={'column'}>
-                              <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
-                                {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
-                          } </Box>
+                        <Box>{event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
+                          ? (<Box><Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
+                            {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
+                            <Box gap={1} display={'inline-flex'}>
+                              <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>{event.startTime.slice(11, 16)}</Text>
+                              - <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>{event.endTime.slice(11, 16)}</Text></Box></Box>
+                          ) : (<Box gap={1} display={'flex'} flexDir={'column'}>
+                            <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
+                              {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
+                        } </Box>
 
-                        <Box justifyContent={'space-between'}>
-                          {event.categoryIds.length > 0
-                            ? <Flex gap={{ sm: 0, md: 2 }} display={'flow'}>
-                              <Text fontSize={{ base: 'sm', md: 'inherit' }}>{categoryHeader(event)}</Text>
-                              {event.categoryIds.map((categoryId) => {
-                                return (categories.find((category) => categoryId == category.id))?.name
-                              }).join(", ")}</Flex>
-                            : null
-                          }</Box></Stack></Container>
+                        <Box justifyContent={'space-between'}>{event.categoryIds.length > 0
+                          ? <Flex gap={{ sm: 0, md: 2 }} display={{ base: 'block', md: 'inline-flex' }}>
+                            <Text fontSize={{ base: 'sm', md: 'inherit' }}>{categoryHeader(event)}</Text>
+                            {event.categoryIds.map((categoryId) => {
+                              return (categories.find((category) => categoryId == category.id))?.name
+                            }).join(", ")}</Flex>
+                          : null
+                        }</Box></Stack></Container>
 
-                    <Flex bgImg={event.image}
-                      // bgImg={event.image ? event.image : DefaultImage}  pos={{ base: 'absolute', md: 'inherit' }}
-                      bgSize={'cover'} w={{ base: '50vw', md: 'lg' }}
+                    <Flex bgImg={event.image} bgSize={'cover'} w={{ base: '50vw', md: 'lg' }} bgPos={'center'}
                       h={'xs'} justifyContent={'right'} borderRightRadius={{ base: 0, md: 7.5 }}>
                       <Button fontSize={{ base: 'xl', md: '2xl' }} justifyContent={'end'} bg={'none'} color={'purple.300'}
                         method={"delete"}
                         onClick={handleDelete}
                         value={event.id} aria-label='Delete event'
                       >x</Button></Flex></HStack></Link></Card >
-            ))}</Stack></Stack ></Stack >
+            )).reverse()}</Stack></Stack ></Stack >
     </>
   );
 };

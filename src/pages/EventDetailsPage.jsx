@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { redirect } from 'react-router-dom';
 import { Card, Image, Heading, Text, Box, Flex, Container, Stack, StackItem, SimpleGrid, ControlBox, Grid, GridItem, HStack, Button, WrapItem, Center, useDisclosure, useToast, Select } from '@chakra-ui/react';
 import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import DefaultImage from "../assets/DefaultImage.jpg";
 import { FormEditEvent } from '../components/FormEditEvent';
-import { EventForm } from '../components/EventForm_Add&Edit';
+// import { EventForm as FormEditEvent } from '../components/EventForm_Add&Edit';
 
 export const loader = async ({ params }) => {
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
@@ -18,10 +19,10 @@ export const loader = async ({ params }) => {
 }
 export const action = async ({ request, params }) => {
   const formData = Object.fromEntries(await request.formData());
-  const body = JSON.stringify({ ...formData, eventId: params.eventId });
-  await fetch("http://localhost:3000/events", {
+  console.log("FORMDATA:", formData);
+  await fetch(`http://localhost:3000/events/${params.eventId}`, {
     method: "PUT",
-    body,
+    body: JSON.stringify({ ...formData, eventId: params.eventId }),
     headers: { "Content-Type": "application/json" },
   });
   return redirect(`/event/${params.eventId}`);
@@ -43,6 +44,15 @@ export const EventDetailsPage = () => {
     '2xl': '96em', // ~1536px
   }
 
+  // useEffect((events) => {
+  //   const fetchEvents = async () => {
+  //     const response = await fetch(`http://localhost:3000/event/${event.id}`);
+  //     const json = await response.json();
+  //     console.log(json);
+  //   }
+  //   fetchEvents(event);
+  // }, []);
+
   const handleDelete = (event) => {
     try {
       event.preventDefault();
@@ -50,61 +60,106 @@ export const EventDetailsPage = () => {
         fetch(`http://localhost:3000/events/${event.target.value}`, {
           method: `DELETE`,
         })
-          .then(fetchEvents())
+          // .then(fetch(event))
           .then(response => response.json())
-          .then(navigate(0))
-          .finally(toast({
+          .then(toast({
             title: 'Success!',
-            description: 'The event has been deleted.',
+            description: 'This event has been deleted.',
             status: 'success',
-            duration: 5000,
+            duration: 3000,
             isClosable: true,
           }))
-        console.log("handleDELETE success");
+          .then(fetch(`http://localhost:3000/events/`))
+          .finally(navigate(`http://localhost:3000/events/`))
+        // console.log("handleDELETE success");
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
-      console.log("handleDELETE error");
+      // console.log("handleDELETE error");
     }
   }
 
   ////////////////////////////////////////ADDEDD
-  const handleSubmit = async (event) => {
-    // event.preventDefault();
-    // console.log(e);
-    try {
-      const response = await fetch(
-        `http://localhost:3000/events/${event.id}`, {
-        method: `PUT`,
-        body: JSON.stringify(event),
-        headers: { "Content-Type": "application/json;charset=utf-8" },
-      })
-        .then(response => response.json())
-        .then(toast({
-          title: 'Success!',
-          description: 'This event has been updated.',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        }))
-    } catch (error) {
-      console.error(error)
-      toast({
-        title: 'Error',
-        description: 'There was an error while editing this event.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-    // fetchEvents();
-    // console.log(event);
-    onClose();
-    navigate(`./`);
-  }
+  // const handleSubmit = async (event) => {
+  //   // event.preventDefault();
+  //   // console.log(e);
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3000/events/${event.id}`, {
+  //       method: `PUT`,
+  //       body: JSON.stringify(event),
+  //       headers: { "Content-Type": "application/json;charset=utf-8" },
+  //     })
+  //       .then(response => response.json())
+  //       .then(toast({
+  //         title: 'Success!',
+  //         description: 'This event has been updated.',
+  //         status: 'success',
+  //         duration: 5000,
+  //         isClosable: true,
+  //       }))
+  //   } catch (error) {
+  //     console.error('error updating event', error)
+  //     toast({
+  //       title: 'Error',
+  //       description: 'There was an error while editing this event.',
+  //       status: 'error',
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   }
+  //   // fetchEvents();
+  //   // console.log(event);
+  //   onClose();
+  //   navigate(`./`);
+  // }
+
   ////////////////////////////////////////
 
-  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories" : "Event category";
+  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories:" : "Event category:";
+
+  // const handleEditSubmit = async () => {
+  //   // e.preventDefault();
+  //   // try {
+  //   const response = await fetch(
+  //     `http://localhost:3000/events/${event.id}`, {
+  //     method: `PUT`,
+  //     body: JSON.stringify(inputs),
+  //     headers: { "Content-Type": "application/json;charset=utf-8" },
+  //   })
+  //     .then(response => response.json())
+  //     // .then((response) => {
+  //     // this.toast.show({ timeOut: 4000 })
+  //     // .then(toast.fadeout(4000))
+  //     .catch((error) => {
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not okay.');
+  //       }
+  //       return response.json()
+  //     })
+  //     // })
+  //     // } catch (error) {
+  //     //     console.error(`Error updating event.`);
+  //     //     toast({
+  //     //         title: 'Error',
+  //     //         description: 'There was an error while editing this event.',
+  //     //         status: 'error',
+  //     //         duration: 5000,
+  //     //         isClosable: true,
+  //     //     })
+  //     // }
+
+  //     .then(await fetch(event))
+  //     .then(onClose())
+  //     .then(navigate(`./`))
+  //     .then(toast({
+  //       title: 'Success!',
+  //       description: 'This event has been updated.',
+  //       status: 'success',
+  //       duration: 3000,
+  //       isClosable: true,
+  //     }));
+  // }
 
   return (
     <div className='event-details-page' w={'80%'} h={'100%'} align={'center'}>
@@ -113,33 +168,13 @@ export const EventDetailsPage = () => {
         <Heading py={4} pb={8}>Event details</Heading>
         <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
 
-
-          {/* ////////////////////////////////////////REMOVED */}
-          {/* <EventForm onClick={onOpen} onClose={onClose} fetchEvents={fetchEvents}
-            submitMethod={`PUT`} formMethod={"put"} ButtonIcon={<CiCirclePlus size={25} />} /> */}
-
-          {/* ////////////////////////////////////////REPLACED_WITH */}
-          {/* <EventForm onClick={onOpen} onClose={onClose} submitEvent={handleSubmit}
-            initialFormState={event} formMethod={"put"} ButtonText={'Edit (combined form)'} formData={event} /> */}
           <FormEditEvent onClick={onOpen} onClose={onClose}
-          // fetchEvents={fetchEvents} submitEvent={handleSubmit} ButtonText={'Edit'}  formMethod={"put"} initialFormState={event}
           />
 
-
-          {/* <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
-            _hover={{ bgColor: 'whiteAlpha.500', cursor: 'pointer' }} onClick={onOpen}>Delete</Button> */}
-
           <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
-            // color={'purple.300'} 
             _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
             method={"delete"} onClick={handleDelete} value={event.id} aria-label={'Delete event'}>
             Delete</Button>
-
-          {/* <Select icon={<CiFilter size={25} justify={'left'} />} placeholder={'Filter by category'}
-            type={'button'} h={10} w={'fit-content'} _hover={{ bg: "whiteAlpha.100", cursor: "pointer" }}
-            onClick={handleFilter()} border={'none'} /> */}
-
-          {/* <Button bgColor={'whiteAlpha.400'} ><Link to="/">Edit - in progress</Link></Button> */}
 
           <Button bgColor={'whiteAlpha.300'} _hover={{
             bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer'
@@ -186,21 +221,6 @@ export const EventDetailsPage = () => {
                       <Text verticalAlign={'center'}>Location:</Text>
                       <Text fontSize={'lg'} fontWeight={'semibold'}>{event.location}</Text></HStack></Center>
 
-
-
-
-                  <Box justifyContent={'space-between'}>
-                    {event.categoryIds.length > 0
-                      ? <Flex gap={{ sm: 0, md: 2 }} display={'flow'}>
-                        <Text fontSize={{ base: 'sm', md: 'inherit' }}>{categoryHeader(event)}</Text>
-                        {event.categoryIds.map((categoryId) => {
-                          return (categories.find((category) => categoryId == category.id))?.name
-                        }).join(", ")}</Flex>
-                      : null
-                    }</Box>
-
-
-
                   <Center>
                     {event.categoryIds.length > 0
                       ? <HStack gap={2} display={{ base: 'block', md: 'inline-flex' }}>
@@ -210,13 +230,11 @@ export const EventDetailsPage = () => {
                             return (categories.find((category) => categoryId == category.id)).name
                           }).join(", ")
                           }</Text></HStack>
-                      : ''}
-                  </Center></Stack></Container>
+                      : ''}</Center>
+                </Stack></Container>
 
               <Box mt={{ base: 10, md: 0 }} backgroundImage={users.find((user) => event.createdBy == user.id).image} backgroundSize={'cover'}
-                borderBottomRightRadius={{ base: 0, md: 5 }} boxSize={'2xs'}
-              // w={'2xs'} h={'2xs'} objectFit={'cover'}
-              >
+                borderBottomRightRadius={{ base: 0, md: 5 }} boxSize={'2xs'} >
                 <Box display={'inline-flex'} gap={4} alignSelf={'center'} color={'purple.700'} >
                   <Text>Hosted by:</Text>
                   <Text fontWeight={'semibold'}>

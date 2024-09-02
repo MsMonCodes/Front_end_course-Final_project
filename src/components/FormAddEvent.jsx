@@ -2,15 +2,8 @@ import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalO
 import { React, useState, useRef, isValidElement } from 'react';
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
-// import { loader } from "../pages/EventDetailsPage";
 
-import DefaultImage from "../assets/DefaultImage.jpg";
-import LoadingSpinner from "../assets/LoadingSpinner.gif";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-export const FormAddEvent = (
-    // { fetchEvents, ButtonText, submitMethod, formMethod}
-) => {
+export const FormAddEvent = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { users, categories } = useLoaderData(loader);
     const [inputs, setInputs] = useState({
@@ -52,40 +45,45 @@ export const FormAddEvent = (
         else {
             setInputs(values => ({ ...values, [name]: value }))
         }
-        // fetchEvents();
-        // navigate(`/`);
     }
 
-
-    const handleSubmit = async (event, params) => {
-        event.preventDefault();
-        try {
-            const response = await fetch(
-                `http://localhost:3000/events/`, {
-                method: `POST`,
-                body: JSON.stringify(inputs),
-                headers: { "Content-Type": "application/json;charset=utf-8" },
+    const handleSubmit = async (e, params) => {
+        e.preventDefault();
+        // try {
+        const response = await fetch(
+            `http://localhost:3000/events/`, {
+            method: `POST`,
+            body: JSON.stringify(inputs),
+            headers: { "Content-Type": "application/json;charset=utf-8" },
+        })
+            .then(response => response.json())
+            .catch((error) => {
+                (response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not okay.');
+                    }
+                    return response.json()
+                }
             })
-                .then(response => response.json())
-                .then(toast({
-                    title: 'Success!',
-                    description: 'Your new event has been created.',
-                    status: 'success',
-                    duration: 5000,
-                    isClosable: true,
-                }))
-        } catch (error) {
-            toast({
-                title: 'Error',
-                description: 'There was an error while creating the event.',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-        await fetch(`http://localhost:3000/events/`)
+            // } catch (error) {
+            //     toast({
+            //         title: 'Error',
+            //         description: 'There was an error while creating the event.',
+            //         status: 'error',
+            //         duration: 5000,
+            //         isClosable: true,
+            //     });
+            // }
+            .then(await fetch(`http://localhost:3000/events/`))
             .then(onClose())
-            .then(navigate(0));
+            // .then(navigate(`./`))
+            .then(toast({
+                title: 'Success!',
+                description: 'Your new event has been created.',
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+            }));
     }
 
 

@@ -4,27 +4,20 @@ import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
 // import { loader } from "../pages/EventDetailsPage";
 
-import DefaultImage from "../assets/DefaultImage.jpg";
-import LoadingSpinner from "../assets/LoadingSpinner.gif";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-export const FormEditEvent = (
-    // { fetchEvents, ButtonText, submitMethod, formMethod }
-) => {
+export const FormEditEvent = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { event, users, categories } = useLoaderData(loader);
-    // const [inputs, setInputs] = useState(event);
     const [inputs, setInputs] = useState({
         createdBy: event.createdBy,
         title: event.title,
         description: event.description,
         image: event.image,
-        categoryIds: [event.categoryIds],
+        categoryIds: event.categoryIds,
         location: event.location,
         startTime: event.startTime.slice(0, 16),
         endTime: event.endTime.slice(0, 16),
     });
-
+    console.log("EVENT:", event);
     const initialRef = useRef(null);
     const finalRef = useRef(null);
     const breakpoints = {
@@ -54,42 +47,44 @@ export const FormEditEvent = (
         else {
             setInputs(values => ({ ...values, [name]: value }))
         }
-        // fetchEvents();
-        // navigate(`/`);
     }
 
-
-    const handleSubmit = async (event, params) => {
-        event.preventDefault();
-        try {
-            const response = await fetch(
-                `http://localhost:3000/events/${event.id}`, {
-                method: `PUT`,
-                body: JSON.stringify(inputs),
-                headers: { "Content-Type": "application/json;charset=utf-8" },
-            })
-                .then(response => response.json())
-                .then(toast({
-                    title: 'Success!',
-                    description: 'Your new event has been created.',
-                    status: 'success',
-                    duration: 5000,
-                    isClosable: true,
-                }))
-        } catch (error) {
-            toast({
-                title: 'Error',
-                description: 'There was an error while creating the event.',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-        await fetch(`http://localhost:3000/events/${event.id}`)
-            // console.log(event);
-            .then(onClose())
-            .then(navigate(`./`));
-    }
+    // const handleSubmit = async () => {
+    //     // e.preventDefault();
+    //     // try {
+    //     const response = await fetch(
+    //         `http://localhost:3000/events/`, {
+    //         method: `PUT`,
+    //         body: JSON.stringify(inputs),
+    //         headers: { "Content-Type": "application/json;charset=utf-8" },
+    //     })
+    //         .then((response) => {
+    //             if (!response.ok) {
+    //                 throw new Error('Network response was not okay.');
+    //             }
+    //             return response.json();
+    //         })
+    //         // .then(response => response.json())
+    //         // .then(await fetch(event))
+    //         .then(onClose())
+    //         .then(navigate(`./`))
+    //         .then(toast({
+    //             title: 'Success!',
+    //             description: 'This event has been updated.',
+    //             status: 'success',
+    //             duration: 3000,
+    //             isClosable: true,
+    //         }))
+    //     // .catch((error) => {
+    //     //     toast({
+    //     //         title: 'Error',
+    //     //         description: 'There was an error while editing the event.',
+    //     //         status: 'error',
+    //     //         duration: 5000,
+    //     //         isClosable: true,
+    //     //     })
+    //     // });
+    // }
 
 
     return (
@@ -97,8 +92,6 @@ export const FormEditEvent = (
             <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
                 _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
                 onClick={onOpen}>Edit</Button>
-            {/* <Icon type={'button'} h={10} w={5} _hover={{ color: 'white', cursor: 'pointer' }}
-                onClick={onOpen}>{ButtonText}</Icon> */}
 
             <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
@@ -106,11 +99,9 @@ export const FormEditEvent = (
                     <ModalHeader>Add your event details</ModalHeader>
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
-                        <Form onSubmit={handleSubmit} id={"add-new-event"}
-                            method={"put"}
-                        // method={"post"}
-                        >
-                            {/* <FormControl isInvalid={catValidation()}> */}
+                        <Form
+                            // onSubmit={handleSubmit} 
+                            id={"add-new-event"} method={"put"} >
                             <FormControl pb={3}><FormLabel>Who is the host of this event?</FormLabel>
                                 <Select required={true} placeholder='Select a registered host'
                                     onChange={handleChange} value={inputs.createdBy} name='createdBy'>
@@ -130,11 +121,8 @@ export const FormEditEvent = (
                                     value={inputs.description || ""}
                                     type='text' placeholder='...' /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Upload your event image:
-                                {/* <FormHelperText display={'inline'} pl={2} fontWeight={'hairline'}
-                                    // verticalAlign={'center'} fontSize={'sm'} fontStyle={'italic'} color={'blackAlpha.700'}
-                                    >Click to upload an image</FormHelperText>*/}</FormLabel>
-                                {/* <Form id={'form'} encType='multipart/form-data' > */}
+                            <FormControl pb={3}>
+                                <FormLabel>Upload your event image:</FormLabel>
                                 <Textarea aria-label="image" rows="1" name="image" required={true}
                                     onChange={handleChange} value={inputs.image || ""}
                                     placeholder={'Paste the image URL here.'}></Textarea>
@@ -144,7 +132,7 @@ export const FormEditEvent = (
                                 <FormLabel>What category does your event fall under?</FormLabel>
                                 <InputGroup display={'flex'} flexDir={'column'} name='categoryIds' value={inputs.categoryIds || ""}>{categories.map((category) => (
                                     <Checkbox colorScheme={'yellow'} pb={2} size={'sm'} name='categoryIds' key={category.id}
-                                        onChange={handleChange} value={category.id}>{category.name}</Checkbox>
+                                        onChange={() => handleChange()} value={category.id}>{category.name}</Checkbox>
                                 ))} </InputGroup></FormControl>
 
                             <FormControl pb={3}><FormLabel>Enter the location of your event</FormLabel>
