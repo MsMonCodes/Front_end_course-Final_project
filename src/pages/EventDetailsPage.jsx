@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { redirect } from 'react-router-dom';
-import { Card, Image, Heading, Text, Box, Flex, Container, Stack, StackItem, SimpleGrid, ControlBox, Grid, GridItem, HStack, Button, WrapItem, Center, useDisclosure, useToast, Select } from '@chakra-ui/react';
-import { useLoaderData, Link, useNavigate } from "react-router-dom";
-import DefaultImage from "../assets/DefaultImage.jpg";
+import { Card, Image, Heading, Text, Box, Container, Stack, HStack, Button, Center, useDisclosure, useToast } from '@chakra-ui/react';
+import { useLoaderData, Link, useNavigate, redirect } from "react-router-dom";
+// import DefaultImage from "../assets/DefaultImage.jpg";
 import { FormEditEvent } from '../components/FormEditEvent';
 // import { EventForm as FormEditEvent } from '../components/EventForm_Add&Edit';
 
@@ -17,16 +16,16 @@ export const loader = async ({ params }) => {
     categories: await categories.json(),
   }
 }
-export const action = async ({ request, params }) => {
-  const formData = Object.fromEntries(await request.formData());
-  console.log("FORMDATA:", formData);
-  await fetch(`http://localhost:3000/events/${params.eventId}`, {
-    method: "PUT",
-    body: JSON.stringify({ ...formData, eventId: params.eventId }),
-    headers: { "Content-Type": "application/json" },
-  });
-  return redirect(`/event/${params.eventId}`);
-};
+// export const action = async ({ request, params }) => {
+//   const formData = Object.fromEntries(await request.formData());
+//   console.log("FORMDATA:", formData);
+//   await fetch(`http://localhost:3000/events/${params.eventId}`, {
+//     method: "PUT",
+//     body: JSON.stringify({ ...formData, eventId: params.eventId }),
+//     headers: { "Content-Type": "application/json" },
+//   });
+//   return redirect(`/event/${params.eventId}`);
+// };
 
 export const EventDetailsPage = () => {
   window.scrollTo(0, 0);
@@ -44,16 +43,16 @@ export const EventDetailsPage = () => {
     '2xl': '96em', // ~1536px
   }
 
-  // useEffect((events) => {
-  //   const fetchEvents = async () => {
-  //     const response = await fetch(`http://localhost:3000/event/${event.id}`);
+  // useEffect(() => {
+  //   const fetchEventDetails = async () => {
+  //     const response = await fetch(`http://localhost:3000/events/event/${event.id}`);
   //     const json = await response.json();
   //     console.log(json);
   //   }
-  //   fetchEvents(event);
+  //   fetchEventDetails(event);
   // }, []);
 
-  const handleDelete = (event) => {
+  const handleDelete = async (event) => {
     try {
       event.preventDefault();
       if (window.confirm(`Are you sure you want to delete this event?`)) {
@@ -69,8 +68,8 @@ export const EventDetailsPage = () => {
             duration: 3000,
             isClosable: true,
           }))
-          .then(fetch(`http://localhost:3000/events/`))
-          .finally(navigate(`http://localhost:3000/events/`))
+          .then(await fetch(`http://localhost:3000/events/`))
+          .finally(navigate(`../`))
         // console.log("handleDELETE success");
       }
     } catch (error) {
@@ -79,87 +78,7 @@ export const EventDetailsPage = () => {
     }
   }
 
-  ////////////////////////////////////////ADDEDD
-  // const handleSubmit = async (event) => {
-  //   // event.preventDefault();
-  //   // console.log(e);
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:3000/events/${event.id}`, {
-  //       method: `PUT`,
-  //       body: JSON.stringify(event),
-  //       headers: { "Content-Type": "application/json;charset=utf-8" },
-  //     })
-  //       .then(response => response.json())
-  //       .then(toast({
-  //         title: 'Success!',
-  //         description: 'This event has been updated.',
-  //         status: 'success',
-  //         duration: 5000,
-  //         isClosable: true,
-  //       }))
-  //   } catch (error) {
-  //     console.error('error updating event', error)
-  //     toast({
-  //       title: 'Error',
-  //       description: 'There was an error while editing this event.',
-  //       status: 'error',
-  //       duration: 5000,
-  //       isClosable: true,
-  //     });
-  //   }
-  //   // fetchEvents();
-  //   // console.log(event);
-  //   onClose();
-  //   navigate(`./`);
-  // }
-
-  ////////////////////////////////////////
-
   const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories:" : "Event category:";
-
-  // const handleEditSubmit = async () => {
-  //   // e.preventDefault();
-  //   // try {
-  //   const response = await fetch(
-  //     `http://localhost:3000/events/${event.id}`, {
-  //     method: `PUT`,
-  //     body: JSON.stringify(inputs),
-  //     headers: { "Content-Type": "application/json;charset=utf-8" },
-  //   })
-  //     .then(response => response.json())
-  //     // .then((response) => {
-  //     // this.toast.show({ timeOut: 4000 })
-  //     // .then(toast.fadeout(4000))
-  //     .catch((error) => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not okay.');
-  //       }
-  //       return response.json()
-  //     })
-  //     // })
-  //     // } catch (error) {
-  //     //     console.error(`Error updating event.`);
-  //     //     toast({
-  //     //         title: 'Error',
-  //     //         description: 'There was an error while editing this event.',
-  //     //         status: 'error',
-  //     //         duration: 5000,
-  //     //         isClosable: true,
-  //     //     })
-  //     // }
-
-  //     .then(await fetch(event))
-  //     .then(onClose())
-  //     .then(navigate(`./`))
-  //     .then(toast({
-  //       title: 'Success!',
-  //       description: 'This event has been updated.',
-  //       status: 'success',
-  //       duration: 3000,
-  //       isClosable: true,
-  //     }));
-  // }
 
   return (
     <div className='event-details-page' w={'80%'} h={'100%'} align={'center'}>
@@ -168,8 +87,7 @@ export const EventDetailsPage = () => {
         <Heading py={4} pb={8}>Event details</Heading>
         <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
 
-          <FormEditEvent onClick={onOpen} onClose={onClose}
-          />
+          <FormEditEvent onClick={onOpen} onClose={onClose} />
 
           <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
             _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}

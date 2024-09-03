@@ -1,37 +1,28 @@
 import { Button, FormLabel, Input, Select, Box, Image, Flex, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Switch, InputGroup, Textarea, Checkbox, SelectField, CheckboxGroup, Toast, useToast, FormHelperText, Icon } from "@chakra-ui/react";
 import { React, useState, useRef, isValidElement } from 'react';
-import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-// import { loader } from "../pages/EventsListPage";
-import { loader } from "../pages/EventDetailsPage";
+import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react-router-dom";
+import { loader } from "../pages/EventsListPage";
+// import { loader } from "../pages/EventDetailsPage";
 
+import DefaultImage from "../assets/DefaultImage.jpg";
+import LoadingSpinner from "../assets/LoadingSpinner.gif";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-
-export const actionAddEvent = async ({ request, params }) => {
-    const formData = Object.inputs(await request.formData());
-    const body = JSON.stringify({ ...formData, eventId: params.eventId });
-    await fetch("http://localhost:3000/events", {
-        method: "POST",
-        body,
-        headers: { "Content-Type": "application/json" },
-    });
-    return null;
-};
-
-
-export const FormAddEvent = () => {
+export const FormEditEvent = (
+    // { fetchEvents, ButtonText, submitMethod, formMethod }
+) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { users, categories } = useLoaderData(loader);
+    const { event, users, categories } = useLoaderData(loader);
     const [inputs, setInputs] = useState({
-        createdBy: "",
-        title: "",
-        description: "",
-        image: "",
-        categoryIds: [],
-        location: "",
-        startTime: "",
-        endTime: ""
+        createdBy: event.createdBy,
+        title: event.title,
+        description: event.description,
+        image: event.image,
+        categoryIds: event.categoryIds,
+        location: event.location,
+        startTime: event.startTime.slice(0, 16),
+        endTime: event.endTime.slice(0, 16),
     });
-    // formData(inputs);
     const initialRef = useRef(null);
     const finalRef = useRef(null);
     const breakpoints = {
@@ -61,54 +52,60 @@ export const FormAddEvent = () => {
         else {
             setInputs(values => ({ ...values, [name]: value }))
         }
+        // fetchEvents();
+        // navigate(`/`);
     }
 
-    const handleSubmit = async (e, params) => {
-        e.preventDefault();
-        // try {
-        const response = await fetch(
-            `http://localhost:3000/events/`, {
-            method: `POST`,
-            body: JSON.stringify(inputs),
-            headers: { "Content-Type": "application/json;charset=utf-8" },
-        })
-            .then(response => response.json())
-            .catch((error) => {
-                (response) => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not okay.');
-                    }
-                    return response.json()
-                }
-            })
-            // } catch (error) {
-            //     toast({
-            //         title: 'Error',
-            //         description: 'There was an error while creating the event.',
-            //         status: 'error',
-            //         duration: 5000,
-            //         isClosable: true,
-            //     });
-            // }
-            .then(await fetch(`http://localhost:3000/events/`))
-            .then(onClose())
-            // .then(navigate(`./`))
-            .then(toast({
-                title: 'Success!',
-                description: 'Your new event has been created.',
-                status: 'success',
-                duration: 3000,
-                isClosable: true,
-            }));
-    }
+    // const handleSubmit = async () => {
+    //     // e.preventDefault();
+    //     // try {
+    //     const response = await fetch(
+    //         `http://localhost:3000/events/${event.id}`, {
+    //         method: `PUT`,
+    //         body: JSON.stringify(inputs),
+    //         headers: { "Content-Type": "application/json;charset=utf-8" },
+    //     })
+    //         .then(response => response.json())
+    //         // .then((response) => {
+    //         // this.toast.show({ timeOut: 4000 })
+    //         // .then(toast.fadeout(4000))
+    //         .catch((error) => {
+    //             if (!response.ok) {
+    //                 throw new Error('Network response was not okay.');
+    //             }
+    //             return response.json()
+    //         })
+    //         // })
+    //         // } catch (error) {
+    //         //     console.error(`Error updating event.`);
+    //         //     toast({
+    //         //         title: 'CATCH ERROR: Error',
+    //         //         description: 'There was an error while creating the event.',
+    //         //         status: 'error',
+    //         //         duration: 5000,
+    //         //         isClosable: true,
+    //         //     })
+    //         // }
+
+    //         .then(await fetch(event))
+    //         .then(onClose())
+    //         .then(navigate(`./`))
+    //         .then(toast({
+    //             title: 'Success!',
+    //             description: 'Your new event has been edited.',
+    //             status: 'success',
+    //             duration: 3000,
+    //             isClosable: true,
+    //         }));
+    // }
 
 
     return (
         <>
             <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
                 _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
-                onClick={onOpen}>Add event</Button>
-            {/* <Icon  type={'button'} h={10} w={5} _hover={{ color: 'white', cursor: 'pointer' }}
+                onClick={onOpen}>Edit</Button>
+            {/* <Icon type={'button'} h={10} w={5} _hover={{ color: 'white', cursor: 'pointer' }}
                 onClick={onOpen}>{ButtonText}</Icon> */}
 
             <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
@@ -118,8 +115,11 @@ export const FormAddEvent = () => {
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
                         <Form
-                            onSubmit={handleSubmit}
-                            id={"add-new-event"} method={"post"}>
+                            // onSubmit={handleSubmit}
+                            id={'edit-event-form'}
+                            method={"put"}
+                        // method={"post"}
+                        >
                             {/* <FormControl isInvalid={catValidation()}> */}
                             <FormControl pb={3}><FormLabel>Who is the host of this event?</FormLabel>
                                 <Select required={true} placeholder='Select a registered host'
@@ -152,14 +152,9 @@ export const FormAddEvent = () => {
 
                             <FormControl pb={3}>
                                 <FormLabel>What category does your event fall under?</FormLabel>
-                                <InputGroup
-                                    // required={(value) => value.length > 0 || "Pleease select at least one category"}
-                                    display={'flex'} flexDir={'column'} name='categoryIds' value={inputs.categoryIds || ""}
-                                // _valid={(value) => value.length > 0 || "At least one category must be selected"}
-                                >{categories.map((category) => (
+                                <InputGroup display={'flex'} flexDir={'column'} name='categoryIds' value={inputs.categoryIds || ""}>{categories.map((category) => (
                                     <Checkbox colorScheme={'yellow'} pb={2} size={'sm'} name='categoryIds' key={category.id}
-                                        onChange={() => handleChange} value={category.id}
-                                    >{category.name}</Checkbox>
+                                        onChange={handleChange} value={category.id}>{category.name}</Checkbox>
                                 ))} </InputGroup></FormControl>
 
                             <FormControl pb={3}><FormLabel>Enter the location of your event</FormLabel>
@@ -175,7 +170,7 @@ export const FormAddEvent = () => {
                                     name='endTime' onChange={handleChange} value={inputs.endTime || ""} /></FormControl>
 
                             <Flex pt={4} my={4} justify={'flex-end'}>
-                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"post"}
+                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"}
                                 // onClick={() => onClose}
                                 >Save & View</Button>
                                 <Button onClick={() => onClose}

@@ -1,6 +1,6 @@
-import { React, useState, useRef, useEffect } from 'react';
-import { Box, Heading, Image, Flex, Stack, Text, Card, HStack, Container, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Input, FormLabel, Select, Checkbox, CheckboxGroup, Center, RadioGroup, Radio, color, Switch, InputGroup, SimpleGrid, ButtonGroup, useBreakpointValue, Icon, CheckboxIcon, SelectField, List, ListItem, Spacer, IconButton, useToast, InputLeftElement } from '@chakra-ui/react';
-import { useLoaderData, Link, Form, redirect, useNavigate } from "react-router-dom";
+import { React, useState, useEffect } from 'react';
+import { Box, Heading, Flex, Stack, Text, Card, HStack, Container, Button, useDisclosure, Select, useToast } from '@chakra-ui/react';
+import { useLoaderData, Link, useNavigate, redirect } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
 // import { EventForm as FormAddEvent } from '../components/EventForm_Add&Edit.jsx';
 import { CiFilter } from "react-icons/ci";
@@ -17,16 +17,60 @@ export const loader = async () => {
     categories: await categories.json(),
   }
 }
-export const action = async ({ request, params }) => {
-  const formData = Object.fromEntries(await request.formData());
-  const body = JSON.stringify({ ...formData, eventId: params.eventId });
-  await fetch("http://localhost:3000/events", {
-    method: "POST",
-    body,
-    headers: { "Content-Type": "application/json" },
-  });
-  return null;
-};
+// export const action = async ({ request, params }) => {
+//   const formData = Object.fromEntries(await request.formData());
+//   const body = JSON.stringify({ ...formData, eventId: params.eventId });
+//   await fetch("http://localhost:3000/events", {
+//     method: "POST",
+//     body,
+//     headers: { "Content-Type": "application/json" },
+//   });
+//   return null;
+// };
+
+
+// export const action = async ({ request, params }) => {
+//   const formData = Object.fromEntries(await request.formData());
+//   const body = JSON.stringify({ ...formData, eventId: params.eventId });
+//   const response = await fetch("http://localhost:3000/events", {
+//     method: "POST",
+//     body,
+//     headers: { "Content-Type": "application/json" },
+//   });
+//   const eventObject = await response.json();
+//   console.log(eventObject);
+//   return {
+//     eventObject: events.parse(eventObject),
+//   };
+
+//   // return null;
+// };
+
+// export const action = async ({ request, params }) => {
+//   const formData = Object.fromEntries(await request.formData());
+//   const body = JSON.stringify({ ...formData, eventId: params.eventId });
+//   const response = await fetch("http://localhost:3000/events", {
+//     method: "POST",
+//     body,
+//     headers: { "Content-Type": "application/json" },
+//     loading: { title: "Updating...", description: "Please wait" },
+//     success: {
+//       title: "Event successfully updated",
+//       description: "Looks great",
+//       isClosable: true,
+//       duration: 3000,
+//     },
+//     error: {
+//       title: "Failed to edit event",
+//       description: "Something went wrong",
+//     },
+//   })
+//     .then(response => response.json())
+//     .then(await fetch(response))
+//     .then(onClose())
+//     .then(navigate(`/`))
+//   return null;
+// };
 
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
@@ -58,7 +102,7 @@ export const EventsListPage = () => {
             title: 'Success!',
             description: 'The event has been deleted.',
             status: 'success',
-            duration: 5000,
+            duration: 3000,
             isClosable: true,
           }))
           .finally(navigate(0))
@@ -137,10 +181,6 @@ export const EventsListPage = () => {
     })
     setFilteredEvents(filtered);
   }
-
-  // useEffect(() => {
-  //   fetchEvents();
-  // }, []);
 
   return (
     <>
