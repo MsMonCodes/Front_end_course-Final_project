@@ -66,15 +66,11 @@ export const EventDetailsPage = () => {
 
   return (
     <div className='event-details-page' w={'80%'} h={'100%'} align={'center'}>
-
       <Stack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} pb={0} gap={4} >
-        <Heading py={4} pb={8}>Event details</Heading>
+
+        <Heading py={{ base: 2, md: 4 }}>Event details</Heading>
         <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
-
-          <FormEditEvent
-            onClick={onOpen} onClose={onClose}
-          />
-
+          <FormEditEvent onClick={onOpen} onClose={onClose} />
           <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
             _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
             method={"delete"} onClick={handleDelete} value={event.id} aria-label={'Delete event'}>

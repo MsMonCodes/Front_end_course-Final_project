@@ -1,4 +1,4 @@
-import { Box, Input, InputGroup, InputRightElement, List, ListItem, Text } from "@chakra-ui/react";
+import { Box, color, Input, InputGroup, InputRightElement, List, ListItem, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { IoCloseOutline } from "react-icons/io5";
@@ -27,25 +27,32 @@ export const SearchBar = ({ placeholder, events }) => {
         setSearchInput("");
     };
 
-
     return (
         <div className="search">
-            <Box>
-                <InputGroup className="searchInputs" borderEndRadius={0} borderColor={'whiteAlpha.400'}>
-                    <Input type="text" placeholder={placeholder} value={searchInput} onChange={handleFilter} />
+            <Box w={'3xs'} colorScheme='yellow'>
+                <InputGroup className="searchInputs"
+                    borderEndRadius={0}
+                    borderColor={'whiteAlpha.400'}>
+
+                    <Input type="text" placeholder={placeholder} value={searchInput} onChange={handleFilter}
+                        _hover={{ borderColor: 'whiteAlpha.600' }}
+                        _focus={{ border: '1px', borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'}
+                    />
                     <InputRightElement className="searchIcon">
-                        {filteredEvents.length === 0
+                        {filteredEvents.length == 0
                             ? (<CiSearch size={20} />)
-                            : (<IoCloseOutline id="clearBtn" color={'yellow.200'} onClick={clearInput} />)
+                            : (<IoCloseOutline id="clearButton" color={'yellow.200'} onClick={clearInput} />)
                         }</InputRightElement></InputGroup>
                 {filteredEvents.length != 0 && (
-                    <List className="dataResult" textAlign={'left'} pl={2} pt={2} bgColor={'blackAlpha.900'} overflow={'hidden'}
-                        overflowY={'auto'} overscrollBehaviorY={'contain'} position={'absolute'} zIndex={2}>
+                    <List className="dataResult" textAlign={'left'} bgColor={'white'}
+                        overflow={'hidden'} overflowY={'auto'} overscrollBehaviorY={'contain'} position={'absolute'}
+                        zIndex={2} borderRadius={8} w={'inherit'}
+                    >
                         {filteredEvents.slice(0, 15).map((value, key) => {
                             return (
-                                <ListItem key={value.id} _hover={{ bg: "whiteAlpha.100", cursor: "pointer" }}>
+                                <ListItem px={4} py={1} key={value.id} _hover={{ bg: "blue.500", color: "white", cursor: "pointer" }}>
                                     <Link to={`/event/${value.id}`} className="dataItem" >
-                                        <Text>{value.title}</Text></Link></ListItem>
+                                        <Text fontSize={'md'}>{value.title}</Text></Link></ListItem>
                             );
                         })}
                     </List>
@@ -54,4 +61,3 @@ export const SearchBar = ({ placeholder, events }) => {
         </div >
     );
 }
-

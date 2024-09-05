@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { Box, Heading, Flex, Stack, Text, Card, HStack, Container, Button, useDisclosure, Select, useToast } from '@chakra-ui/react';
+import { Box, Heading, Flex, Stack, Text, Card, HStack, Container, Button, useDisclosure, Select, useToast, color } from '@chakra-ui/react';
 import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
 import { CiFilter } from "react-icons/ci";
@@ -84,19 +84,16 @@ export const EventsListPage = () => {
       <Stack className='event-list' w={'100%'} h={'100%'} align={'center'}>
         <Stack pb={{ base: 6, md: 10 }} gap={4} w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} align={'center'}>
 
-          <Heading py={4} pb={{ base: 4, md: 8 }}>Upcoming events</Heading>
-
+          <Heading py={{ base: 2, md: 4 }}>Upcoming events</Heading>
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'} gap={2}>
             <SearchBar events={events} placeholder={'Search by title...'} />
-
-
-
-            <Box><Select icon={<CiFilter size={25} />} placeholder={"none"} onChange={handleFilter}
-              borderColor={'whiteAlpha.400'}>
+            <Box><Select fontFamily={'inherit'} fontSize={'md'} icon={<CiFilter size={25} />}
+              placeholder={"none"} _hover={{ borderColor: 'whiteAlpha.600' }} onChange={handleFilter}
+              _focus={{ border: '1px', borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'}
+              colorScheme='yellow' borderColor={'whiteAlpha.400'}>
               {categories.map((category) => (
-                <option key={category.id} value={category.id}>{category.name}</option>
+                <option color={'yellow.800'} key={category.id} value={category.id}>{category.name}</option>
               ))}</Select></Box>
-
             <FormAddEvent onClick={onOpen} onClose={onClose} /></HStack>
 
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
@@ -148,6 +145,6 @@ export const EventsListPage = () => {
                         value={event.id} aria-label='Delete event'
                       >x</Button></Flex></HStack></Link></Card >
             )).reverse()}</Stack></Stack ></Stack >
-    </div>
+    </div >
   );
 };
