@@ -1,10 +1,6 @@
-import {
-    Button, FormLabel, Input, Select, Modal, ModalOverlay, ModalContent, ModalHeader,
-    ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Textarea, useToast
-} from "@chakra-ui/react";
+import { Button, FormLabel, Input, Select, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Textarea, useToast, Stack } from "@chakra-ui/react";
 import { React, useState, useRef } from 'react';
 import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react-router-dom";
-// import { loader } from "../pages/EventsListPage";
 import { loader } from "../pages/EventDetailsPage";
 
 export const actionEditEvent = async ({ request, params }) => {
@@ -42,17 +38,6 @@ export const FormEditEvent = () => {
         xl: '80em', // ~1280px
         '2xl': '96em', // ~1536px
     }
-
-    // const [inputs, setInputs] = useState({
-    //     createdBy: event.createdBy,
-    //     title: event.title,
-    //     description: event.description,
-    //     image: event.image,
-    //     categoryIds: event.categoryIds,
-    //     location: event.location,
-    //     startTime: event.startTime.slice(0, 16),
-    //     endTime: event.endTime.slice(0, 16),
-    // });
 
     const initialInputs = ({
         createdBy: event.createdBy,
@@ -102,54 +87,46 @@ export const FormEditEvent = () => {
 
     return (
         <div className="edit-event-form">
-            <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
-                _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
-                onClick={onOpen}>Edit</Button>
+            <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'} _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }} onClick={onOpen}>
+                Edit</Button>
 
             <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
                 <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'}>
-                    <ModalHeader>Add your event details</ModalHeader>
+                    <ModalHeader>Update the event details</ModalHeader>
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
                         <Form id={"add-new-event"} method={"put"} onSubmit={handleSubmit}>
-                            <FormControl pb={3}><FormLabel>Who is the host of this event?</FormLabel>
-                                <Select required={true} placeholder='Select a registered host'
-                                    onChange={handleChange} value={inputs.createdBy} name='createdBy'>
+                            <FormControl pb={3}><FormLabel>Change the host</FormLabel>
+                                <Select required={true} placeholder='Select a registered host' onChange={handleChange} value={inputs.createdBy} name='createdBy' focusBorderColor={'whiteAlpha.600'} >
                                     {users.map((user) => (
                                         <option value={user.id} key={user.id}>{user.name}</option>
                                     ))}</Select></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Enter the name of your event</FormLabel>
-                                <Input required={true} name='title' onChange={handleChange} value={inputs.title || ""}
-                                    type='text' placeholder='...' /></FormControl>
+                            <FormControl pb={3}><FormLabel>Change the event name</FormLabel>
+                                <Input required={true} name='title' onChange={handleChange} value={inputs.title || ""} type='text' placeholder='...' focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Type your event description here</FormLabel>
-                                <Input required={true} name={'description'} onChange={handleChange}
-                                    value={inputs.description || ""} type='text' placeholder='...' /></FormControl>
+                            <FormControl pb={3}><FormLabel>Change the event description</FormLabel>
+                                <Input required={true} name={'description'} onChange={handleChange} value={inputs.description || ""} type='text' placeholder='...' focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Upload your event image:</FormLabel>
-                                <Textarea aria-label="image" rows="1" name="image" required={true} onChange={handleChange}
-                                    value={inputs.image || ""} placeholder={'Place the image URL here'} /></FormControl>
+                            <FormControl pb={3}><FormLabel>Change the event image</FormLabel>
+                                <Textarea aria-label="image" rows="1" name="image" required={true} onChange={handleChange} h={'10vh'} value={inputs.image || ""} placeholder={'Place the image URL here'} focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>What category does your event fall under?</FormLabel>
-                                <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]"
-                                    value={inputs.categoryIds} onChange={handleCheckedCategories}>
-                                    {categories.map(category => (
-                                        <option value={category.id} key={category.id}>{category.name}</option>
-                                    ))} </select></FormControl>
+                            <FormControl pb={3}><FormLabel>Change the event category/categories</FormLabel>
+                                <Stack w={'full'} borderColor={'whiteAlpha.400'} borderRadius={10}>
+                                    <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]" value={inputs.categoryIds} onChange={handleCheckedCategories} focusBorderColor={'red.600'}>
+                                        {categories.map(category => (
+                                            <option value={category.id} key={category.id}>{category.name}</option>
+                                        ))}</select></Stack></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Enter the location of your event</FormLabel>
-                                <Input required={true} type={'text'} name='location' onChange={handleChange}
-                                    value={inputs.location || ""} /></FormControl>
+                            <FormControl pb={3}><FormLabel>Change the event location</FormLabel>
+                                <Input required={true} type={'text'} name='location' onChange={handleChange} value={inputs.location || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Select the start date and time of your event</FormLabel>
-                                <Input required={true} type={'datetime-local'} name='startTime'
-                                    onChange={handleChange} value={inputs.startTime || ""} /></FormControl>
+                            <FormControl pb={3}><FormLabel>Change the start date and time</FormLabel>
+                                <Input required={true} type={'datetime-local'} name='startTime' onChange={handleChange} value={inputs.startTime || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Select the end date and time of your event</FormLabel>
-                                <Input required={true} type={'datetime-local'} name='endTime'
-                                    onChange={handleChange} value={inputs.endTime || ""} /></FormControl>
+                            <FormControl pb={3}><FormLabel>Change the end date and time</FormLabel>
+                                <Input required={true} type={'datetime-local'} name='endTime' onChange={handleChange} value={inputs.endTime || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
                             <ModalFooter pt={4} my={4} justify={'flex-end'}>
                                 <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"} onClick={onClose}>
@@ -160,6 +137,6 @@ export const FormEditEvent = () => {
                     </ModalBody>
                 </ModalContent>
             </Modal >
-        </div>
+        </div >
     );
 } 

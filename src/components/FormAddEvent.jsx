@@ -1,11 +1,10 @@
 import {
-    Button, FormLabel, Input, Select, Modal, ModalOverlay, ModalContent, ModalHeader,
+    Button, FormLabel, Input, Select, Modal, ModalOverlay, ModalContent, ModalHeader, Stack,
     ModalCloseButton, ModalBody, FormControl, useDisclosure, Textarea, useToast, ModalFooter
 } from "@chakra-ui/react";
 import { React, useState, useRef } from 'react';
-import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react-router-dom";
+import { Form, useActionData, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
-// import { loader } from "../pages/EventDetailsPage";
 
 export const actionAddEvent = async ({ request, params }) => {
     console.log("action is running: Add form");
@@ -26,7 +25,6 @@ export const actionAddEvent = async ({ request, params }) => {
     return null;
 };
 
-// reference: initialInputs handleChange
 
 export const FormAddEvent = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -54,16 +52,6 @@ export const FormAddEvent = () => {
         endTime: ""
     });
     const [inputs, setInputs] = useState({ initialInputs });
-    // const [inputs, setInputs] = useState({
-    //     createdBy: "",
-    //     title: "",
-    //     description: "",
-    //     image: "",
-    //     categoryIds: [],
-    //     location: "",
-    //     startTime: "",
-    //     endTime: ""
-    // });
 
     const handleCheckedCategories = (event) => {
         const catIds = Array.from(event.target.selectedOptions).map(o => Number(o.value));
@@ -103,11 +91,9 @@ export const FormAddEvent = () => {
             }
             return response.json()
         };
-
         try {
             await fetch(actionData)
                 .then(alert('Success! A new event has been created.'))
-            // .then(navigate(0));
         } catch {
             (error) => {
                 toast({
@@ -119,64 +105,56 @@ export const FormAddEvent = () => {
                 }).then(console.error(error));
             }
         }
-
         navigate(0);
     }
 
     return (
         <>
-            <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
-                _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
-                onClick={onOpen}>Add event</Button>
+            <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'} _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }} onClick={onOpen}>
+                Add event</Button>
 
             <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={closeModal}>
                 <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
-                <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'} >
-                    <ModalHeader>Add your event details</ModalHeader>
+                <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'}>
+                    <ModalHeader>Add the event details</ModalHeader>
                     <ModalCloseButton onClick={closeModal} />
                     <ModalBody>
                         <Form onSubmit={handleSubmit} id={"add-new-event"} method={"post"}>
                             <FormControl pb={3}>
-                                <FormLabel>Who is the host of this event?</FormLabel>
-                                <Select required={true} placeholder='Select a registered host'
-                                    onChange={handleChange} value={inputs.createdBy} name='createdBy'>
+                                <FormLabel>Select the host</FormLabel>
+                                <Select required={true} placeholder='Select a registered host' onChange={handleChange} value={inputs.createdBy} name='createdBy' focusBorderColor={'whiteAlpha.600'}>
                                     {users.map((user) => (
                                         <option value={user.id} key={user.id}>{user.name}</option>
                                     ))}</Select></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Enter the name of your event</FormLabel>
-                                <Input required={true} name='title' onChange={handleChange}
-                                    value={inputs.title || ""} type='text' placeholder='...' /></FormControl>
+                            <FormControl pb={3}><FormLabel>Enter the event name</FormLabel>
+                                <Input required={true} name='title' onChange={handleChange} value={inputs.title || ""} type='text' placeholder='...' focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Type your event description here</FormLabel>
-                                <Input required={true} name={'description'}
-                                    onChange={handleChange}
-                                    value={inputs.description || ""}
-                                    type='text' placeholder='...' /></FormControl>
+                            <FormControl pb={3}><FormLabel>Enter the event description</FormLabel>
+                                <Input required={true} name={'description'} onChange={handleChange} value={inputs.description || ""} type='text' placeholder='...' focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Upload your event image:</FormLabel>
+                            <FormControl pb={3}><FormLabel>Upload the event image</FormLabel>
                                 <Textarea aria-label="image" rows="1" name="image" required={true}
                                     onChange={handleChange} value={inputs.image || ""}
-                                    placeholder={'Insert the image URL here.'}></Textarea></FormControl>
+                                    placeholder={'Enter the image URL here.'}></Textarea></FormControl>
 
-                            <FormControl pb={3}><FormLabel>What category does your event fall under?</FormLabel>
-                                <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]"
-                                    value={inputs.categoryIds} onChange={handleCheckedCategories}>
-                                    {categories.map(category => (
-                                        <option value={category.id} key={category.id}>{category.name}</option>
-                                    ))} </select></FormControl>
+                            <FormControl pb={3}><FormLabel>Select an event category/categories</FormLabel>
+                                <Stack w={'full'} borderColor={'whiteAlpha.400'} borderRadius={10}>
+                                    <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]" value={inputs.categoryIds} onChange={handleCheckedCategories} focusBorderColor={'whiteAlpha.600'}>
+                                        {categories.map(category => (
+                                            <option value={category.id} key={category.id}>{category.name}</option>
+                                        ))} </select></Stack></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Enter the location of your event</FormLabel>
-                                <Input required={true} type={'text'}
-                                    name='location' onChange={handleChange} value={inputs.location || ""} /></FormControl>
+                            <FormControl pb={3}><FormLabel>Enter the event location</FormLabel>
+                                <Input required={true} type={'text'} name='location' onChange={handleChange} value={inputs.location || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Enter the start date and time of your event</FormLabel>
+                            <FormControl pb={3}><FormLabel>Enter the start date and time</FormLabel>
                                 <Input required={true} type={'datetime-local'}
-                                    name='startTime' onChange={handleChange} value={inputs.startTime || ""} /></FormControl>
+                                    name='startTime' onChange={handleChange} value={inputs.startTime || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Enter the end date and time of your event</FormLabel>
+                            <FormControl pb={3}><FormLabel>Enter the end date and time</FormLabel>
                                 <Input required={true} type={'datetime-local'}
-                                    name='endTime' onChange={handleChange} value={inputs.endTime || ""} /></FormControl>
+                                    name='endTime' onChange={handleChange} value={inputs.endTime || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
                             <ModalFooter pt={4} my={4} justify={'flex-end'}>
                                 <Button colorScheme='yellow' mr={3} type={'submit'} method={"post"} onClose={closeModal}>Save & View</Button>
@@ -184,7 +162,7 @@ export const FormAddEvent = () => {
                         </Form>
                     </ModalBody>
                 </ModalContent>
-            </Modal >
+            </Modal>
         </>
     );
 } 
