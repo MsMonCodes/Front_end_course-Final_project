@@ -3,7 +3,7 @@ import {
     ModalCloseButton, ModalBody, FormControl, useDisclosure, Textarea, useToast, ModalFooter
 } from "@chakra-ui/react";
 import { React, useState, useRef } from 'react';
-import { Form, useActionData, useLoaderData, useNavigate } from "react-router-dom";
+import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
 // import { loader } from "../pages/EventDetailsPage";
 
@@ -23,7 +23,7 @@ export const actionAddEvent = async ({ request, params }) => {
         body,
         headers: { "Content-Type": "application/json" },
     })
-    return (alert('Success! A new event has been created.'));
+    return null;
 };
 
 // reference: initialInputs handleChange
@@ -106,17 +106,8 @@ export const FormAddEvent = () => {
 
         try {
             await fetch(actionData)
-
+                .then(alert('Success! A new event has been created.'))
             // .then(navigate(0));
-            // .then(
-            //     toast({
-            //         title: 'Success!',
-            //         description: 'A new event has been created.',
-            //         status: 'success',
-            //         duration: 3000,
-            //         isClosable: false,
-            //     })
-            // )
         } catch {
             (error) => {
                 toast({
@@ -130,13 +121,6 @@ export const FormAddEvent = () => {
         }
 
         navigate(0);
-        // toast({
-        //     title: 'Success!',
-        //     description: 'A new event has been created.',
-        //     status: 'success',
-        //     duration: 3000,
-        //     isClosable: false,
-        // }).then(navigate(0));
     }
 
     return (

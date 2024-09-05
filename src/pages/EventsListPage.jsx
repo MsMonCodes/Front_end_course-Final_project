@@ -49,18 +49,13 @@ export const EventsListPage = () => {
             }
             return response.json()
           })
-          // .then(toast({
-          //   title: 'Success!',
-          //   description: 'An event has been deleted.',
-          //   status: 'success',
-          //   duration: 3000,
-          //   isClosable: true,
-          // }))
-          .finally(navigate(0))
+          .then(alert(`An event has been deleted.`))
+        // .finally(navigate(0))
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
     }
+    return navigate(0)
   }
 
   const breakpoints = {
