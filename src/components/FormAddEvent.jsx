@@ -107,7 +107,7 @@ export const FormAddEvent = () => {
         try {
             await fetch(actionData)
 
-                .then(navigate(0));
+            // .then(navigate(0));
             // .then(
             //     toast({
             //         title: 'Success!',
@@ -129,14 +129,14 @@ export const FormAddEvent = () => {
             }
         }
 
-        // navigate(0);
-        toast({
-            title: 'Success!',
-            description: 'A new event has been created.',
-            status: 'success',
-            duration: 3000,
-            isClosable: false,
-        }).then(navigate(0));
+        navigate(0);
+        // toast({
+        //     title: 'Success!',
+        //     description: 'A new event has been created.',
+        //     status: 'success',
+        //     duration: 3000,
+        //     isClosable: false,
+        // }).then(navigate(0));
     }
 
     return (
