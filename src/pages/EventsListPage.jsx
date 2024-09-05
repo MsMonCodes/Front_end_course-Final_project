@@ -88,7 +88,11 @@ export const EventsListPage = () => {
 
           <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'} gap={2}>
             <SearchBar events={events} placeholder={'Search by title...'} />
-            <Box><Select icon={<CiFilter size={25} />} placeholder={"none"} onChange={handleFilter}>
+
+
+
+            <Box><Select icon={<CiFilter size={25} />} placeholder={"none"} onChange={handleFilter}
+              borderColor={'whiteAlpha.400'}>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>{category.name}</option>
               ))}</Select></Box>
