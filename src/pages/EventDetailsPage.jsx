@@ -34,15 +34,6 @@ export const EventDetailsPage = () => {
     '2xl': '96em', // ~1536px
   }
 
-  // useEffect(() => {
-  //   const fetchEventDetails = async () => {
-  //     const response = await fetch(`http://localhost:3000/events/event/${event.id}`);
-  //     const json = await response.json();
-  //     console.log(json);
-  //   }
-  //   fetchEventDetails(event);
-  // }, []);
-
   const handleDelete = async (event) => {
     try {
       event.preventDefault();
@@ -58,7 +49,7 @@ export const EventDetailsPage = () => {
           })
           .then(toast({
             title: 'Success!',
-            description: 'This event has been deleted.',
+            description: 'The event has been deleted.',
             status: 'success',
             duration: 3000,
             isClosable: true,
@@ -67,7 +58,7 @@ export const EventDetailsPage = () => {
           .finally(navigate(`/`))
       }
     } catch (error) {
-      alert(`An error occurred: ${error.message}. Please try again.`);
+      alert(`An error occurred while trying to delete this event: ${error.message}. Please try again.`);
     }
   }
 

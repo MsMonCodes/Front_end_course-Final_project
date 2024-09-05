@@ -1,8 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import { Box, Heading, Flex, Stack, Text, Card, HStack, Container, Button, useDisclosure, Select, useToast } from '@chakra-ui/react';
-import { useLoaderData, Link, useNavigate, redirect } from "react-router-dom";
+import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
-// import { EventForm as FormAddEvent } from '../components/EventForm_Add&Edit.jsx';
 import { CiFilter } from "react-icons/ci";
 import { FormAddEvent } from '../components/FormAddEvent.jsx';
 
@@ -50,12 +49,11 @@ export const EventsListPage = () => {
             return response.json()
           })
           .then(alert(`An event has been deleted.`))
-        // .finally(navigate(0))
       }
     } catch (error) {
-      alert(`An error occurred: ${error.message}. Please try again.`);
+      alert(`An error occurred while trying to delete an event: ${error.message}. Please try again.`);
     }
-    return navigate(0)
+    return navigate(0);
   }
 
   const breakpoints = {

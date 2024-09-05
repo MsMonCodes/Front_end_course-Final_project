@@ -22,7 +22,9 @@ export const actionEditEvent = async ({ request, params }) => {
         method: "PUT",
         body,
         headers: { "Content-Type": "application/json" },
-    }).then(redirect('./')).then(alert("SUCCESSS"));
+    })
+        .then(redirect('./'))
+        .then(alert('Success! This event has been edited.'));
 };
 
 export const FormEditEvent = () => {
@@ -75,29 +77,16 @@ export const FormEditEvent = () => {
         setInputs(values => ({ ...values, [name]: value }))
     }
 
-
     const handleSubmit = async () => {
+        const actionData = useActionData();
         response => {
             if (!response.ok) {
                 throw new Error('Network response was not okay.');
             }
             return response.json()
         };
-
-        const actionData = useActionData();
-
         try {
             await fetch(actionData)
-
-                .then(
-                    toast({
-                        title: 'Success!',
-                        description: 'This event has been edited.',
-                        status: 'success',
-                        duration: 3000,
-                        isClosable: false,
-                    })
-                )
         } catch {
             (error) => {
                 toast({
@@ -111,24 +100,19 @@ export const FormEditEvent = () => {
         }
     }
 
-
-
     return (
-        <>
+        <div className="edit-event-form">
             <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
                 _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}
                 onClick={onOpen}>Edit</Button>
 
-            <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose} >
+            <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
-                <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'} >
+                <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'}>
                     <ModalHeader>Add your event details</ModalHeader>
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
-                        <Form id={"add-new-event"} method={"put"}
-                            onSubmit={handleSubmit}
-                        >
-
+                        <Form id={"add-new-event"} method={"put"} onSubmit={handleSubmit}>
                             <FormControl pb={3}><FormLabel>Who is the host of this event?</FormLabel>
                                 <Select required={true} placeholder='Select a registered host'
                                     onChange={handleChange} value={inputs.createdBy} name='createdBy'>
@@ -141,8 +125,8 @@ export const FormEditEvent = () => {
                                     type='text' placeholder='...' /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Type your event description here</FormLabel>
-                                <Input required={true} name={'description'} onChange={handleChange} value={inputs.description || ""}
-                                    type='text' placeholder='...' /></FormControl>
+                                <Input required={true} name={'description'} onChange={handleChange}
+                                    value={inputs.description || ""} type='text' placeholder='...' /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Upload your event image:</FormLabel>
                                 <Textarea aria-label="image" rows="1" name="image" required={true} onChange={handleChange}
@@ -168,12 +152,14 @@ export const FormEditEvent = () => {
                                     onChange={handleChange} value={inputs.endTime || ""} /></FormControl>
 
                             <ModalFooter pt={4} my={4} justify={'flex-end'}>
-                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"} onClick={onClose} >Save & View</Button>
-                                <Button onClick={() => onClose()} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></ModalFooter>
+                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"} onClick={onClose}>
+                                    Save & View</Button>
+                                <Button onClick={() => onClose()} color={'blackAlpha'} colorScheme={'whiteAlpha'}>
+                                    Cancel</Button></ModalFooter>
                         </Form>
                     </ModalBody>
                 </ModalContent>
             </Modal >
-        </>
+        </div>
     );
 } 
