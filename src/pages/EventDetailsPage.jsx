@@ -43,7 +43,7 @@ export const EventDetailsPage = () => {
   //   fetchEventDetails(event);
   // }, []);
 
-  const handleDelete = (event) => {
+  const handleDelete = async (event) => {
     try {
       event.preventDefault();
       if (window.confirm(`Are you sure you want to delete this event?`)) {
@@ -63,8 +63,8 @@ export const EventDetailsPage = () => {
             duration: 3000,
             isClosable: true,
           }))
-          .then(fetch(`http://localhost:3000/events/`))
-          .finally(navigate(`../`))
+          .then(await fetch(`http://localhost:3000/events/`))
+          .finally(navigate(`/`))
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);

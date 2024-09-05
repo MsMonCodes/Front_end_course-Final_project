@@ -57,7 +57,6 @@ export const EventsListPage = () => {
             isClosable: true,
           }))
           .finally(navigate(0))
-        // .finally(navigate(0))
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
