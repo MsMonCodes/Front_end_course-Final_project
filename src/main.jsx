@@ -28,13 +28,14 @@ const router = createBrowserRouter([
         element: <EventsListPage />,
         loader: eventsListLoader,
         action: actionAddEvent,
-        errorElement: <ErrorPage />,
+        // errorElement: <ErrorPage />,
       },
       {
         path: '/event/:eventId',
         element: <EventDetailsPage />,
         loader: eventDetailsLoader,
         action: actionEditEvent,
+        // errorElement: <ErrorPage />,
       },
       // {
       //   path: '/event/new',

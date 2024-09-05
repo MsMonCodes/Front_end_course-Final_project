@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Text, Flex, Stack, HStack, StackDivider } from "@chakra-ui/react";
+import { Heading, Text, Stack } from "@chakra-ui/react";
 import { useRouteError } from "react-router-dom";
 
 export const ErrorPage = () => {
@@ -9,12 +9,8 @@ export const ErrorPage = () => {
         <div id="error-page" align={'center'}>
             <Stack pt={'40vh'} >
                 <Heading>Oops!</Heading>
-                <Text fontSize={'2xl'}>Sorry, an unexpected error has occurred:</Text>
+                <Text fontSize={'2xl'}>An unexpected error has occurred:</Text>
                 <Text>
-                    <i>"{error.statusText || error.message}"</i>
-                </Text>
-            </Stack>
-
-        </div >
+                    <i>"{error.statusText || error.message}"</i></Text></Stack></div >
     );
 }

@@ -7,6 +7,7 @@ import { CiFilter } from "react-icons/ci";
 import { FormAddEvent } from '../components/FormAddEvent.jsx';
 
 export const loader = async () => {
+  console.log("loader is running: List");
   const events = await fetch(`http://localhost:3000/events`);
   const users = await fetch(`http://localhost:3000/users`);
   const categories = await fetch(`http://localhost:3000/categories`);
@@ -17,60 +18,6 @@ export const loader = async () => {
     categories: await categories.json(),
   }
 }
-// export const action = async ({ request, params }) => {
-//   const formData = Object.fromEntries(await request.formData());
-//   const body = JSON.stringify({ ...formData, eventId: params.eventId });
-//   await fetch("http://localhost:3000/events", {
-//     method: "POST",
-//     body,
-//     headers: { "Content-Type": "application/json" },
-//   });
-//   return null;
-// };
-
-
-// export const action = async ({ request, params }) => {
-//   const formData = Object.fromEntries(await request.formData());
-//   const body = JSON.stringify({ ...formData, eventId: params.eventId });
-//   const response = await fetch("http://localhost:3000/events", {
-//     method: "POST",
-//     body,
-//     headers: { "Content-Type": "application/json" },
-//   });
-//   const eventObject = await response.json();
-//   console.log(eventObject);
-//   return {
-//     eventObject: events.parse(eventObject),
-//   };
-
-//   // return null;
-// };
-
-// export const action = async ({ request, params }) => {
-//   const formData = Object.fromEntries(await request.formData());
-//   const body = JSON.stringify({ ...formData, eventId: params.eventId });
-//   const response = await fetch("http://localhost:3000/events", {
-//     method: "POST",
-//     body,
-//     headers: { "Content-Type": "application/json" },
-//     loading: { title: "Updating...", description: "Please wait" },
-//     success: {
-//       title: "Event successfully updated",
-//       description: "Looks great",
-//       isClosable: true,
-//       duration: 3000,
-//     },
-//     error: {
-//       title: "Failed to edit event",
-//       description: "Something went wrong",
-//     },
-//   })
-//     .then(response => response.json())
-//     .then(await fetch(response))
-//     .then(onClose())
-//     .then(navigate(`/`))
-//   return null;
-// };
 
 export const EventsListPage = () => {
   window.scrollTo(0, 0);
@@ -85,7 +32,6 @@ export const EventsListPage = () => {
     const fetchEvents = async () => {
       const response = await fetch(`http://localhost:3000/events/`);
       const json = await response.json();
-      console.log(json);
     }
     fetchEvents(events);
   }, [filteredEvents]);
@@ -97,7 +43,12 @@ export const EventsListPage = () => {
         fetch(`http://localhost:3000/events/${event.target.value}`, {
           method: `DELETE`,
         })
-          .then(response => response.json())
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not okay.');
+            }
+            return response.json()
+          })
           .then(toast({
             title: 'Success!',
             description: 'The event has been deleted.',
@@ -120,53 +71,6 @@ export const EventsListPage = () => {
     xl: '80em', // ~1280px
     '2xl': '96em', // ~1536px
   }
-
-  ////////////////////////////////////////ADDEDD
-  // const formData = {};
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:3000/events/`, {
-  //       method: `POST`,
-  //       body: JSON.stringify(inputs),
-  //       headers: { "Content-Type": "application/json;charset=utf-8" },
-  //     })
-  //       .then(response => response.json())
-  //       .then(toast({
-  //         title: 'Success!',
-  //         description: 'Your new event has been created.',
-  //         status: 'success',
-  //         duration: 5000,
-  //         isClosable: true,
-  //       }))
-  //   } catch (error) {
-  //     console.error(error)
-  //     toast({
-  //       title: 'Error',
-  //       description: 'There was an error while creating the event.',
-  //       status: 'error',
-  //       duration: 5000,
-  //       isClosable: true,
-  //     });
-  //   }
-  //   fetchEvents()
-  //     .then(onClose())
-  //     .then(navigate(0));
-  // }
-
-  // const initialFormAddEvent = {
-  //   createdBy: "",
-  //   title: "",
-  //   description: "",
-  //   image: "",
-  //   categoryIds: [],
-  //   location: "",
-  //   startTime: "",
-  //   endTime: ""
-  // }
-  ////////////////////////////////////////
 
   const categoryHeader = (event) => event.categoryIds.length > 1 ? "Categories:" : "Category:";
 
@@ -196,10 +100,7 @@ export const EventsListPage = () => {
                 <option key={category.id} value={category.id}>{category.name}</option>
               ))}</Select></Box>
 
-            <FormAddEvent onClick={onOpen} onClose={onClose} />
-
-
-          </HStack>
+            <FormAddEvent onClick={onOpen} onClose={onClose} /></HStack>
 
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
             {filteredEvents.map((event) => (

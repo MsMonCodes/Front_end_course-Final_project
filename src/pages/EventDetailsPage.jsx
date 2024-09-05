@@ -6,6 +6,7 @@ import { FormEditEvent } from '../components/FormEditEvent';
 // import { EventForm as FormEditEvent } from '../components/EventForm_Add&Edit';
 
 export const loader = async ({ params }) => {
+  console.log("loader is running: Details");
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
   const users = await fetch(`http://localhost:3000/users`);
   const categories = await fetch(`http://localhost:3000/categories`);
@@ -16,16 +17,6 @@ export const loader = async ({ params }) => {
     categories: await categories.json(),
   }
 }
-// export const action = async ({ request, params }) => {
-//   const formData = Object.fromEntries(await request.formData());
-//   console.log("FORMDATA:", formData);
-//   await fetch(`http://localhost:3000/events/${params.eventId}`, {
-//     method: "PUT",
-//     body: JSON.stringify({ ...formData, eventId: params.eventId }),
-//     headers: { "Content-Type": "application/json" },
-//   });
-//   return redirect(`/event/${params.eventId}`);
-// };
 
 export const EventDetailsPage = () => {
   window.scrollTo(0, 0);
@@ -59,8 +50,12 @@ export const EventDetailsPage = () => {
         fetch(`http://localhost:3000/events/${event.target.value}`, {
           method: `DELETE`,
         })
-          // .then(fetch(event))
-          .then(response => response.json())
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not okay.');
+            }
+            return response.json()
+          })
           .then(toast({
             title: 'Success!',
             description: 'This event has been deleted.',
@@ -70,11 +65,9 @@ export const EventDetailsPage = () => {
           }))
           .then(await fetch(`http://localhost:3000/events/`))
           .finally(navigate(`../`))
-        // console.log("handleDELETE success");
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);
-      // console.log("handleDELETE error");
     }
   }
 
@@ -87,7 +80,9 @@ export const EventDetailsPage = () => {
         <Heading py={4} pb={8}>Event details</Heading>
         <HStack gap={4} justifyContent={'flex-end'} w={'inherit'}>
 
-          <FormEditEvent onClick={onOpen} onClose={onClose} />
+          <FormEditEvent
+            onClick={onOpen} onClose={onClose}
+          />
 
           <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
             _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }}

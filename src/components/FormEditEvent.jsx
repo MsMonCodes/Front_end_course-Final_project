@@ -1,10 +1,14 @@
-import { Button, FormLabel, Input, Select, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Switch, InputGroup, Textarea, useToast, Stack } from "@chakra-ui/react";
+import {
+    Button, FormLabel, Input, Select, Modal, ModalOverlay, ModalContent, ModalHeader,
+    ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Textarea, useToast
+} from "@chakra-ui/react";
 import { React, useState, useRef } from 'react';
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-import { loader } from "../pages/EventsListPage";
-// import { loader } from "../pages/EventsEditPage";
+// import { loader } from "../pages/EventsListPage";
+import { loader } from "../pages/EventDetailsPage";
 
 export const actionEditEvent = async ({ request, params }) => {
+    console.log("action is running: Edit form");
     const formData = await request.formData();
     const formObj = Object.fromEntries(formData);
     const catIds = formData.getAll("categoryIds[]").map(catId => Number(catId));
@@ -14,13 +18,11 @@ export const actionEditEvent = async ({ request, params }) => {
         categoryIds: catIds,
         ...formObj
     });
-
     return await fetch(`http://localhost:3000/events/${params.eventId}`, {
         method: "PUT",
         body,
         headers: { "Content-Type": "application/json" },
-    })
-        .then(redirect('./'));
+    }).then(redirect('./'));
 };
 
 export const FormEditEvent = () => {
@@ -39,7 +41,18 @@ export const FormEditEvent = () => {
         '2xl': '96em', // ~1536px
     }
 
-    const [inputs, setInputs] = useState({
+    // const [inputs, setInputs] = useState({
+    //     createdBy: event.createdBy,
+    //     title: event.title,
+    //     description: event.description,
+    //     image: event.image,
+    //     categoryIds: event.categoryIds,
+    //     location: event.location,
+    //     startTime: event.startTime.slice(0, 16),
+    //     endTime: event.endTime.slice(0, 16),
+    // });
+
+    const initialInputs = ({
         createdBy: event.createdBy,
         title: event.title,
         description: event.description,
@@ -49,6 +62,7 @@ export const FormEditEvent = () => {
         startTime: event.startTime.slice(0, 16),
         endTime: event.endTime.slice(0, 16),
     });
+    const [inputs, setInputs] = useState({ ...initialInputs });
 
     const handleCheckedCategories = (event) => {
         const catIds = Array.from(event.target.selectedOptions).map(o => Number(o.value));
@@ -95,14 +109,11 @@ export const FormEditEvent = () => {
                                     value={inputs.image || ""} placeholder={'Place the image URL here'} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>What category does your event fall under?</FormLabel>
-                                <select
-                                    multiple={true} placeholder="Select one or more categories" name="categoryIds[]"
+                                <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]"
                                     value={inputs.categoryIds} onChange={handleCheckedCategories}>
                                     {categories.map(category => (
                                         <option value={category.id} key={category.id}>{category.name}</option>
-                                    ))}
-                                </select>
-                            </FormControl>
+                                    ))} </select></FormControl>
 
                             <FormControl pb={3}><FormLabel>Enter the location of your event</FormLabel>
                                 <Input required={true} type={'text'} name='location' onChange={handleChange}
@@ -117,7 +128,7 @@ export const FormEditEvent = () => {
                                     onChange={handleChange} value={inputs.endTime || ""} /></FormControl>
 
                             <ModalFooter pt={4} my={4} justify={'flex-end'}>
-                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"} >Save & View</Button>
+                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"} onClick={onClose} >Save & View</Button>
                                 <Button onClick={() => onClose()} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></ModalFooter>
                         </Form>
                     </ModalBody>
