@@ -36,7 +36,7 @@ export const EventsListPage = () => {
     fetchEvents(events);
   }, [filteredEvents]);
 
-  const handleDelete = (event) => {
+  const handleDelete = async (event) => {
     try {
       event.preventDefault();
       if (window.confirm(`Are you sure you want to delete this event?`)) {
@@ -51,12 +51,13 @@ export const EventsListPage = () => {
           })
           .then(toast({
             title: 'Success!',
-            description: 'The event has been deleted.',
+            description: 'An event has been deleted.',
             status: 'success',
             duration: 3000,
             isClosable: true,
           }))
           .finally(navigate(0))
+        // .finally(navigate(0))
       }
     } catch (error) {
       alert(`An error occurred: ${error.message}. Please try again.`);

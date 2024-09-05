@@ -2,7 +2,7 @@ import {
     Button, FormLabel, Input, Select, Modal, ModalOverlay, ModalContent, ModalHeader,
     ModalCloseButton, ModalBody, FormControl, useDisclosure, Textarea, useToast, ModalFooter
 } from "@chakra-ui/react";
-import { React, useState, useRef, useEffect } from 'react';
+import { React, useState, useRef, useEffect, startTransition, useTransition } from 'react';
 import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
 // import { loader } from "../pages/EventDetailsPage";
@@ -24,34 +24,7 @@ export const actionAddEvent = async ({ request, params }) => {
         body,
         headers: { "Content-Type": "application/json" },
     })
-    // .then(alert('Success! A new event has been created.'))
-    // .then(redirect(0))
-    // return fetch(`http://localhost:3000/events`).then(redirect('./'));
-
-    // .then(response => {
-    //     if (!response.ok) {
-    //         throw new Error('Network response was not okay.');
-    //     }
-    //     return response.json()
-    // })
-
-    // .then(success({
-    //     title: 'Success!',
-    //     description: 'Your new event has been created.',
-    //     status: 'success',
-    //     duration: 3000,
-    //     isClosable: false,
-    // }))
-    // .catch((error) => {
-    //     error({
-    //         title: 'Error',
-    //         description: 'There was an error while creating the event.',
-    //         status: 'error',
-    //         duration: 5000,
-    //         isClosable: true,
-    //     });
-    // });
-    // return redirect(`./`);
+    // .then(alert('Success! A new event has been created.'))   
 
     return null;
 };
@@ -124,136 +97,67 @@ export const FormAddEvent = () => {
     }
 
     const actionData = useActionData()
-    // actionData?.then(res => {
-    //     if (!res.ok) {
-    //         toast(something went wrong)
-    //         return
-    //     }
 
-    //     toast("YAY!")
-    // })
+    // const _handleSubmit = async () => {
+    //     console.log(`running handleSubmit`);
+    //     actionData?.then(
+    //         response => {
+    //             if (!response.ok) {
+    //                 throw new Error('Network response was not okay.');
+    //             }
+    //             console.log(`actionData exists`);
+
+    //             return response.json()
+    //                 .then(closeModal())
+    //                 .then(toast({
+    //                     title: 'Success!',
+    //                     description: 'A new event has been created.',
+    //                     status: 'success',
+    //                     duration: 3000,
+    //                     isClosable: false,
+    //                 }))
+    //                 .catch(toast({
+    //                     title: 'Error',
+    //                     description: 'There was an error while creating the event.',
+    //                     status: 'error',
+    //                     duration: 5000,
+    //                     isClosable: true,
+    //                 }))
+    //                 .finally(location.reload())
+    //                 ;
+    //         })
+    // }
+
 
     const handleSubmit = async () => {
         console.log(`running handleSubmit`);
-        actionData?.then(response => {
+        response => {
             if (!response.ok) {
                 throw new Error('Network response was not okay.');
             }
-            console.log(`actionData exists`)
             return response.json()
-                .then(() => onClose())
-                .then(toast({
-                    title: 'Success!',
-                    description: 'A new event has been created.',
-                    status: 'success',
-                    duration: 3000,
-                    isClosable: false,
-                }))
-                .catch(toast({
+        };
+        return navigate(0)
+            .then(onClose())
+
+            .then(toast({
+                title: 'Success!',
+                description: 'A new event has been created.',
+                status: 'success',
+                duration: 3000,
+                isClosable: false,
+            }))
+
+            .catch((error) => {
+                toast({
                     title: 'Error',
                     description: 'There was an error while creating the event.',
                     status: 'error',
                     duration: 5000,
                     isClosable: true,
-                }))
-                .finally(navigate(0))
-                ;
-        })
+                });
+            })
     }
-
-
-
-
-    // const handleSubmit = () => {
-    //     response => {
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not okay.');
-    //         }
-    //         return response.json()
-    //     };
-    //     fetch(events)
-    //         .then(onClose())
-
-    //         .then(toast({
-    //             title: 'Success!',
-    //             description: 'A new event has been created.',
-    //             status: 'success',
-    //             duration: 3000,
-    //             isClosable: false,
-    //         }))
-
-    //         .catch((error) => {
-    //             toast({
-    //                 title: 'Error',
-    //                 description: 'There was an error while creating the event.',
-    //                 status: 'error',
-    //                 duration: 5000,
-    //                 isClosable: true,
-    //             });
-    //         })
-    //     // .then(redirect(`./`));
-    // }
-
-    // const handleSubmit = async () => {
-    //     // e.preventDefault();
-    //     // const response = await fetch(
-    //     //     `http://localhost:3000/events/`, {
-    //     //     method: `POST`,
-    //     //     body: JSON.stringify(inputs),
-    //     //     headers: { "Content-Type": "application/json;charset=utf-8" },
-    //     // })
-    //     // .then(response => response.json())
-
-
-    //     // response => response.json()
-    //     //     .catch((error) => {
-    //     //         (response) => {
-    //     //             if (!response.ok) {
-    //     //                 throw new Error('Network response was not okay.');
-    //     //             }
-    //     //             return response.json()
-    //     //         }
-    //     //     });
-    //     // // await fetch(`http://localhost:3000/events/`)
-    //     //     .then(closeModal())
-    //     //     .then(toast({
-    //     //         title: 'Success!',
-    //     //         description: 'Your new event has been created.',
-    //     //         status: 'success',
-    //     //         duration: 3000,
-    //     //         isClosable: true,
-    //     //     }))
-    //     //     .then(navigate(0));
-
-    //     response => {
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not okay.');
-    //         }
-    //         return response.json()
-    //     };
-    //     onClose()
-
-    //         .then(toast({
-    //             title: 'Success!',
-    //             description: 'A new event has been created.',
-    //             status: 'success',
-    //             duration: 3000,
-    //             isClosable: false,
-    //         }))
-
-    //         .catch((error) => {
-    //             toast({
-    //                 title: 'Error',
-    //                 description: 'There was an error while creating the event.',
-    //                 status: 'error',
-    //                 duration: 5000,
-    //                 isClosable: true,
-    //             });
-    //         })
-    //         .then(redirect(`./`));
-    // }
-
-
 
     return (
         <>
@@ -267,9 +171,7 @@ export const FormAddEvent = () => {
                     <ModalHeader>Add your event details</ModalHeader>
                     <ModalCloseButton onClick={closeModal} />
                     <ModalBody>
-                        <Form
-                            onSubmit={handleSubmit}
-                            id={"add-new-event"} method={"post"}>
+                        <Form onSubmit={handleSubmit} id={"add-new-event"} method={"post"}>
                             <FormControl pb={3}>
                                 <FormLabel>Who is the host of this event?</FormLabel>
                                 <Select required={true} placeholder='Select a registered host'
@@ -313,7 +215,7 @@ export const FormAddEvent = () => {
                                     name='endTime' onChange={handleChange} value={inputs.endTime || ""} /></FormControl>
 
                             <ModalFooter pt={4} my={4} justify={'flex-end'}>
-                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"post"}>Save & View</Button>
+                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"post"} onClose={closeModal}>Save & View</Button>
                                 <Button onClick={() => closeModal()} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></ModalFooter>
                         </Form>
                     </ModalBody>
