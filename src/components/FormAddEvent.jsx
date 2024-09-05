@@ -2,8 +2,8 @@ import {
     Button, FormLabel, Input, Select, Modal, ModalOverlay, ModalContent, ModalHeader,
     ModalCloseButton, ModalBody, FormControl, useDisclosure, Textarea, useToast, ModalFooter
 } from "@chakra-ui/react";
-import { React, useState, useRef, useEffect, startTransition, useTransition } from 'react';
-import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react-router-dom";
+import { React, useState, useRef } from 'react';
+import { Form, useActionData, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
 // import { loader } from "../pages/EventDetailsPage";
 
@@ -18,15 +18,12 @@ export const actionAddEvent = async ({ request, params }) => {
         categoryIds: catIds,
         ...formObj
     });
-
     await fetch("http://localhost:3000/events", {
         method: "POST",
         body,
         headers: { "Content-Type": "application/json" },
     })
-    // .then(alert('Success! A new event has been created.'))   
-
-    return null;
+    return (alert('Success! A new event has been created.'));
 };
 
 // reference: initialInputs handleChange
@@ -96,38 +93,7 @@ export const FormAddEvent = () => {
         onClose();
     }
 
-    const actionData = useActionData()
-
-    // const _handleSubmit = async () => {
-    //     console.log(`running handleSubmit`);
-    //     actionData?.then(
-    //         response => {
-    //             if (!response.ok) {
-    //                 throw new Error('Network response was not okay.');
-    //             }
-    //             console.log(`actionData exists`);
-
-    //             return response.json()
-    //                 .then(closeModal())
-    //                 .then(toast({
-    //                     title: 'Success!',
-    //                     description: 'A new event has been created.',
-    //                     status: 'success',
-    //                     duration: 3000,
-    //                     isClosable: false,
-    //                 }))
-    //                 .catch(toast({
-    //                     title: 'Error',
-    //                     description: 'There was an error while creating the event.',
-    //                     status: 'error',
-    //                     duration: 5000,
-    //                     isClosable: true,
-    //                 }))
-    //                 .finally(location.reload())
-    //                 ;
-    //         })
-    // }
-
+    const actionData = useActionData();
 
     const handleSubmit = async () => {
         console.log(`running handleSubmit`);
@@ -137,26 +103,40 @@ export const FormAddEvent = () => {
             }
             return response.json()
         };
-        return navigate(0)
-            .then(onClose())
 
-            .then(toast({
-                title: 'Success!',
-                description: 'A new event has been created.',
-                status: 'success',
-                duration: 3000,
-                isClosable: false,
-            }))
+        try {
+            await fetch(actionData)
 
-            .catch((error) => {
+                .then(navigate(0));
+            // .then(
+            //     toast({
+            //         title: 'Success!',
+            //         description: 'A new event has been created.',
+            //         status: 'success',
+            //         duration: 3000,
+            //         isClosable: false,
+            //     })
+            // )
+        } catch {
+            (error) => {
                 toast({
                     title: 'Error',
                     description: 'There was an error while creating the event.',
                     status: 'error',
                     duration: 5000,
                     isClosable: true,
-                });
-            })
+                }).then(console.error(error));
+            }
+        }
+
+        // navigate(0);
+        toast({
+            title: 'Success!',
+            description: 'A new event has been created.',
+            status: 'success',
+            duration: 3000,
+            isClosable: false,
+        }).then(navigate(0));
     }
 
     return (

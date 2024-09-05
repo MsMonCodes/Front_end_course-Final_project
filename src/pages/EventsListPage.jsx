@@ -49,13 +49,13 @@ export const EventsListPage = () => {
             }
             return response.json()
           })
-          .then(toast({
-            title: 'Success!',
-            description: 'An event has been deleted.',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          }))
+          // .then(toast({
+          //   title: 'Success!',
+          //   description: 'An event has been deleted.',
+          //   status: 'success',
+          //   duration: 3000,
+          //   isClosable: true,
+          // }))
           .finally(navigate(0))
       }
     } catch (error) {
@@ -87,7 +87,7 @@ export const EventsListPage = () => {
   }
 
   return (
-    <>
+    <div className='full-event-list-page'  >
       <Stack className='event-list' w={'100%'} h={'100%'} align={'center'}>
         <Stack pb={{ base: 6, md: 10 }} gap={4} w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} align={'center'}>
 
@@ -151,6 +151,6 @@ export const EventsListPage = () => {
                         value={event.id} aria-label='Delete event'
                       >x</Button></Flex></HStack></Link></Card >
             )).reverse()}</Stack></Stack ></Stack >
-    </>
+    </div>
   );
 };

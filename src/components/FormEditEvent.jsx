@@ -3,7 +3,7 @@ import {
     ModalCloseButton, ModalBody, FormControl, useDisclosure, ModalFooter, Textarea, useToast
 } from "@chakra-ui/react";
 import { React, useState, useRef } from 'react';
-import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react-router-dom";
 // import { loader } from "../pages/EventsListPage";
 import { loader } from "../pages/EventDetailsPage";
 
@@ -22,7 +22,7 @@ export const actionEditEvent = async ({ request, params }) => {
         method: "PUT",
         body,
         headers: { "Content-Type": "application/json" },
-    }).then(redirect('./'));
+    }).then(redirect('./')).then(alert("SUCCESSS"));
 };
 
 export const FormEditEvent = () => {
@@ -75,6 +75,44 @@ export const FormEditEvent = () => {
         setInputs(values => ({ ...values, [name]: value }))
     }
 
+
+    const handleSubmit = async () => {
+        response => {
+            if (!response.ok) {
+                throw new Error('Network response was not okay.');
+            }
+            return response.json()
+        };
+
+        const actionData = useActionData();
+
+        try {
+            await fetch(actionData)
+
+                .then(
+                    toast({
+                        title: 'Success!',
+                        description: 'This event has been edited.',
+                        status: 'success',
+                        duration: 3000,
+                        isClosable: false,
+                    })
+                )
+        } catch {
+            (error) => {
+                toast({
+                    title: 'Error',
+                    description: 'There was an error while editing this event.',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                }).then(console.error(error));
+            }
+        }
+    }
+
+
+
     return (
         <>
             <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'}
@@ -87,7 +125,9 @@ export const FormEditEvent = () => {
                     <ModalHeader>Add your event details</ModalHeader>
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
-                        <Form id={"add-new-event"} method={"put"} >
+                        <Form id={"add-new-event"} method={"put"}
+                            onSubmit={handleSubmit}
+                        >
 
                             <FormControl pb={3}><FormLabel>Who is the host of this event?</FormLabel>
                                 <Select required={true} placeholder='Select a registered host'

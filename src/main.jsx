@@ -1,16 +1,8 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  EventDetailsPage,
-  loader as eventDetailsLoader,
-  // action as actionEditEvent 
-} from './pages/EventDetailsPage';
-import {
-  EventsListPage,
-  loader as eventsListLoader
-  // action as actionAddEvent, 
-} from './pages/EventsListPage';
+import { EventDetailsPage, loader as eventDetailsLoader, } from './pages/EventDetailsPage';
+import { EventsListPage, loader as eventsListLoader } from './pages/EventsListPage';
 import { actionEditEvent } from './components/FormEditEvent';
 import { actionAddEvent } from './components/FormAddEvent';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -28,23 +20,19 @@ const router = createBrowserRouter([
         element: <EventsListPage />,
         loader: eventsListLoader,
         action: actionAddEvent,
-        // errorElement: <ErrorPage />,
+        errorElement: <ErrorPage />,
       },
       {
         path: '/event/:eventId',
         element: <EventDetailsPage />,
         loader: eventDetailsLoader,
         action: actionEditEvent,
-        // errorElement: <ErrorPage />,
-      },
-      // {
-      //   path: '/event/new',
-      //   element: <EventForm />,
-      // },
+        errorElement: <ErrorPage />,
+      }
     ],
   },
 ]);
-// @ts-ignore
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ChakraProvider>
