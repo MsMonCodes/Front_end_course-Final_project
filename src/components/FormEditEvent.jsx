@@ -129,7 +129,7 @@ export const FormEditEvent = () => {
 
                             <ModalFooter pt={4} my={4} justify={'flex-end'}>
                                 <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"} onClick={onClose}>
-                                    Save & View</Button>
+                                    Save</Button>
                                 <Button onClick={() => onClose()} color={'blackAlpha'} colorScheme={'whiteAlpha'}>
                                     Cancel</Button></ModalFooter>
                         </Form>

@@ -109,18 +109,19 @@ export const EventsListPage = () => {
                           {event.description}</Text></Stack>
 
                       <Stack pt={{ base: 4, md: 2 }} justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
-                        <Box>{event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
-                          ? (<Box><Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
-                            {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
-                            <Box gap={1} display={'inline-flex'}>
+                        <Box>
+                          {event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
+                            ? (<Box><Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
+                              {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
+                              <Box gap={1} display={'inline-flex'}>
+                                <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
+                                  {event.startTime.slice(11, 16)}</Text>
+                                - <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
+                                  {event.endTime.slice(11, 16)}</Text></Box></Box>
+                            ) : (<Box gap={1} display={'flex'} flexDir={'column'}>
                               <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
-                                {event.startTime.slice(11, 16)}</Text>
-                              - <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
-                                {event.endTime.slice(11, 16)}</Text></Box></Box>
-                          ) : (<Box gap={1} display={'flex'} flexDir={'column'}>
-                            <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
-                              {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
-                        }</Box>
+                                {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
+                          }</Box>
 
                         <Box justifyContent={'space-between'}>{event.categoryIds.length > 0
                           ? <Flex gap={{ sm: 0, md: 2 }} display={{ base: 'block', md: 'inline-flex' }}>

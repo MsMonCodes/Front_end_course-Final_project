@@ -98,16 +98,17 @@ export const EventDetailsPage = () => {
                   <Center gap={2} display={{ base: 'block', md: 'inline-flex' }}>
                     <Text>
                       Date:</Text>
-                    <Center> {event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
-                      ? (<HStack><Text fontSize={'lg'} fontWeight={'semibold'}>
-                        {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
-                        <HStack gap={1} display={'inline-flex'}>
+                    <Center>
+                      {event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
+                        ? (<HStack><Text fontSize={'lg'} fontWeight={'semibold'}>
+                          {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
+                          <HStack gap={1} display={'inline-flex'}>
+                            <Text fontSize={'lg'} fontWeight={'semibold'}>
+                              ({event.startTime.slice(11, 16)} - {event.endTime.slice(11, 16)})</Text></HStack></HStack>)
+                        : (<Box gap={1} display={'flex'} flexDir={'column'}>
                           <Text fontSize={'lg'} fontWeight={'semibold'}>
-                            ({event.startTime.slice(11, 16)} - {event.endTime.slice(11, 16)})</Text></HStack></HStack>)
-                      : (<Box gap={1} display={'flex'} flexDir={'column'}>
-                        <Text fontSize={'lg'} fontWeight={'semibold'}>
-                          {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
-                    } </Center></Center>
+                            {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
+                      } </Center></Center>
 
                   <Center>
                     <HStack gap={2} display={{ base: 'block', md: 'inline-flex' }} >

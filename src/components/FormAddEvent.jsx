@@ -155,7 +155,7 @@ export const FormAddEvent = () => {
                                     name='endTime' onChange={handleChange} value={inputs.endTime || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
 
                             <ModalFooter pt={4} my={4} justify={'flex-end'}>
-                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"post"} onClose={closeModal}>Save & View</Button>
+                                <Button colorScheme='yellow' mr={3} type={'submit'} method={"post"} onClose={closeModal}>Save</Button>
                                 <Button onClick={() => closeModal()} color={'blackAlpha'} colorScheme={'whiteAlpha'}>Cancel</Button></ModalFooter>
                         </Form>
                     </ModalBody>
