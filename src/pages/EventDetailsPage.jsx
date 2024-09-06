@@ -4,7 +4,6 @@ import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import { FormEditEvent } from '../components/FormEditEvent';
 
 export const loader = async ({ params }) => {
-  console.log("loader is running: Details");
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
   const users = await fetch(`http://localhost:3000/users`);
   const categories = await fetch(`http://localhost:3000/categories`);

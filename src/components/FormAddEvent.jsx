@@ -7,7 +7,6 @@ import { Form, useActionData, useLoaderData, useNavigate } from "react-router-do
 import { loader } from "../pages/EventsListPage";
 
 export const actionAddEvent = async ({ request, params }) => {
-    console.log("action is running: Add form");
     const formData = await request.formData();
     const formObj = Object.fromEntries(formData);
     const catIds = formData.getAll("categoryIds[]").map(catId => Number(catId));
@@ -84,7 +83,6 @@ export const FormAddEvent = () => {
     const actionData = useActionData();
 
     const handleSubmit = async () => {
-        console.log(`running handleSubmit`);
         response => {
             if (!response.ok) {
                 throw new Error('Network response was not okay.');

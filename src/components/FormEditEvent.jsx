@@ -4,7 +4,6 @@ import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react
 import { loader } from "../pages/EventDetailsPage";
 
 export const actionEditEvent = async ({ request, params }) => {
-    console.log("action is running: Edit form");
     const formData = await request.formData();
     const formObj = Object.fromEntries(formData);
     const catIds = formData.getAll("categoryIds[]").map(catId => Number(catId));

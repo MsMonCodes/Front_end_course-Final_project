@@ -6,7 +6,6 @@ import { CiFilter } from "react-icons/ci";
 import { FormAddEvent } from '../components/FormAddEvent.jsx';
 
 export const loader = async () => {
-  console.log("loader is running: List");
   const events = await fetch(`http://localhost:3000/events`);
   const users = await fetch(`http://localhost:3000/users`);
   const categories = await fetch(`http://localhost:3000/categories`);
