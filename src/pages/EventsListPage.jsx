@@ -86,15 +86,20 @@ export const EventsListPage = () => {
           <Heading py={{ base: 2, md: 4 }}>
             Upcoming events</Heading>
 
-          <HStack w={'100%'} display={'flex'} justifyContent={'flex-end'} gap={2}>
-            <SearchBar events={events} placeholder={'Search by title...'} />
-            <Box>
-              <Select fontFamily={'inherit'} fontSize={'md'} icon={<CiFilter size={25} />} placeholder={"none"} _hover={{ borderColor: 'whiteAlpha.600' }} onChange={handleFilter} _focus={{ border: '1px', borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'} colorScheme='yellow' borderColor={'whiteAlpha.400'}>
-                {categories.map((category) => (
-                  <option color={'yellow.800'} key={category.id} value={category.id}>
-                    {category.name}</option>
-                ))}</Select></Box>
-            <FormAddEvent onClick={onOpen} onClose={onClose} /></HStack>
+          <HStack w={'100%'} display={'flex'} justifyContent={'space-between'} gap={2}>
+            <HStack display={'flex'} justifyContent={'flex-start'} gap={2}>
+              <SearchBar events={events} placeholder={'Search by title...'} />
+              <Box>
+                <Select fontFamily={'inherit'} fontSize={'md'} icon={<CiFilter size={25} />} placeholder={"none"} _hover={{ borderColor: 'whiteAlpha.600' }} onChange={handleFilter} _focus={{ border: '1px', borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'} colorScheme='yellow' borderColor={'whiteAlpha.400'}>
+                  {categories.map((category) => (
+                    <option color={'yellow.800'} key={category.id} value={category.id}>
+                      {category.name}</option>
+                  ))}</Select></Box>
+            </HStack>
+            <HStack display={'flex'} justifyContent={'space-between'}>
+              <FormAddEvent onClick={onOpen} onClose={onClose} />
+            </HStack>
+          </HStack>
 
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
             {filteredEvents.map((event) => (

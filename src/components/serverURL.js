@@ -1,1 +1,1 @@
-export const serverURL = "https://my-json-server.typicode.com/msmoncodes/JSON_Database"
+export const serverURL = "https://monzapi.slimjim.xyz"

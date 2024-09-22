@@ -28,7 +28,9 @@ export const SearchBar = ({ placeholder, events }) => {
 
     return (
         <div className="search">
-            <Box w={'3xs'} colorScheme='yellow'>
+            <Box w={'3xs'}
+            //  colorScheme='yellow'
+            >
                 <InputGroup className="searchInputs" borderEndRadius={0} borderColor={'whiteAlpha.400'}>
                     <Input type="text" placeholder={placeholder} value={searchInput} onChange={handleFilter} _hover={{ borderColor: 'whiteAlpha.600' }} _focus={{ border: '1px', borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'} />
                     <InputRightElement className="searchIcon">

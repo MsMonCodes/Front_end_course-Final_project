@@ -98,35 +98,36 @@ export const FormEditEvent = () => {
                     <ModalBody>
                         <Form id={"add-new-event"} method={"put"} onSubmit={handleSubmit}>
                             <FormControl pb={3}><FormLabel>Change the host</FormLabel>
-                                <Select required={true} placeholder='Select a registered host' onChange={handleChange} value={inputs.createdBy} name='createdBy' focusBorderColor={'whiteAlpha.600'} >
+                                <Select required={true} placeholder='Select a registered host' onChange={handleChange} value={inputs.createdBy} name='createdBy'
+                                    _focus={{ borderColor: 'whiteAlpha.600' }} >
                                     {users.map((user) => (
                                         <option value={user.id} key={user.id}>{user.name}</option>
                                     ))}</Select></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event name</FormLabel>
-                                <Input required={true} name='title' onChange={handleChange} value={inputs.title || ""} type='text' placeholder='...' focusBorderColor={'whiteAlpha.600'} /></FormControl>
+                                <Input required={true} name='title' onChange={handleChange} value={inputs.title || ""} type='text' placeholder='...' _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event description</FormLabel>
-                                <Input required={true} name={'description'} onChange={handleChange} value={inputs.description || ""} type='text' placeholder='...' focusBorderColor={'whiteAlpha.600'} /></FormControl>
+                                <Input required={true} name={'description'} onChange={handleChange} value={inputs.description || ""} type='text' placeholder='...' _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event image</FormLabel>
-                                <Textarea aria-label="image" rows="1" name="image" required={true} onChange={handleChange} h={'10vh'} value={inputs.image || ""} placeholder={'Place the image URL here'} focusBorderColor={'whiteAlpha.600'} /></FormControl>
+                                <Textarea aria-label="image" rows="1" name="image" required={true} onChange={handleChange} h={'10vh'} value={inputs.image || ""} placeholder={'Place the image URL here'} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event category/categories</FormLabel>
                                 <Stack w={'full'} borderColor={'whiteAlpha.400'} borderRadius={10}>
-                                    <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]" value={inputs.categoryIds} onChange={handleCheckedCategories} focusBorderColor={'red.600'}>
+                                    <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]" value={inputs.categoryIds} onChange={handleCheckedCategories} _focus={{ borderColor: 'whiteAlpha.600' }}>
                                         {categories.map(category => (
                                             <option value={category.id} key={category.id}>{category.name}</option>
                                         ))}</select></Stack></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event location</FormLabel>
-                                <Input required={true} type={'text'} name='location' onChange={handleChange} value={inputs.location || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
+                                <Input required={true} type={'text'} name='location' onChange={handleChange} value={inputs.location || ""} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the start date and time</FormLabel>
-                                <Input required={true} type={'datetime-local'} name='startTime' onChange={handleChange} value={inputs.startTime || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
+                                <Input required={true} type={'datetime-local'} name='startTime' onChange={handleChange} value={inputs.startTime || ""} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the end date and time</FormLabel>
-                                <Input required={true} type={'datetime-local'} name='endTime' onChange={handleChange} value={inputs.endTime || ""} focusBorderColor={'whiteAlpha.600'} /></FormControl>
+                                <Input required={true} type={'datetime-local'} name='endTime' onChange={handleChange} value={inputs.endTime || ""} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <ModalFooter pt={4} my={4} justify={'flex-end'}>
                                 <Button colorScheme='yellow' mr={3} type={'submit'} method={"put"} onClick={onClose}>
