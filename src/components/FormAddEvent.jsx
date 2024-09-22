@@ -5,6 +5,7 @@ import {
 import { React, useState, useRef } from 'react';
 import { Form, useActionData, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventsListPage";
+import { serverURL } from "./serverURL";
 
 export const actionAddEvent = async ({ request, params }) => {
     const formData = await request.formData();
@@ -16,7 +17,7 @@ export const actionAddEvent = async ({ request, params }) => {
         categoryIds: catIds,
         ...formObj
     });
-    await fetch("http://localhost:3000/events", {
+    await fetch(`${serverURL}/events`, {
         method: "POST",
         body,
         headers: { "Content-Type": "application/json" },

@@ -2,6 +2,7 @@ import { Button, FormLabel, Input, Select, Modal, ModalOverlay, ModalContent, Mo
 import { React, useState, useRef } from 'react';
 import { Form, redirect, useActionData, useLoaderData, useNavigate } from "react-router-dom";
 import { loader } from "../pages/EventDetailsPage";
+import { serverURL } from "./serverURL";
 
 export const actionEditEvent = async ({ request, params }) => {
     const formData = await request.formData();
@@ -13,7 +14,7 @@ export const actionEditEvent = async ({ request, params }) => {
         categoryIds: catIds,
         ...formObj
     });
-    return await fetch(`http://localhost:3000/events/${params.eventId}`, {
+    return await fetch(`${serverURL}/events/${params.eventId}`, {
         method: "PUT",
         body,
         headers: { "Content-Type": "application/json" },

@@ -4,11 +4,12 @@ import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import { SearchBar } from '../components/SearchBar.jsx';
 import { CiFilter } from "react-icons/ci";
 import { FormAddEvent } from '../components/FormAddEvent.jsx';
+import { serverURL } from '../components/serverURL.js';
 
 export const loader = async () => {
-  const events = await fetch(`http://localhost:3000/events`);
-  const users = await fetch(`http://localhost:3000/users`);
-  const categories = await fetch(`http://localhost:3000/categories`);
+  const events = await fetch(`${serverURL}/events`);
+  const users = await fetch(`${serverURL}/users`);
+  const categories = await fetch(`${serverURL}/categories`);
 
   return {
     events: await events.json(),
@@ -27,7 +28,7 @@ export const EventsListPage = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const response = await fetch(`http://localhost:3000/events/`);
+      const response = await fetch(`${serverURL}/events/`);
       const json = await response.json();
     }
     fetchEvents(events);
@@ -37,7 +38,7 @@ export const EventsListPage = () => {
     try {
       event.preventDefault();
       if (window.confirm(`Are you sure you want to delete this event?`)) {
-        fetch(`http://localhost:3000/events/${event.target.value}`, {
+        fetch(`${serverURL}/events/${event.target.value}`, {
           method: `DELETE`,
         })
           .then(response => {

@@ -2,11 +2,12 @@ import React from 'react';
 import { Card, Image, Heading, Text, Box, Container, Stack, HStack, Button, Center, useDisclosure, useToast } from '@chakra-ui/react';
 import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import { FormEditEvent } from '../components/FormEditEvent';
+import { serverURL } from '../components/serverURL';
 
 export const loader = async ({ params }) => {
-  const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
-  const users = await fetch(`http://localhost:3000/users`);
-  const categories = await fetch(`http://localhost:3000/categories`);
+  const event = await fetch(`${serverURL}/events/${params.eventId}`);
+  const users = await fetch(`${serverURL}/users`);
+  const categories = await fetch(`${serverURL}/categories`);
 
   return {
     event: await event.json(),
@@ -35,7 +36,7 @@ export const EventDetailsPage = () => {
     try {
       event.preventDefault();
       if (window.confirm(`Are you sure you want to delete this event?`)) {
-        fetch(`http://localhost:3000/events/${event.target.value}`, {
+        fetch(`${serverURL}/events/${event.target.value}`, {
           method: `DELETE`,
         })
           .then(response => {
@@ -51,7 +52,7 @@ export const EventDetailsPage = () => {
             duration: 3000,
             isClosable: true,
           }))
-          .then(await fetch(`http://localhost:3000/events/`))
+          .then(await fetch(`${serverURL}/events/`))
           .finally(navigate(`/`))
       }
     } catch (error) {
