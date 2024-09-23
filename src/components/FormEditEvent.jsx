@@ -43,6 +43,7 @@ export const FormEditEvent = () => {
         createdBy: event.createdBy,
         title: event.title,
         description: event.description,
+        paragraph: event.paragraph,
         image: event.image,
         categoryIds: event.categoryIds,
         location: event.location,
@@ -97,7 +98,8 @@ export const FormEditEvent = () => {
                     <ModalCloseButton onClick={onClose} />
                     <ModalBody>
                         <Form id={"add-new-event"} method={"put"} onSubmit={handleSubmit}>
-                            <FormControl pb={3}><FormLabel>Change the host</FormLabel>
+                            <FormControl pb={3}>
+                                <FormLabel>Change the host</FormLabel>
                                 <Select required={true} placeholder='Select a registered host' onChange={handleChange} value={inputs.createdBy} name='createdBy'
                                     _focus={{ borderColor: 'whiteAlpha.600' }} >
                                     {users.map((user) => (
@@ -105,23 +107,26 @@ export const FormEditEvent = () => {
                                     ))}</Select></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event name</FormLabel>
-                                <Input required={true} name='title' onChange={handleChange} value={inputs.title || ""} type='text' placeholder='...' _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
+                                <Input required={true} maxLength={40} name='title' onChange={handleChange} value={inputs.title || ""} type='text' placeholder='...' _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Change the event description</FormLabel>
-                                <Input required={true} name={'description'} onChange={handleChange} value={inputs.description || ""} type='text' placeholder='...' _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
+                            <FormControl pb={3}><FormLabel>Change the brief event description</FormLabel>
+                                <Textarea required={true} maxLength={55} name={'description'} onChange={handleChange} value={inputs.description || ""} type='text' placeholder='...' _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
+
+                            <FormControl pb={3}><FormLabel>Change the more detailed event description</FormLabel>
+                                <Textarea required={true} maxLength={200} h={'13vh'} name={'paragraph'} onChange={handleChange} value={inputs.paragraph || ""} type='text' placeholder='...' _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event image</FormLabel>
-                                <Textarea aria-label="image" rows="1" name="image" required={true} onChange={handleChange} h={'10vh'} value={inputs.image || ""} placeholder={'Place the image URL here'} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
+                                <Textarea required={true} aria-label="image" rows="1" name="image" onChange={handleChange} h={'10vh'} value={inputs.image || ""} placeholder={'Place the image URL here'} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event category/categories</FormLabel>
                                 <Stack w={'full'} borderColor={'whiteAlpha.400'} borderRadius={10}>
-                                    <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]" value={inputs.categoryIds} onChange={handleCheckedCategories} _focus={{ borderColor: 'whiteAlpha.600' }}>
+                                    <select multiple={true} name="categoryIds[]" onChange={handleCheckedCategories} value={inputs.categoryIds} placeholder="Select one or more categories" _focus={{ borderColor: 'whiteAlpha.600' }}>
                                         {categories.map(category => (
                                             <option value={category.id} key={category.id}>{category.name}</option>
                                         ))}</select></Stack></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the event location</FormLabel>
-                                <Input required={true} type={'text'} name='location' onChange={handleChange} value={inputs.location || ""} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
+                                <Input required={true} maxLength={30} type={'text'} name='location' onChange={handleChange} value={inputs.location || ""} placeholder={'...'} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>
 
                             <FormControl pb={3}><FormLabel>Change the start date and time</FormLabel>
                                 <Input required={true} type={'datetime-local'} name='startTime' onChange={handleChange} value={inputs.startTime || ""} _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>

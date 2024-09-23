@@ -60,7 +60,7 @@ export const EventDetailsPage = () => {
     }
   }
 
-  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Event categories:" : "Event category:";
+  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Categories:" : "Category:";
 
   return (
     <div className='event-details-page' w={'80%'} h={'100%'} align={'center'}>
@@ -129,9 +129,14 @@ export const EventDetailsPage = () => {
                           }</Text></HStack>
                       : ''}</Center>
 
+                  <Center w={{ base: '50vw', md: '30vw' }} pt={4} pb={{ base: 4, md: 0 }}>
+                    <Text fontStyle={'italic'} fontSize={'lg'}>
+                      {event.paragraph}</Text></Center>
+
                 </Stack></Container>
 
-              <Box mt={{ base: 10, md: 0 }} backgroundImage={users.find((user) => event.createdBy == user.id).image} backgroundSize={'cover'} borderBottomRightRadius={{ base: 0, md: 5 }} boxSize={'2xs'}>
+              <Box mt={{ base: 10, md: 0 }} backgroundImage={users.find((user) => event.createdBy == user.id).image}
+                backgroundSize={'cover'} bgPos={'center'} borderBottomRightRadius={{ base: 0, md: 5 }} boxSize={'md'}>
                 <Box display={'inline-flex'} gap={4} alignSelf={'center'} color={'purple.700'}>
                   <Text>
                     Hosted by:</Text>

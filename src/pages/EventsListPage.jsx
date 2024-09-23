@@ -64,7 +64,7 @@ export const EventsListPage = () => {
     '2xl': '96em', // ~1536px
   }
 
-  const categoryHeader = (event) => event.categoryIds.length > 1 ? "Categories:" : "Category:";
+  // const categoryHeader = (event) => event.categoryIds.length > 1 ? "Categories:" : "Category:";
 
   const handleFilter = (event) => {
     const filterByCategory = Number(event.target.value);
@@ -129,7 +129,11 @@ export const EventsListPage = () => {
                                 {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3, 10)}  -  {new Date(event.endTime).toDateString().slice(0, 3)}, {new Date(event.endTime).toDateString().slice(3)}</Text></Box>)
                           }</Box>
 
-                        <Box justifyContent={'space-between'}>{event.categoryIds.length > 0
+                        <Box>
+                          <Text fontWeight={'semibold'} fontSize={{ base: 'sm', md: 'inherit' }}>
+                            {event.location}</Text></Box>
+
+                        {/* <Box justifyContent={'space-between'}>{event.categoryIds.length > 0
                           ? <Flex gap={{ sm: 0, md: 2 }} display={{ base: 'block', md: 'inline-flex' }}>
                             <Text fontSize={{ base: 'sm', md: 'inherit' }}>
                               {categoryHeader(event)}</Text>
@@ -137,7 +141,8 @@ export const EventsListPage = () => {
                               return (categories.find((category) => categoryId == category.id))?.name
                             }).join(", ")}</Flex>
                           : null
-                        }</Box>
+                        }</Box> */}
+
                       </Stack>
 
                     </Container>
