@@ -64,7 +64,7 @@ export const EventDetailsPage = () => {
 
   return (
     <div className='event-details-page' w={'80%'} h={'100%'} align={'center'}>
-      <Stack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} pb={0} gap={4}>
+      <Stack w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} justifyContent={'center'} pb={0} gap={4}>
 
         <Heading py={{ base: 2, md: 4 }}>
           Event details</Heading>
@@ -82,7 +82,7 @@ export const EventDetailsPage = () => {
 
             <Image borderTopRadius={'inherit'} boxSize={'full'} w={{ base: '100%', md: 'container.md' }} height={'full'} objectFit={'cover'} src={event.image ? event.image : DefaultImage} alt={`image of ${event.description}`} alignItems={'right'} />
 
-            <Stack paddingBlock={8} w={{ base: '100%', md: 'container.md' }} >
+            <Stack py={12} px={12} w={{ base: '100%', md: 'container.md' }} >
               <Heading color={'yellow.500'} pb={2} size={'2xl'}>
                 {event.title}</Heading>
               <Text color={'purple.500'} letterSpacing={3} fontWeight={'semibold'} fontSize={'xl'}>
@@ -93,7 +93,8 @@ export const EventDetailsPage = () => {
               <Container justifyContent={'center'} alignContent={'center'} py={0}>
                 <Stack align={'center'} justify={'center'} py={{ base: 10, md: 0 }} gap={{ base: 2, md: 'inherit' }}>
 
-                  <Heading fontWeight={'thin'} size={'lg'} pb={{ base: 2, md: 6 }}>
+                  <Heading fontWeight={'thin'}
+                    textDecoration={'underline'} textDecorationThickness={'1px'} textUnderlineOffset={'1'} size={'lg'} pb={{ base: 2, md: 6 }}>
                     Event details</Heading>
 
                   <Center gap={2} display={{ base: 'block', md: 'inline-flex' }}>
@@ -103,7 +104,7 @@ export const EventDetailsPage = () => {
                       {event.startTime.slice(0, 10) === event.endTime.slice(0, 10)
                         ? (<HStack><Text fontSize={'lg'} fontWeight={'semibold'}>
                           {new Date(event.startTime).toDateString().slice(0, 3)}, {new Date(event.startTime).toDateString().slice(3)}</Text>
-                          <HStack gap={1} display={'inline-flex'}>
+                          <HStack gap={1} display={{ base: 'block', md: 'inline' }}>
                             <Text fontSize={'lg'} fontWeight={'semibold'}>
                               ({event.startTime.slice(11, 16)} - {event.endTime.slice(11, 16)})</Text></HStack></HStack>)
                         : (<Box gap={1} display={'flex'} flexDir={'column'}>
@@ -112,7 +113,7 @@ export const EventDetailsPage = () => {
                       } </Center></Center>
 
                   <Center>
-                    <HStack gap={2} display={{ base: 'block', md: 'inline-flex' }} >
+                    <HStack gap={2} display={{ base: 'block', md: 'inline' }} >
                       <Text verticalAlign={'center'}>
                         Location:</Text>
                       <Text fontSize={'lg'} fontWeight={'semibold'}>
@@ -120,7 +121,7 @@ export const EventDetailsPage = () => {
 
                   <Center>
                     {event.categoryIds.length > 0
-                      ? <HStack gap={2} display={{ base: 'block', md: 'inline-flex' }}>
+                      ? <HStack gap={2} display={{ base: 'block', md: 'inline' }}>
                         <Text>{categoryHeader(event)}</Text>
                         <Text fontSize={'lg'} fontWeight={'semibold'}>
                           {event.categoryIds.map((categoryId) => {
@@ -129,7 +130,7 @@ export const EventDetailsPage = () => {
                           }</Text></HStack>
                       : ''}</Center>
 
-                  <Center w={{ base: '50vw', md: '30vw' }} pt={4} pb={{ base: 4, md: 0 }}>
+                  <Center w={{ base: '50vw', md: '30vw', lg: '20vw' }} pt={4} pb={{ base: 4, md: 0 }}>
                     <Text fontStyle={'italic'} fontSize={'lg'}>
                       {event.paragraph}</Text></Center>
 

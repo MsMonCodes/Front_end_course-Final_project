@@ -111,16 +111,16 @@ export const FormAddEvent = () => {
 
     return (
         <>
-            <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'} _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }} onClick={onOpen}>
+            <Button type={'button'} border={{ base: '1px', md: '0px' }} borderColor={{ base: "whiteAlpha.400" }} h={10} w={'fit-content'} bgColor={{ base: 'inherit', md: 'whiteAlpha.300' }} _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }} onClick={onOpen}>
                 Add event</Button>
 
-            <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={closeModal}>
-                <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
+            <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={closeModal} size={{ base: 'full', lg: 'lg' }}>
+                <ModalOverlay bg={'blackAlpha.600'} backdropFilter={'auto'} backdropBlur='8px' />
                 <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'}>
                     <ModalHeader>Add the event details</ModalHeader>
                     <ModalCloseButton onClick={closeModal} />
                     <ModalBody>
-                        <Form onSubmit={handleSubmit} id={"add-new-event"} method={"post"}>
+                        <Form id={"add-new-event"} method={"post"} onSubmit={handleSubmit}>
                             <FormControl pb={3}>
                                 <FormLabel>Select the host</FormLabel>
                                 <Select required={true} placeholder='Select a registered host' onChange={handleChange} value={inputs.createdBy} name='createdBy' _focus={{ borderColor: 'whiteAlpha.600' }}>
@@ -140,12 +140,16 @@ export const FormAddEvent = () => {
                             <FormControl pb={3}><FormLabel>Upload the event image</FormLabel>
                                 <Textarea required={true} aria-label="image" rows="5" name="image" onChange={handleChange} value={inputs.image || ""} placeholder={'Enter the image URL here.'}></Textarea></FormControl>
 
-                            <FormControl pb={3}><FormLabel>Select an event category/categories</FormLabel>
+                            <FormControl pb={3} ><FormLabel>Select an event category/categories</FormLabel>
                                 <Stack w={'full'} borderColor={'whiteAlpha.400'} borderRadius={10}>
+                                    {/* <Select h={'100px'} multiple placeholder="Select one or more categories" name="categoryIds[]" onChange={handleCheckedCategories} value={inputs.categoryIds} _focus={{ borderColor: 'whiteAlpha.600' }}> */}
                                     <select multiple={true} placeholder="Select one or more categories" name="categoryIds[]" onChange={handleCheckedCategories} value={inputs.categoryIds} _focus={{ borderColor: 'whiteAlpha.600' }}>
                                         {categories.map(category => (
                                             <option value={category.id} key={category.id}>{category.name}</option>
-                                        ))} </select></Stack></FormControl>
+                                        ))}
+                                    </select>
+                                    {/* </Select> */}
+                                </Stack></FormControl>
 
                             <FormControl pb={3}><FormLabel>Enter the event location</FormLabel>
                                 <Input required={true} maxLength={30} type={'text'} name='location' onChange={handleChange} value={inputs.location || ""} placeholder='...' _focus={{ borderColor: 'whiteAlpha.600' }} /></FormControl>

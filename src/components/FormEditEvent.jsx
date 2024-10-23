@@ -91,8 +91,8 @@ export const FormEditEvent = () => {
             <Button type={'button'} h={10} w={'fit-content'} bgColor={'whiteAlpha.300'} _hover={{ bgColor: 'yellow.500', color: 'blackAlpha.700', cursor: 'pointer' }} onClick={onOpen}>
                 Edit</Button>
 
-            <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay bg={'blackAlpha.500'} backdropFilter={'auto'} backdropBlur='8px' />
+            <Modal initialFocusRef={initialRef} finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose} size={{ base: 'full', lg: 'lg' }}>
+                <ModalOverlay bg={'blackAlpha.600'} backdropFilter={'auto'} backdropBlur='8px' />
                 <ModalContent bgColor={'whiteAlpha.700'} color={'blackAlpha.900'}>
                     <ModalHeader>Update the event details</ModalHeader>
                     <ModalCloseButton onClick={onClose} />

@@ -86,19 +86,19 @@ export const EventsListPage = () => {
           <Heading py={{ base: 2, md: 4 }}>
             Upcoming events</Heading>
 
-          <HStack w={'100%'} display={'flex'} justifyContent={'space-between'} gap={2}>
-            <HStack display={'flex'} justifyContent={'flex-start'} gap={2}>
+          <HStack direction={{ base: 'column-reverse', md: 'row' }} w={'100%'} display={{ base: 'block', md: 'flex' }} justifyContent={{ base: 'center', md: 'space-between' }} gap={2} verticalAlign={'center'}>
+            <HStack justifyContent={'flex-start'} gap={2} display={{ base: 'block', md: 'flex' }}>
               <SearchBar events={events} placeholder={'Search by title...'} />
-              <Box>
-                <Select fontFamily={'inherit'} fontSize={'md'} icon={<CiFilter size={25} />} placeholder={"none"} _hover={{ borderColor: 'whiteAlpha.600' }} onChange={handleFilter} _focus={{ border: '1px', borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'} colorScheme='yellow' borderColor={'whiteAlpha.400'}>
+              <Box w={{ base: 225, md: 'fit-content' }} pb={{ base: 8, md: 0 }} >
+                <Select fontFamily={'inherit'} fontSize={'md'} icon={<CiFilter size={25} />} placeholder={"filter by category"} _hover={{ borderColor: 'whiteAlpha.600' }} onChange={handleFilter} borderWidth={{ base: '0px 0px 1px 0px', md: '1px' }} borderRadius={{ base: 0, md: 7.5 }} _focus={{ border: '1px', borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'} colorScheme='yellow' borderColor={'whiteAlpha.400'}>
                   {categories.map((category) => (
-                    <option color={'yellow.800'} key={category.id} value={category.id}>
+                    <option color={'yellow.500'} key={category.id} value={category.id}>
                       {category.name}</option>
                   ))}</Select></Box>
             </HStack>
-            <HStack display={'flex'} justifyContent={'space-between'}>
-              <FormAddEvent onClick={onOpen} onClose={onClose} />
-            </HStack>
+            {/* <HStack display={'flex'} justifyContent={'space-between'}> */}
+            <FormAddEvent onClick={onOpen} onClose={onClose} alignitems={'right'} w={{ base: 250, md: 'fit-content' }} />
+            {/* </HStack> */}
           </HStack>
 
           <Stack gap={{ base: 0.1, md: 4 }} w={'inherit'}>
@@ -109,10 +109,11 @@ export const EventsListPage = () => {
                     <Container w={{ base: '50vw', md: 'inherit' }}>
 
                       <Stack pb={{ base: 1, md: 8 }}>
-                        <Heading pb={2} size={'lg'} >
+                        <Heading pb={4} size={'lg'} >
                           {event.title}</Heading>
-                        <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>
-                          {event.description}</Text></Stack>
+                        {/* <Text letterSpacing={3} fontWeight={'semibold'} fontSize={{ base: 'md', md: 'lg' }}>
+                        {event.description}</Text> */}
+                      </Stack>
 
                       <Stack pt={{ base: 4, md: 2 }} justifyContent={'space-around'} rowGap={{ base: 0, md: 2 }}>
                         <Box>

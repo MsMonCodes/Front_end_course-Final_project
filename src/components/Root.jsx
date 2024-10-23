@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Box, Heading } from '@chakra-ui/react';
+import { Box, Center, Container, Heading, HStack } from '@chakra-ui/react';
 
 export const Root = () => {
 
@@ -14,9 +14,9 @@ export const Root = () => {
   }
 
   return (
-    <Box h={"100%"} pt={5} pb={0} bgColor={'blackAlpha.900'} color={'yellow.500'} align={'center'} scrollBehavior={'smooth'} >
-      <Heading size={'3xl'} py={{ base: 4, md: 12 }}>Your Local Event Guide</Heading>
+    <Box h={"100%"} w={'100vw'} pt={5} pb={0} bgColor={'blackAlpha.900'} color={'yellow.500'} align={'center'} scrollBehavior={'smooth'} >
+      <Heading Heading size={'3xl'} py={{ base: 8, md: 12 }} w={{ base: 'xs', md: 'container.sm', lg: 'container.md' }}> Your Local Event Guide</Heading >
       <Outlet w={{ base: '100%', md: 'container.sm', lg: 'container.md' }} />
-    </Box>
+    </Box >
   );
 }

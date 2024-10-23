@@ -28,11 +28,11 @@ export const SearchBar = ({ placeholder, events }) => {
 
     return (
         <div className="search">
-            <Box w={'3xs'}
+            <Box w={{ base: 200, md: 'fit-content' }}
             //  colorScheme='yellow'
             >
                 <InputGroup className="searchInputs" borderEndRadius={0} borderColor={'whiteAlpha.400'}>
-                    <Input type="text" placeholder={placeholder} value={searchInput} onChange={handleFilter} _hover={{ borderColor: 'whiteAlpha.600' }} _focus={{ border: '1px', borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'} />
+                    <Input borderWidth={{ base: '0px 0px 1px 0px', md: '1px' }} borderRadius={{ base: 0, md: 7.5 }} type="text" placeholder={placeholder} value={searchInput} onChange={handleFilter} _hover={{ borderColor: 'whiteAlpha.600' }} _focus={{ borderWidth: { base: '0px 0px 1px 0px', md: '1px' }, borderColor: 'whiteAlpha.600' }} focusBorderColor={'whiteAlpha.600'} />
                     <InputRightElement className="searchIcon">
                         {filteredEvents.length == 0
                             ? (<CiSearch size={20} />)
